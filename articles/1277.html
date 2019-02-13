@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="yanm1ng&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="../css/images/logo.png">
+  
+  <title>
+    
+      单例模式（Singleton） | Xuan&#39;s Blog
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="../js/qrious.js"></script>
+<script src="../js/gitment.js"></script>
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="../index.html">
+      <div class="logo"></div>
+      <span>Xuan's Blog</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="../index.html" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="../index.html" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>单例模式（Singleton）</h2>
+  <p class="post-date">2016-06-11</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><strong>单例模式（Singleton）</strong>，保证一个类仅有一个实例，并提供一个访问它的全局访问点。<br>单例模式有以下特点：</p>
+<ul>
+<li>单例类只能有一个实例。</li>
+<li>单例类必须自己创建自己的唯一的实例。</li>
+<li>单例类必须能给所有其他对象提供这一实例。<br>&nbsp;</li>
+</ul>
+<h2 id="UML类图"><a href="#UML类图" class="headerlink" title="UML类图"></a>UML类图</h2><p><a href="http://qsxuan.com/wp-content/uploads/2016/05/Singleton.png" target="_blank" rel="external"><img src="http://qsxuan.com/wp-content/uploads/2016/05/Singleton.png" alt="Singleton"></a></p>
+<p>&nbsp;</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="饿汉式单例类"><a href="#饿汉式单例类" class="headerlink" title="饿汉式单例类"></a>饿汉式单例类</h3><p>在单例类被加载时就将自己实例化</p>
+<pre class="lang:java decode:true ">package com.qinshaoxuan.singleton;
+
+public class EagerSingleton {
+
+    private static final EagerSingleton instance = new EagerSingleton();
+
+    /**
+     * 私有的构造方法,保证外界无法直接实例化
+     */
+    private EagerSingleton(){}
+
+    /**
+     * 静态工厂方法
+     * @return 单例类的唯一实例
+     */
+    public static EagerSingleton getInstance(){
+        return instance;
+    }
+}
+</pre>
+
+<h3 id="懒汉式单例类"><a href="#懒汉式单例类" class="headerlink" title="懒汉式单例类"></a>懒汉式单例类</h3><p>在单例类第一次被引用时将自己实例化</p>
+<pre class="lang:java decode:true ">package com.qinshaoxuan.singleton;
+
+public class LazySingleton {
+
+    private static LazySingleton instance = null;
+
+    /**
+     * 私有的构造方法,保证外界无法直接实例化
+     */
+    private LazySingleton() {}
+
+    /**
+     * 静态工厂方法
+     * @return 单例类的唯一实例
+     */
+    synchronized public static LazySingleton getInstance(){
+        if(instance == null){
+            instance = new LazySingleton();
+        }
+        return instance;
+    }
+}
+</pre>
+
+<h3 id="登记式单例类"><a href="#登记式单例类" class="headerlink" title="登记式单例类"></a>登记式单例类</h3><p>登记式单例类是为了克服饿汉式和懒汉式单例类均不可继承的缺点而设计的。</p>
+<p>这里的实现为父类饿汉式，子类懒汉式，且子类只能是懒汉式。</p>
+<p>由于子类必须允许父类以构造方法调用产生实例，因此，它的构造方法必须是公开的。这样一来就等于允许了以这样的方式产生实例而不在父类的登记中，这是登记式单例类的一个缺点。</p>
+<p>由于父类的实例必须存在才可能有子类的实例，这在有些情况下是一个浪费，这是登记式单例类的另一个缺点。</p>
+<p>&nbsp;</p>
+<p>RegSingleton类</p>
+<p><pre class="lang:java decode:true ">package com.qinshaoxuan.singleton;</pre></p>
+<p>import java.util.HashMap;</p>
+<p>public class RegSingleton {</p>
+<pre><code>static private HashMap registry = new HashMap();
+
+static {
+    RegSingleton instence = new RegSingleton();
+    registry.put(instence.getClass().getName(), instence);
+}
+
+/**
+ * 保护的构造方法
+ */
+protected RegSingleton() {}
+
+/**
+ * 静态工厂方法
+ * @param name 单例类的类名
+ * @return 单例类的唯一实例
+ */
+static public RegSingleton getInstence(String name){
+    if(name == null){
+        name = &quot;com.qinshaoxuan.singleton.RegSingleton&quot;;
+    }
+    if(registry.get(name)==null){
+        try{
+            registry.put(name, Class.forName(name).newInstance());
+        }
+        catch(Exception e){
+            System.out.println(&quot;Error happened.&quot;);
+        }
+    }
+    return (RegSingleton)(registry.get(name));
+}
+</code></pre><p>}<br><br>RegSingletonChild类</p>
+<p><pre class="lang:java decode:true ">package com.qinshaoxuan.singleton;</pre></p>
+<p>public class RegSingletonChild extends RegSingleton {</p>
+<pre><code>/**
+ * 构造方法
+ */
+public RegSingletonChild() {}
+
+/**
+ * 静态工厂方法
+ * @return 单例类子类的唯一实例
+ */
+static public RegSingletonChild getIntance(){
+    return (RegSingletonChild)RegSingleton.getInstence(&quot;com.qinshaoxuan.singleton.RegSingletonChild&quot;);
+}
+</code></pre><p>}<br><br>&nbsp;</p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>在系统内存中只存在一个对象，因此可以节约系统资源，对于一些需要频繁创建和销毁的对象使用单例模式无疑可以提高系统的性能。</p>
+<p>&nbsp;</p>
+<h2 id="使用场合"><a href="#使用场合" class="headerlink" title="使用场合"></a>使用场合</h2><p>在一个系统要求一个类只有一个实例时才应当使用单例模式。反过来说，如果一个类可以有几个实例共存，那么就没有必要使用单例类。</p>
+<p>&nbsp;</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li>《大话设计模式》 作者：程杰，清华大学出版社</li>
+<li>《Java与模式》 作者：阎宏，电子工业出版社<br>&nbsp;</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="../tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#UML类图"><span class="toc-nav-text">UML类图</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#代码实现"><span class="toc-nav-text">代码实现</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#饿汉式单例类"><span class="toc-nav-text">饿汉式单例类</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#懒汉式单例类"><span class="toc-nav-text">懒汉式单例类</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#登记式单例类"><span class="toc-nav-text">登记式单例类</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#优点"><span class="toc-nav-text">优点</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#使用场合"><span class="toc-nav-text">使用场合</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#参考文献"><span class="toc-nav-text">参考文献</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://qinshaoxuan.com/articles/1277.html';
+    var banner = ''
+    if (banner !== 'undefined') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "yanm1ng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "单例模式（Singleton）",
+        owner: "yanm1ng",
+        repo: "yanm1ng.github.io",
+        oauth: {
+          client_id: "0f87e490e00ee3fd87ef",
+          client_secret: "4a9d2b148e7971c2201ad12131ce8bf8159ccd2e"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="../js/script.js"></script>
+  </body>
+</html>

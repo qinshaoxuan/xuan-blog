@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">2015 Multi-University Training Contest 7 Solutions</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">2015 Multi-University Training Contest 7 Solutions</h1>
+        <div class="stuff">
+            <span>八月 11, 2015</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="../tags/多校/">多校</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>官方题解：<a href="http://bestcoder.hdu.edu.cn/blog/2015-multi-university-training-contest-7-solutions-by-uestc/" target="_blank" rel="noopener">2015 Multi-University Training Contest 7 solutions BY UESTC</a></p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1003-Hotaru’s-problem"><a href="#1003-Hotaru’s-problem" class="headerlink" title="1003 Hotaru’s problem"></a>1003 Hotaru’s problem</h2><blockquote>
+<p>HDU 5371：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5371" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5371</a></p>
+<p>题意：求最长的N-sequence</p>
+<p>定义N-sequence由3部分组成，满足下面2个条件：</p>
+<p>1、第一部分和第三部分相同</p>
+<p>2、第一部分和第二部分对称</p>
+<p>( 1\leqslant n\leqslant 10^5 )<br>manacher算法<br>可以用manacher算法求出(p[i])，表示以下标为(i)和(i+1)为中心的最长回文长度</p>
+</blockquote>
+<p>那么问题可以转化成，相距(x)的两个数(a[i],a[i+x])，满足( \frac{a[i]}{2}\geqslant x) 并且 (\frac{a[i+x]}{2}\geqslant x)，要求(x)尽量大</p>
+<p>可以枚举第一个数下标(i)和长度(x)。姿势好就可以水过。（正解是二分）</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;map&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL __int64</p>
+<p>#define N 100005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>int p[N&lt;&lt;1];<br>int s[N&lt;&lt;1];<br>int n;</p>
+<p>void init() {<br>    for(int i=n; i&gt;=0; –i) {<br>        s[i+i+2]=s[i];<br>        s[i+i+1]=-1;<br>    }<br>    s[0]=-2,s[n+n+2]=-3;<br>}</p>
+<p>void manacher() {<br>    int id=0;<br>    for(int i=1; i&lt;=2*n+1; ++i) {<br>        if(p[id]+id&gt;i)<br>            p[i]=min(p[id-(i-id)],id+p[id]-i);<br>        else<br>            p[i]=1;</p>
+<pre><code>    while(s[i-p[i]]==s[i+p[i]]) p[i]++;
+
+    if(id+p[id]&amp;lt;i+p[i])
+        id=i;
+}
+for(int i=1; i&amp;lt;=n; ++i) {
+    p[i]=p[i+i+1];
+}
+</code></pre><p>}</p>
+<p>int main() {</p>
+<pre><code>int T,cas=1;
+scanf(&quot;%d&quot;,&amp;amp;T);
+while(T--) {
+    scanf(&quot;%d&quot;,&amp;amp;n);
+    for(int i=0; i&amp;lt;n; ++i) scanf(&quot;%d&quot;,&amp;amp;s[i]);
+    init();
+    manacher();
+
+    int ans=0;
+    for(int i=1; i&amp;lt;n; ++i) {
+        for(int j=ans; j&amp;lt;=p[i]/2; ++j) {
+            if(p[i]/2&amp;gt;=j&amp;amp;&amp;amp;p[i+j]/2&amp;gt;=j)
+                ans=max(ans,j);
+        }
+    }
+    printf(&quot;Case #%d: %d\n&quot;,cas++,ans*3);
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1005-The-shortest-problem"><a href="#1005-The-shortest-problem" class="headerlink" title="1005 The shortest problem"></a>1005 The shortest problem</h2><blockquote>
+<p>HDU 5373：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5373" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5373</a></p>
+<p>题意：将数n各位上的数加起来的和接在n末尾形成一个新的数。求进行t次这样的操作后的数是否是11的倍数</p>
+<p>( 1 \leqslant n \leqslant 10^4 , 1 \leqslant t \leqslant 10^5 )<br>能被11整除的数的特征<br>奇位上的数字与偶位上的数字分别加起来，再求它们的差，如果这个差是11的倍数（包括0），那么，原来这个数就一定能被11整除。</p>
+</blockquote>
+<p>知道这个性质之后按题意模拟就行</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;map&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL __int64</p>
+<p>#define N 100005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>int ans,sum;<br>int k;</p>
+<p>void cal(int n) {<br>    int t=1e8,digit;<br>    while(t&gt;n)t/=10;<br>    while(t) {<br>        digit=n/t;<br>        if(k&amp;1) ans+=digit;<br>        else    ans-=digit;<br>        sum+=digit;<br>        n=n%t;<br>        t/=10;<br>        k++;<br>    }<br>}</p>
+<p>int main() {<br>    int n,t;<br>    int cas=1;<br>    while(scanf(“%d%d”,&amp;n,&amp;t),n!=-1||t!=-1) {<br>        k=sum=ans=0;</p>
+<pre><code>    cal(n);
+    while(t--) {
+        cal(sum);
+    }
+    if(abs(ans)%11) printf(&quot;Case #%d: No\n&quot;,cas++);
+    else            printf(&quot;Case #%d: Yes\n&quot;,cas++);
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1007-Gray-code"><a href="#1007-Gray-code" class="headerlink" title="1007 Gray code"></a>1007 Gray code</h2><blockquote>
+<p>HDU 5375：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5375" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5375</a></p>
+<p>题意：给出一个二进制数，‘?’表示当前位为0和1都可以。以及长度为n的数组a。如果格雷码第(i)位为1，那么可以得到(a_i)点，求最多能得多少点</p>
+<p>( 1 \leqslant n \leqslant 2 \times 10^5 )<br>格雷码转换公式：(G_i=B_i\otimes B_{i+1}(n-1\geqslant i\geqslant 0))（G：格雷码，B：二进制码，最低位下标为0）<br>DP<br>(dp[i][j])表示第(i)位为(j)时最大的点数</p>
+</blockquote>
+<p>根据第(i)位和第(i-1)位的情况很容易写出状态转移方程</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;map&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL __int64</p>
+<p>#define N 200005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>int dp[N][2];<br>char str[N];<br>int a[N];</p>
+<p>int main() {</p>
+<pre><code>int T,cas=1;
+scanf(&quot;%d&quot;,&amp;amp;T);
+while(T--) {
+    memset(dp,0,sizeof(dp));
+    scanf(&quot;%s&quot;,str+1);
+    str[0]=&apos;0&apos;;
+    int len=strlen(str+1);
+    for(int i=1; i&amp;lt;=len; ++i)scanf(&quot;%d&quot;,&amp;amp;a[i]);
+
+    for(int i=1; i&amp;lt;=len; ++i) {
+        if(str[i]==&apos;0&apos;) {
+            dp[i][0]=max(dp[i-1][0],(str[i-1]!=&apos;0&apos;)?dp[i-1][1]+a[i]:0);
+        }
+        if(str[i]==&apos;1&apos;) {
+            dp[i][1]=max((str[i-1]!=&apos;1&apos;)?dp[i-1][0]+a[i]:0,dp[i-1][1]);
+        }
+        if(str[i]==&apos;?&apos;) {
+            dp[i][0]=max(dp[i-1][0],(str[i-1]!=&apos;0&apos;)?dp[i-1][1]+a[i]:0);
+            dp[i][1]=max((str[i-1]!=&apos;1&apos;)?dp[i-1][0]+a[i]:0,dp[i-1][1]);
+        }
+    }
+    printf(&quot;Case #%d: %d\n&quot;,cas++,max(dp[len][0],dp[len][1]));
+}
+return 0;
+</code></pre><p>}<br><br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>(待续…)</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="http://link.hhtjim.com/163/785902.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1003-Hotaru’s-problem"><span class="toc-number">1.</span> <span class="toc-text">1003 Hotaru’s problem</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1005-The-shortest-problem"><span class="toc-number">2.</span> <span class="toc-text">1005 The shortest problem</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1007-Gray-code"><span class="toc-number">3.</span> <span class="toc-text">1007 Gray code</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

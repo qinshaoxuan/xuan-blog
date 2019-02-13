@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">单元测试 JUnit + Mockito 用法</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">单元测试 JUnit + Mockito 用法</h1>
+        <div class="stuff">
+            <span>十一月 22, 2016</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="../tags/单元测试/">单元测试</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>JUnit是 Java 很常用的一个包，可以用来进行单元测试，而且配合集群编译，可以很方便的进行自动化测试。</p>
+<p>Mockito 是一个用来实现 Mock 的 Java 包，可以用来自动注入虚拟的类对象，以此来接管方法的调用，从而很方便测试一些需要其他类对象的方法。</p>
+<p>&nbsp;</p>
+<p>最简单的单测</p>
+<p><pre class="lang:java decode:true ">import org.junit.Assert;<br>import org.junit.Test;</pre></p>
+<p>/**</p>
+<ul>
+<li>@author qinshaoxuan</li>
+<li><p>@date 16/11/22<br>*/<br>public class DemoTest {</p>
+<p> @Test<br> public void testDoSomething() {</p>
+<pre><code>IDemo demo = new Demo();
+Assert.assertEquals(true, demo.doSomething());  // 断言相等
+</code></pre><p> }<br>}<br><br>&nbsp;</p>
+</li>
+</ul>
+<p>用 mock 来虚拟类的实现，可以用在要测试的类中调用了其他类的对象的情况</p>
+<p><pre class="lang:java decode:true ">import org.junit.Assert;<br>import org.junit.Test;<br>import org.junit.runner.RunWith;<br>import org.mockito.InjectMocks;<br>import org.mockito.Mock;<br>import org.mockito.Mockito;<br>import org.mockito.runners.MockitoJUnitRunner;</pre></p>
+<p>/**</p>
+<ul>
+<li>@author qinshaoxuan</li>
+<li><p>@date 16/11/22<br>*/<br>@RunWith(MockitoJUnitRunner.class)  // 初始化 Mockito<br>public class DemoTest {</p>
+<p> @InjectMocks<br> IDemo demo = new Demo();    // 会真正执行方法<br> @Mock<br> IService service;           // 虚拟的类对象，不会真正执行方法</p>
+<p> private static final String HOLLE = “Hello World”;</p>
+<p> @Test<br> public void testDoSomething() {</p>
+<pre><code>// 当方法调用时返回指定值
+Mockito.when(service.requestSomething(Mockito.anyString())).thenReturn(HOLLE);
+// 当方法调用时抛出异常
+Mockito.doThrow(new Throwable()).when(service).requestSomething(Mockito.any(SomeClass.class));
+
+String str = &quot;someString&quot;;
+Assert.assertEquals(HOLLE, demo.doSomething(str));  // 断言相等
+</code></pre><p> }<br>}<br><br>其中 when 和 thenReturn 表示当方法调用时返回什么，也可以用 thenThrow 来抛出异常</p>
+</li>
+</ul>
+<p>方法的参数要指定类型，用每个类型对应的 <span class="lang:java decode:true crayon-inline ">any()</span>  来指定，Mockito 提供了所有的基础类型，和一些集合类，还可以传入类对象来指定类型</p>
+<p>&nbsp;</p>
+<p>可以用 verify 来监视方法的调用</p>
+<p><pre class="lang:java decode:true ">import org.junit.Test;<br>import org.junit.runner.RunWith;<br>import org.mockito.InjectMocks;<br>import org.mockito.Mock;<br>import org.mockito.Mockito;<br>import org.mockito.runners.MockitoJUnitRunner;</pre></p>
+<p>/**</p>
+<ul>
+<li>@author qinshaoxuan</li>
+<li><p>@date 16/11/22<br>*/<br>@RunWith(MockitoJUnitRunner.class)  // 初始化 Mockito<br>public class DemoTest {</p>
+<p> @InjectMocks<br> IDemo demo = new Demo();    // 会真正执行方法<br> @Mock<br> IService service;           // 虚拟的类对象，不会真正执行方法</p>
+<p> @Test<br> public void testDoSomething() {</p>
+<pre><code>demo.doSomething();
+// 监控方法调用
+Mockito.verify(service).requestSomething(); // 调用一次
+Mockito.verify(service, Mockito.times(2)).requestOther(); // 调用多次
+</code></pre><p> }<br>}<br><br>&nbsp;</p>
+</li>
+</ul>
+<p>当要测试的方法中调用了静态方法，那么就需要用 PowerMock 来虚拟</p>
+<p><pre class="lang:java decode:true ">import org.junit.Assert;<br>import org.junit.Before;<br>import org.junit.Test;<br>import org.junit.runner.RunWith;<br>import org.mockito.InjectMocks;<br>import org.mockito.Mockito;<br>import org.mockito.MockitoAnnotations;<br>import org.powermock.api.mockito.PowerMockito;<br>import org.powermock.core.classloader.annotations.PrepareForTest;<br>import org.powermock.modules.junit4.PowerMockRunner;</pre></p>
+<p>/**</p>
+<ul>
+<li>@author qinshaoxuan</li>
+<li><p>@date 16/11/22<br>*/<br>@RunWith(PowerMockRunner.class)    // 初始化 PowerMock<br>@PrepareForTest({SomeUtils.class}) // 需要调用的静态方法的类对象<br>public class DemoTest {</p>
+<p> @InjectMocks<br> IDemo demo = new Demo();</p>
+<p> private static final String HOLLE = “Hello World”;</p>
+<p> @Before<br> public void init() {</p>
+<pre><code>MockitoAnnotations.initMocks(this);     // 初始化 Mockito
+</code></pre><p> }</p>
+<p> @Test<br> public void testDoSomething() {</p>
+<pre><code>// 调用静态方法时返回指定值
+PowerMockito.mockStatic(SomeUtils.class);
+Mockito.when(SomeUtils.makeSomething(Mockito.any())).thenReturn(HOLLE);
+
+Assert.assertEquals(HOLLE, demo.doSomething());  // 断言相等
+</code></pre><p> }<br>}<br><br>&nbsp;</p>
+</li>
+</ul>
+<p>如果要测试某个方法是否会抛出异常，可以用 JUnit 里的 ExpectedException 类来测试</p>
+<p><pre class="lang:java decode:true ">import org.junit.Rule;<br>import org.junit.Test;<br>import org.junit.rules.ExpectedException;<br>import org.junit.runner.RunWith;<br>import org.mockito.InjectMocks;<br>import org.mockito.runners.MockitoJUnitRunner;</pre></p>
+<p>/**</p>
+<ul>
+<li>@author qinshaoxuan</li>
+<li><p>@date 16/11/22<br>*/<br>@RunWith(MockitoJUnitRunner.class)  // 初始化 Mockito<br>public class DemoTest {</p>
+<p> @InjectMocks<br> IDemo demo = new Demo();<br> @Rule<br> ExpectedException expectedException = ExpectedException.none();</p>
+<p> @Test<br> public void testDoSomething() {</p>
+<pre><code>expectedException.expect(Throwable.class);          // 指定异常的期望类型
+expectedException.expectMessage(&quot;some reason&quot;);     // 指定异常的期望消息
+
+demo.doSomething();
+</code></pre><p> }<br>}<br><br>&nbsp;</p>
+</li>
+</ul>
+<p>目前遇到的就是这些场景，如果有需要会再补充</p>
+<p>&nbsp;</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="http://link.hhtjim.com/163/785902.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single" class="page">
+    <div id="top">
+        <a class="icon-left image-icon" href="javascript:history.back()"></a>
+    </div>
+    <div class="section">
+        <div class="article">
+            <div class="main">
+                <div class="content">
+                    <p>鸽巢原理</p>
+<p>所谓鸽巢原理即n+1只鸽子，只有n个巢，则至少有一鸽巢有两只鸽子。<br>鸽巢原理又叫抽屉原理。</p>
+<p>推广：<br>如果要把n个物件分配到m个容器中，必有至少一个容器容纳至少$$[\frac{n}{m}]$$个物件。（$$[x]$$为$$x$$的整数部分）</p>
+<h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><p><a href="http://poj.org/problem?id=2356" target="_blank" rel="noopener">POJ 2356 Find a multiplet</a><br>题意：给N个数，问是否能取m个数，使其和为N的倍数<br>对于本题<br>可以用鸽巢原理来证明：<br>设(a_1,a_2,\cdots ,a_n)是正整数序列，则至少存在整数(l,r,1 \leqslant l &lt; r\leqslant n)，使得(\sum_{i=l}^{r}a_i)是n的倍数。</p>
+<p>&nbsp;</p>
+<p>证明：<br>构造一个序列(s_n=\sum_{i=1}^{n})，则(s_1 &lt; s_2 &lt; \cdots &lt; s_n)<br>有两种可能：<br>（1）若有一个(s_h)是(n)的倍数，则定理已得证。<br>（2）设在上面的序列中没有任何一个元素是(m)的倍数。令[s_h\equiv r_h (mod n)]</p>
+<p>其中(h=1,2,\cdots,n).假定上面的序列中所有的项都非(n)的倍数，故其中(r_1,r_2,\cdots,r_n)无一为0，而 且所有的(r_h)均小于(n)。不超过(n-1)的正整数只有(n-1)个。根据鸽巢原理，其中至少存在一对(r_h,r_k)，满 足(r_h=r_k).即(s_h)和(s_k)满足[s_k\equiv s_h (mod n)]</p>
+<p>不妨设</p>
+<p>[\begin{array}{lcl}&amp;s_h&amp;=a_1+a_2+\cdots+a_k+a_k+1+\cdots+a_h\-)&amp;s_k&amp;=a_1+a_2+\cdots+a_k\\hline&amp;s_h-s_k&amp;=a_{k+1}+a_{k+2}+\cdots+a_h\equiv 0 (mod n)\ \end{array}]</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true " title="POJ 2356">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;cmath&gt;<br>using namespace std;</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>#define N 10005</p>
+<p>#define LL long long</p>
+<p>int num[N];<br>int sum[N];//记录前n项和<br>int l,r;//记录左右下标</p>
+<p>int main(){<br>    int n;<br>    while(~scanf(“%d”,&amp;n)){<br>        for(int i=1;i&lt;=n;++i){<br>            scanf(“%d”,&amp;num[i]);<br>        }<br>        sum[0]=0;<br>        for(int i=1;i&lt;=n;++i)<br>            sum[i]=sum[i-1]+num[i];</p>
+<pre><code>    int flag=0;
+    for(int i=1;i&amp;lt;=n&amp;amp;&amp;amp;!flag;++i){
+        for(int j=i;j&amp;lt;=n&amp;amp;&amp;amp;!flag;++j){
+            if((sum[j]-sum[i-1])%n==0){
+                l=i,r=j,flag=1;
+                break;
+            }
+
+        }
+    }
+    printf(&quot;%d\n&quot;,r-l+1);
+    for(int i=l;i&amp;lt;=r;++i)
+        printf(&quot;%d\n&quot;,num[i]);
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

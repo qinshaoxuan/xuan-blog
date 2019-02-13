@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="yanm1ng&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="../css/images/logo.png">
+  
+  <title>
+    
+      AJAX学习笔记 | Xuan&#39;s Blog
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="../js/qrious.js"></script>
+<script src="../js/gitment.js"></script>
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="../index.html">
+      <div class="logo"></div>
+      <span>Xuan's Blog</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="../index.html" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="../index.html" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>AJAX学习笔记</h2>
+  <p class="post-date">2016-01-24</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>## </p>
+<blockquote>
+<p>学习教程：<a href="http://www.imooc.com/learn/250" target="_blank" rel="external">慕课网：AJAX全接触</a></p>
+</blockquote>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Ajax 全称：Asynchronous JavaScript and XML（异步的JavaScript和XML）</p>
+<p>Ajax不是某种编程语言<br>是一种在无需重新加载整个网页的情况下，能够更新部分网页的技术。</p>
+<h3 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h3><ul>
+<li>运用HTML和CSS来实现页面，表达信息</li>
+<li>运用XMLHttpRequest和web服务器进行数据的异步交换</li>
+<li>运用JavaScript操作DOM，实现动态的局部刷新</li>
+</ul>
+<hr>
+<p>## </p>
+<p>## </p>
+<h2 id="概念介绍"><a href="#概念介绍" class="headerlink" title="概念介绍"></a>概念介绍</h2><h3 id="XMLHttpRequest对象"><a href="#XMLHttpRequest对象" class="headerlink" title="XMLHttpRequest对象"></a>XMLHttpRequest对象</h3><p><strong>同步</strong>：就是用户填写完信息之后，全部提交给服务器，等待服务器的回应，是一次性全部的。</p>
+<p><strong>异步</strong>：当用户填写完一条信息之后，这条信息会自动向服务器提交，然后服务器响应客户端，在此过程中，用户依然在填写表格的信息，即向服务器请求多次，节省了用户的时间，提高了用户的体验。XMLhttpRequest对象来实现这一功能，也需要javascript来操作DOM实现局部的信息更新。</p>
+<p>&nbsp;</p>
+<p><strong>实例化XMLHttpRequest对象</strong></p>
+<p><pre class="toolbar:2 lang:js decode:true">var request=new XMLHttpRequest();</pre><br>浏览器的支持情况：大部分浏览器都支持，但是在IE5/IE6不能支持，但是也可以通过添加代码使得IE5/IE6支持。</p>
+<p><pre class="lang:js decode:true">var request;<br>if(window.XMLHttpRequest){<br>    request = new XMLHttpRequest(); //IE7+，Firefox，Chrome，Opera，Safari…<br>}else{<br>    request = new ActiveXObject(“Microsoft.XMLHTTP”); //IE6,IE5<br>}</pre><br>&nbsp;</p>
+<h3 id="HTTP请求"><a href="#HTTP请求" class="headerlink" title="HTTP请求"></a>HTTP请求</h3><p>HTTP是计算机通过网络进行通信的规则<br>HTTP是一种无状态的协议(不建立持久的连接，服务端不保留连接的相关信息,浏览器发出请求和服务器返回响应是一个没有记忆的过程)<br><strong>一个完整的<span style="color: #00ccff; background-color: #ffffff;">HTTP请求</span>过程有7个步骤：</strong></p>
+<ol>
+<li>建立TCP连接</li>
+<li>Web浏览器向Web服务器发送请求命令</li>
+<li>Web浏览器发送请求头信息</li>
+<li>Web服务器应答</li>
+<li>Web服务器发送应答头信息</li>
+<li>Web服务器向浏览器发送数据</li>
+<li><p>Web服务器关闭TCP连接<br><strong><span style="color: #00ccff;">http请求</span>一般由4部分组成：</strong></p>
+</li>
+<li><p>HTTP请求的方法或动作，GET或POST</p>
+</li>
+<li>正在请求的URL</li>
+<li>请求头，包含一些客户端环境信息，身份验证信息等</li>
+<li>请求体(请求正文)，包含要发送的一些字符串信息,表单信息等等。请求头和请求体之间有一个空行，表面请求头已经结束。<br><strong>GET：</strong>一般用于信息的获取，使用URL传递参数，对发送信息的数量也有限制，一般在2000字符。默认方式，一般用于查询、获取操作,不是很安全，任何人可见，信息都显示在URL中。GET请求是一种幂等操作（一个操作任意多次执行所产生的影响均与一次执行的影响相同）。</li>
+</ol>
+<p><strong>POST：</strong>一般用于修改服务器上的资源，对所发送的数量无限制。一般用于发送表单数据，新建，修改，删除等操作，要安全一些，不在URL中显示，对其他人不显示。</p>
+<p><strong><span style="color: #00ccff;">HTTP响应</span>一般由3部分组成：</strong></p>
+<ol>
+<li>一个数字或文字组成的状态码，用来显示请求是成功还是失败</li>
+<li>响应头，和请求头一样包含许多有用信息，如服务器类型、日期时间、内容类型和长度等</li>
+<li>响应体，即响应正文。响应头和响应体之间有空行<br>&nbsp;</li>
+</ol>
+<p><a href="http://hate13.com/?p=991" target="_blank" rel="external"><strong>HTTP状态码</strong></a></p>
+<ul>
+<li><strong>1XX</strong>：信息类，表示收到Web浏览器请求，正在进一步处理中</li>
+<li><strong>2XX</strong>：成功，表示用户请求被正确接收</li>
+<li><strong>3XX</strong>：重定向，表示请求没有成功，客户必须采取进一步动作</li>
+<li><strong>4XX</strong>：客户端错误，表示客户端提交的请求有错误，例如：404 NOT Found,意味着请求中所引用的文档不存在</li>
+<li><strong>5XX</strong>：服务器错误，表示服务器不能完成对请求的处理，如：500<br>&nbsp;</li>
+</ul>
+<h3 id="XMLHttpRequest发送请求"><a href="#XMLHttpRequest发送请求" class="headerlink" title="XMLHttpRequest发送请求"></a>XMLHttpRequest发送请求</h3><p><strong>XMLHttpRequest方法</strong></p>
+<p><pre class="lang:js decode:true ">open(method,url,async)<br>/<em><br>method:GET或POST<br>url:相对的地址或绝对的地址<br>async:同步(false)，异步(true)默认
+</em>/</pre></p>
+<p>send(string)<br>/<em><br>将请求内容string发送到服务器<br>如果使用get，可以不填写string<br>如果使用post，则必须填写string
+</em>/<br><strong>示例</strong></p>
+<p><pre class="lang:js decode:true">var request=new XMLHttpRequest();<br>request.open(“GET”,”get.php?name=xuan&amp;sex=man”);<br>request.send();</pre></p>
+<p>request.open(“POST”,”post.php”);<br>request.setRequestHeader(“Content-type”,”application/x-www-form-urlencoded”);<br>                                          //设置HTTP头信息,一定要写在open()和send()之间<br>request.send(“name=xuan&amp;sex=man”);<br>&nbsp;</p>
+<h3 id="XMLHttpRequest取得响应"><a href="#XMLHttpRequest取得响应" class="headerlink" title="XMLHttpRequest取得响应"></a>XMLHttpRequest取得响应</h3><ul>
+<li><strong>responseText</strong>：获得字符串形式的响应数据</li>
+<li><strong>responseXML</strong>：获得XML形式的响应数据</li>
+<li><strong>status和statusText</strong>：以数字和文本形式返回HTTP代码</li>
+<li><strong>getAllResponseHeader()</strong>：获取所有响应表头</li>
+<li><strong>getResponseHeader()</strong>：查询响应中的某个字段的值</li>
+<li><p><strong>readyState</strong>：服务器响应状态，值的意义：</p>
+<ul>
+<li>0：请求未初始化，open还没有调用</li>
+<li>1：服务器连接已建立，open已经调用了</li>
+<li>2：请求已接收，也就是接收了头信息了</li>
+<li>3：请求处理中，也就是接收到响应主题了</li>
+<li>4：请求已完成，响应已就绪，也就是响应完成了<br><strong>示例</strong><br><pre class="lang:js decode:true">var request = new XMLHttpRequest() //建立XHR对象<br>request.open(“GET”,”get.php?name=xuan&amp;sex=man”,true); //用get方法异步打开get.php<br>request.send(); //发送请求头信息<br>request.onreadystatechange=function(){<br>if(request.readyState==4) {<br>if(request.status==200) { <pre><code>document.getElementById(&quot;searchResult&quot;).innerHTML = request.responseText;
+                        //将id为searchResult的元素值改为响应结果
+</code></pre>}else{<pre><code>alert(&quot;发生错误：&quot; + request.status); //请求错误，返回错误码
+</code></pre>}<br>}<br>}<br>/<em><br>通过onreadystatechange事件 ，对readyState属性进行监听即对服务器的响应进行监听，<br>readyState==4,响应完成<br>status==200,请求成功
+</em>/</pre><br>&nbsp;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>&nbsp;</p>
+<h2 id="JSON"><a href="#JSON" class="headerlink" title="JSON"></a>JSON</h2><h3 id="JSON基本概念"><a href="#JSON基本概念" class="headerlink" title="JSON基本概念"></a>JSON基本概念</h3><p>JavaScript对象表示法（JavaScript Object Notation）<br>JSON是存储和交换文本信息的语法，类似XML。它采用键值对的方式来组织，易于人们阅读和编写，同时也易于机器解析和生成<br>JSON是独立于语言的，也就是说不管什么语言，都可以解析json，只需要按照json的规则来就行</p>
+<p><strong>JSON和XML比较</strong></p>
+<ul>
+<li>JSON的长度和XML格式比起来很短小</li>
+<li>JSON读写的速度更快</li>
+<li>JSON可以使用JavaScript内建的方法直接进行解析，转换成JavaScipt对象，非常方便<br>&nbsp;</li>
+</ul>
+<h3 id="JSON格式"><a href="#JSON格式" class="headerlink" title="JSON格式"></a>JSON格式</h3><p>JSON数据的书写格式是”名称”:”值”<br>名称和值的组合中的名称卸载前面（在双引号中），值卸载后面（同样在双引号中），中间用冒号隔开，组合之间用逗号隔开。如：”name”:”xuan”,”sex”:”man”</p>
+<p>json的值可以是下面这些类型：</p>
+<ul>
+<li>数字（整数或浮点数）</li>
+<li>字符串（在双引号中）</li>
+<li>逻辑值（true或false）</li>
+<li>数组（在方括号中）</li>
+<li>对象（在花括号中）</li>
+<li>null<br><strong>示例</strong><br><pre class="lang:js decode:true">var jsondata=’{<br>“employees”: [{<pre><code>&quot;firstName&quot;: &quot;Bill&quot;,
+&quot;lastName&quot;: &quot;Gates&quot;
+</code></pre>}, {<pre><code>&quot;firstName&quot;: &quot;George&quot;,
+&quot;lastName&quot;: &quot;Bush&quot;
+</code></pre>}, {<pre><code>&quot;firstName&quot;: &quot;Thomas&quot;,
+&quot;lastName&quot;: &quot;Carter&quot;
+</code></pre>}]’;<br>}</pre><br>&nbsp;</li>
+</ul>
+<h3 id="JSON解析"><a href="#JSON解析" class="headerlink" title="JSON解析"></a>JSON解析</h3><p>json解析的方法有两种：<strong>eval</strong>和<strong>JSON.parse</strong></p>
+<p>eval 较危险，不光解析了字符串，还解析了js方法，不建议使用。尽可能使用JSON.parse较好，它还会捕捉JSON中的语法错误。</p>
+<p><strong>示例</strong></p>
+<p><pre class="lang:c++ decode:true">//方法一<br>var jsonobj = eval( ‘(‘ + jsondata+’)’);<br>                //这种方法不检查是否合法，也会执行内部的js代码，此方法不安全<br>alert(jsonobj.employees[0].firstName);<br>//方法二<br>var jsonobbj = JSON.parse(jsondata);//方法安全，建议使用<br>alert(jsonobj.employees[0].firstName);</pre><br>JSON在线校验工具：<a href="http://jsonlint.com/" target="_blank" rel="external">JSONLint</a></p>
+<hr>
+<p>&nbsp;</p>
+<h2 id="jQuery中的AJAX"><a href="#jQuery中的AJAX" class="headerlink" title="jQuery中的AJAX"></a>jQuery中的AJAX</h2><p><strong>jQuery.ajax设置属性：</strong></p>
+<ul>
+<li><strong>type</strong>：类型，”GET”或”POST”，默认为”GET”</li>
+<li><strong>url</strong>：发送请求的地址</li>
+<li><strong>data</strong>：是一个对象。连同请求发送到服务器的数据</li>
+<li><strong>datatype</strong>：预期服务器返回的数据类型。如果不指定，jQuery将自动根据HTTP包MIME信息来智能判断，一般我们采用json格式，可以设置为”json”</li>
+<li><strong>success</strong>：是一个方法，请求成功后的回调函数。传入返回后的数据，以及包含成功代码的字符串</li>
+<li><strong>error</strong>：是一个方法，请求失败时调用函数。传入XMLHttpRrquest对象</li>
+</ul>
+<hr>
+<p>&nbsp;</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h2><p><strong>客户端</strong></p>
+<p><pre class="lang:xhtml decode:true">&lt;!DOCTYPE HTML&gt;<br>&lt;html&gt;</pre></p>
+<p>&lt;head&gt;<br>    &lt;meta http-equiv=”Content-Type” content=”text/html; charset=utf-8”&gt;<br>    &lt;title&gt;Demo&lt;/title&gt;<br>    &lt;style&gt;<br>    body,<br>    input,<br>    select,<br>    button,<br>    h1 {<br>        font-size: 28px;<br>        line-height: 1.7;<br>    }<br>    &lt;/style&gt;<br>&lt;/head&gt;</p>
+<p>&lt;body&gt;<br>    &lt;h1&gt;员工查询&lt;/h1&gt;<br>    &lt;label&gt;请输入员工编号：&lt;/label&gt;<br>    &lt;input type=”text” id=”keyword” /&gt;<br>    &lt;button id=”search”&gt;查询&lt;/button&gt;<br>    &lt;p id=”searchResult”&gt;&lt;/p&gt;<br>    &lt;h1&gt;员工新建&lt;/h1&gt;<br>    &lt;label&gt;请输入员工姓名：&lt;/label&gt;<br>    &lt;input type=”text” id=”staffName” /&gt;<br>    &lt;br&gt;<br>    &lt;label&gt;请输入员工编号：&lt;/label&gt;<br>    &lt;input type=”text” id=”staffNumber” /&gt;<br>    &lt;br&gt;<br>    &lt;label&gt;请选择员工性别：&lt;/label&gt;<br>    &lt;select id=”staffSex”&gt;<br>        &lt;option&gt;女&lt;/option&gt;<br>        &lt;option&gt;男&lt;/option&gt;<br>    &lt;/select&gt;<br>    &lt;br&gt;<br>    &lt;label&gt;请输入员工职位：&lt;/label&gt;<br>    &lt;input type=”text” id=”staffJob” /&gt;<br>    &lt;br&gt;<br>    &lt;button id=”save”&gt;保存&lt;/button&gt;<br>    &lt;p id=”createResult”&gt;&lt;/p&gt;<br>    &lt;script src=”<a href="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.js&quot;&gt;&lt;/script&amp;gt" target="_blank" rel="external">http://apps.bdimg.com/libs/jquery/1.11.1/jquery.js&quot;&gt;&lt;/script&amp;gt</a>;<br>    &lt;script&gt;<br>    $(document).ready(function() {<br>        $(“#search”).click(function() {<br>            $.ajax({<br>                type: “GET”,<br>                url: “serverjson.php?number=” + $(“#keyword”).val(),<br>                dataType: “json”,<br>                success: function(data) {<br>                    if (data.success) {<br>                        $(“#searchResult”).html(data.msg);<br>                    } else {<br>                        $(“#searchResult”).html(“出现错误：” + data.msg);<br>                    }<br>                },<br>                error: function(jqXHR) {<br>                    alert(“发生错误：” + jqXHR.status);<br>                },<br>            });<br>        });</p>
+<pre><code>    $(&quot;#save&quot;).click(function() {
+        $.ajax({
+            type: &quot;POST&quot;,
+            url: &quot;serverjson.php&quot;,
+            data: {
+                name: $(&quot;#staffName&quot;).val(),
+                number: $(&quot;#staffNumber&quot;).val(),
+                sex: $(&quot;#staffSex&quot;).val(),
+                job: $(&quot;#staffJob&quot;).val()
+            },
+            dataType: &quot;json&quot;,
+            success: function(data) {
+                if (data.success) {
+                    $(&quot;#createResult&quot;).html(data.msg);
+                } else {
+                    $(&quot;#createResult&quot;).html(&quot;出现错误：&quot; + data.msg);
+                }
+            },
+            error: function(jqXHR) {
+                alert(&quot;发生错误：&quot; + jqXHR.status);
+            },
+        });
+    });
+});
+&amp;lt;/script&amp;gt;
+</code></pre><p>&lt;/body&gt;</p>
+<p>&lt;/html&gt;<br><br><strong>服务端</strong></p>
+<p><pre class="lang:php decode:true " title="serverjson.php">&lt;?php<br>//设置页面内容是html编码格式是utf-8<br>//header(“Content-Type: text/plain;charset=utf-8”);<br>header(“Content-Type: application/json;charset=utf-8”);<br>//header(“Content-Type: text/xml;charset=utf-8”);<br>//header(“Content-Type: text/html;charset=utf-8”);<br>//header(“Content-Type: application/javascript;charset=utf-8”); </pre></p>
+<p>//定义一个多维数组，包含员工的信息，每条员工信息为一个数组<br>$staff = array<br>    (<br>        array(“name” =&gt; “洪七”, “number” =&gt; “101”, “sex” =&gt; “男”, “job” =&gt; “总经理”),<br>        array(“name” =&gt; “郭靖”, “number” =&gt; “102”, “sex” =&gt; “男”, “job” =&gt; “开发工程师”),<br>        array(“name” =&gt; “黄蓉”, “number” =&gt; “103”, “sex” =&gt; “女”, “job” =&gt; “产品经理”)<br>    );</p>
+<p>//判断如果是get请求，则进行搜索；如果是POST请求，则进行新建<br>//$_SERVER是一个超全局变量，在一个脚本的全部作用域中都可用，不用使用global关键字<br>//$_SERVER[“REQUEST_METHOD”]返回访问页面使用的请求方法<br>if ($_SERVER[“REQUEST_METHOD”] == “GET”) {<br>    search();<br>} elseif ($_SERVER[“REQUEST_METHOD”] == “POST”){<br>    create();<br>}</p>
+<p>//通过员工编号搜索员工<br>function search(){<br>    //检查是否有员工编号的参数<br>    //isset检测变量是否设置；empty判断值为否为空<br>    //超全局变量 $_GET 和 $_POST 用于收集表单数据<br>    if (!isset($_GET[“number”]) || empty($_GET[“number”])) {<br>        echo ‘{“success”:false,”msg”:”参数错误”}’;<br>        return;<br>    }<br>    //函数之外声明的变量拥有 Global 作用域，只能在函数以外进行访问。<br>    //global 关键词用于访问函数内的全局变量<br>    global $staff;<br>    //获取number参数<br>    $number = $_GET[“number”];<br>    $result = ‘{“success”:false,”msg”:”没有找到员工。”}’;</p>
+<pre><code>//遍历$staff多维数组，查找key值为number的员工是否存在，如果存在，则修改返回结果
+foreach ($staff as $value) {
+    if ($value[&quot;number&quot;] == $number) {
+        $result = &apos;{&quot;success&quot;:true,&quot;msg&quot;:&quot;找到员工：员工编号：&apos; . $value[&quot;number&quot;] . 
+                        &apos;，员工姓名：&apos; . $value[&quot;name&quot;] . 
+                        &apos;，员工性别：&apos; . $value[&quot;sex&quot;] . 
+                        &apos;，员工职位：&apos; . $value[&quot;job&quot;] . &apos;&quot;}&apos;;
+        break;
+    }
+}
+echo $result;
+</code></pre><p>}</p>
+<p>//创建员工<br>function create(){<br>    //判断信息是否填写完全<br>    if (!isset($_POST[“name”]) || empty($_POST[“name”])<br>        || !isset($_POST[“number”]) || empty($_POST[“number”])<br>        || !isset($_POST[“sex”]) || empty($_POST[“sex”])<br>        || !isset($_POST[“job”]) || empty($_POST[“job”])) {<br>        echo ‘{“success”:false,”msg”:”参数错误，员工信息填写不全”}’;<br>        return;<br>    }<br>    //TODO: 获取POST表单数据并保存到数据库</p>
+<pre><code>//提示保存成功
+echo &apos;{&quot;success&quot;:true,&quot;msg&quot;:&quot;员工：&apos; . $_POST[&quot;name&quot;] . &apos; 信息保存成功！&quot;}&apos;;
+</code></pre><p>}</p>
+<p>?&gt;<br>&nbsp;</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="../tags#AJAX" >
+    <span class="tag-code">AJAX</span>
+  </a>
+
+  <a href="../tags#JSON" >
+    <span class="tag-code">JSON</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#简介"><span class="toc-nav-text">简介</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#实现过程"><span class="toc-nav-text">实现过程</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#概念介绍"><span class="toc-nav-text">概念介绍</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#XMLHttpRequest对象"><span class="toc-nav-text">XMLHttpRequest对象</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#HTTP请求"><span class="toc-nav-text">HTTP请求</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#XMLHttpRequest发送请求"><span class="toc-nav-text">XMLHttpRequest发送请求</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#XMLHttpRequest取得响应"><span class="toc-nav-text">XMLHttpRequest取得响应</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#JSON"><span class="toc-nav-text">JSON</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#JSON基本概念"><span class="toc-nav-text">JSON基本概念</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#JSON格式"><span class="toc-nav-text">JSON格式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#JSON解析"><span class="toc-nav-text">JSON解析</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#jQuery中的AJAX"><span class="toc-nav-text">jQuery中的AJAX</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#示例"><span class="toc-nav-text">示例</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://qinshaoxuan.com/articles/964.html';
+    var banner = ''
+    if (banner !== 'undefined') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "yanm1ng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "AJAX学习笔记",
+        owner: "yanm1ng",
+        repo: "yanm1ng.github.io",
+        oauth: {
+          client_id: "0f87e490e00ee3fd87ef",
+          client_secret: "4a9d2b148e7971c2201ad12131ce8bf8159ccd2e"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="../js/script.js"></script>
+  </body>
+</html>

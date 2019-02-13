@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">创建型模式</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">创建型模式</h1>
+        <div class="stuff">
+            <span>五月 14, 2016</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="../tags/设计模式/">设计模式</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <hr>
+<p>&nbsp;</p>
+<p>创造型模式隐藏了这些类的实例是如何被创建和放在一起的，整个系统关于这些对象所知道的是由抽象类所定义的接口。这样，创建型模式在创建了什么、谁创建它、它是怎么被创建的，以及何时创建这些方法提供了很大的灵活性。</p>
+<div><br><br>当一个系统应该独立于它的产品创建、构成和表示时，应该考虑用创建型模式。<br><br></div><br>创建型模式抽象了实例化的过程。它们帮助一个系统独立于如何创建、组合、和表示它的那些对象。创建型模式都会将关于该系统使用哪些具体的类的信息封装起来。允许客户用结构和功能差别很大的“产品”对象配置一个系统。配置可以是静态的，即在编译时指定，也可以是动态的，就是运行时再指定。<br>&gt; <strong>内聚性与耦合性：</strong><br>&gt;<br>&gt;<br>&gt; 内聚性描述的是一个例程内部组成部分之间相互联系的紧密程度。而耦合性描述的是一个例程与其他例程之间联系的紧密程度。<br>&gt;<br>&gt;<br>&gt; 软件开发的目标应该是创建这样的例程：<strong>内部完整，也就是高内聚，而与其他例程之间的联系则是小巧、直接、可见、灵活的，这就是松耦合</strong>。<br>&nbsp;<br><br>## <strong>抽象工厂模式</strong>（Abstract Factory）<br><br>提供一个创建一系列或相关依赖对象的接口，而无需制定它们具体的类。<br><br><img src="http://qsxuan.com/wp-content/uploads/2016/05/AbstractFactory.png" alt="AbstractFactory.png"><br><br>&nbsp;<br><br>## 建造者模式（Builder）<br><br>将一个复杂对象的构建与它的表示分离，使得同样的构造过程可以创建不同的表示。<br><br><img src="http://qsxuan.com/wp-content/uploads/2016/05/Builder.png" alt="Builder.png"><br><br>&nbsp;<br><br>## 工厂方法模式（Factory Method）<br><br>定义一个用于创建对象的接口，让子类决定实例化哪一个类，工厂模式使一个类的实例化延迟到其子类。<br><br>通常设计应该是从工厂方法模式开始，当设计者发现需要更大的灵活性时，设计便会向其他创建型模式演化。当设计者在设计标准之间进行权衡的时候，了解多个创建型模式可以给设计者更多的选择余地。<br><br><img src="http://qsxuan.com/wp-content/uploads/2016/05/FactoryMethod.png" alt="FactoryMethod.png"><br><br>&nbsp;<br><br>## <strong>原型模式</strong>（Prototype）<br><br>用原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。<br><br>建立相应数目的原型并克隆它们通常比每次用合适的状态手工实例化该类更方便一些<br><br><img src="http://qsxuan.com/wp-content/uploads/2016/05/Prototype.png" alt="Prototype.png"><br><br>&nbsp;<br><br>## 单例模式（Singleton）<br><br>保证一个类仅有一个实例，并提供一个访问它的全局访问点。<br><br>对一些类来说，一个实例是很重要的。一个全局变量可以使得一个对象被访问，但它不能防止实例化多个对象。用单利模式可以让类自身负责保存它的唯一实例。这个类可以保证没有其他实例可以被创建，并且还提供了一个访问该实例的方法。<br><br>对唯一的实例可以严格地控制客户怎样以及何时访问它。<br><br><img src="http://qsxuan.com/wp-content/uploads/2016/05/Singleton.png" alt="Singleton.png"><br><br>&nbsp;<br><br>## 参考文献<br><br><div><br><br><em>   《大话设计模式》 作者：程杰，清华大学出版社
+</em>   《Java与模式》 作者：阎宏，电子工业出版社<br><div></div><br></div><br><div></div>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="http://link.hhtjim.com/163/785902.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

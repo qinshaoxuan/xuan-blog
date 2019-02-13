@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">2015 Multi-University Training Contest 1 Solutions</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">2015 Multi-University Training Contest 1 Solutions</h1>
+        <div class="stuff">
+            <span>七月 21, 2015</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="../tags/多校/">多校</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>官方题解：<a href="http://blog.sina.com.cn/s/blog_15139f1a10102vnx5.html" target="_blank" rel="noopener">2015 Multi-University Training Contest 1 题解 BY FZU</a></p>
+<p>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<h2 id="1001-OO’s-Sequence"><a href="#1001-OO’s-Sequence" class="headerlink" title="1001 OO’s Sequence"></a>1001 OO’s Sequence</h2><blockquote>
+<p>HDU 5288：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5288" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5288</a></p>
+<p>题意：给出一个数组(a[n])，定义函数(f(l,r))表示在区间([l,r])内没有(a_i)的因子的(i)的数量，因子的下标不能为(i)，求</p>
+<p>$$!\sum_{i=1}^{n}\sum_{j=i}^{n}f(i,j)\mod(10^9+1)$$<br>&nbsp;</p>
+</blockquote>
+<p>题目可以转换成每个(a_i)可以贡献的区间个数为(K_i)，求出所有(K_i)之和</p>
+<p>要求(K_i)就是找左右离(a_i)最近的2个因子，求出左右不包含因子的区间长度(l,r)</p>
+<p>$$!K_i=(l+1)\times (r+1)$$</p>
+<p>$$!ans=\sum_{i=1}^{n}K_i$$</p>
+<p>要求出最近的因子可以预处理10000内所有数的因数，在输入的时候记录每个数出现的位置，因为记录是有序的，所以可以找出离(a_i)最近的两个因子</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true " title="HDU 5288">#include&lt;cstdio&gt;  </pre></p>
+<p>#include&lt;algorithm&gt;  </p>
+<p>#include&lt;iostream&gt;  </p>
+<p>#include&lt;cmath&gt;  </p>
+<p>#include&lt;cstring&gt;  </p>
+<p>#include&lt;queue&gt;<br>using namespace std;  </p>
+<p>#define MAX(a,b) ((a&gt;b)?(a):(b))  </p>
+<p>#define MIN(a,b) ((a&lt;b)?(a):(b))  </p>
+<p>#define LL __int64  </p>
+<p>#define N 100005  </p>
+<p>#define M 10005  </p>
+<p>#define INF 1&lt;&lt;30  </p>
+<p>#define MOD 1000000007  </p>
+<p>int n;<br>int a[N];<br>vector&lt;int&gt; fac[M];<br>vector&lt;int&gt; sit[M];  </p>
+<p>void init(){<br>    for(int i=1;i&lt;M;++i){<br>        for(int j=i;j&lt;M;j+=i){<br>            fac[j].push_back(i);<br>        }<br>    }<br>}  </p>
+<p>int main(){<br>    init();<br>    while(scanf(“%d”,&amp;n)!=EOF){<br>        for(int i=1;i&lt;=10000;i++)<br>            sit[i].clear();<br>        for(int i=1;i&lt;=n;++i){<br>            scanf(“%d”,&amp;a[i]);<br>            sit[a[i]].push_back(i);<br>        }<br>        LL ans=0;<br>        LL ll,rr;<br>        int flag;<br>        for(int i=1;i&lt;=n;++i){<br>            ll=0,rr=n+1;<br>            for(int j=0;j&lt;fac[a[i]].size();++j){<br>                flag=1;<br>                for(int k=0;k&lt;sit[fac[a[i]][j]].size();++k){<br>                    if(sit[fac[a[i]][j]][k]&lt;i){<br>                        ll=MAX(ll,sit[fac[a[i]][j]][k]);<br>                    }<br>                    if(sit[fac[a[i]][j]][k]==i)continue;<br>                    if(sit[fac[a[i]][j]][k]&gt;i){<br>                        rr=MIN(rr,sit[fac[a[i]][j]][k]);<br>                        break;<br>                    }<br>                }<br>            }<br>            ll=i-ll-1;<br>            rr=rr-i-1;<br>            ans=(ans+(ll+1)*(rr+1))%MOD;<br>        }<br>        printf(“%I64d\n”,(ans)%MOD);<br>    }  </p>
+<pre><code>return 0;  
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<h2 id="1002-Assignment"><a href="#1002-Assignment" class="headerlink" title="1002 Assignment"></a><span class="Apple-style-span">1002 </span>Assignment</h2><p>&nbsp;</p>
+<blockquote>
+<p>HDU 5289：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5289" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5289</a></p>
+<p>题意：求区间内的数两两之间差小于K的区间个数<br>&nbsp;</p>
+</blockquote>
+<p>RMQ+二分</p>
+<p>先预处理出区间最大值和最小值</p>
+<p>对于每个(a_i)可以用二分找出最大的r值满足区间([i,r])的 ( max-min&lt;K )</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true " title="HDU 5289">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;<br>using namespace std;</p>
+<p>#define MAX(a,b) ((a&gt;b)?(a):(b))</p>
+<p>#define MIN(a,b) ((a&lt;b)?(a):(b))</p>
+<p>#define LL __int64</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>const int MAXN = 100010;<br>int dp1[MAXN][20];<br>int dp2[MAXN][20];<br>int mm[MAXN];</p>
+<p>//初始化RMQ, b数组下标从1开始<br>void initRMQ(int n,int b[]) {<br>    mm[0] = -1;<br>    for(int i = 1; i &lt;= n; i++) {<br>        mm[i] = ((i&amp;(i-1)) == 0)?mm[i-1]+1:mm[i-1];<br>        dp1[i][0] = b[i];<br>        dp2[i][0] = b[i];<br>    }<br>    for(int j = 1; j &lt;= mm[n]; j++)<br>        for(int i = 1; i + (1&lt;&lt;j) -1 &lt;= n; i++){<br>            dp1[i][j] = max(dp1[i][j-1],dp1[i+(1&lt;&lt;(j-1))][j-1]);<br>            dp2[i][j] = min(dp2[i][j-1],dp2[i+(1&lt;&lt;(j-1))][j-1]);<br>        }<br>}<br>//查询最大值<br>int rmq1(int x,int y) {<br>    int k = mm[y-x+1];<br>    return max(dp1[x][k],dp1[y-(1&lt;&lt;k)+1][k]);<br>}</p>
+<p>//查询最小值<br>int rmq2(int x,int y) {<br>    int k = mm[y-x+1];<br>    return min(dp2[x][k],dp2[y-(1&lt;&lt;k)+1][k]);<br>}</p>
+<p>int n,k;<br>int a[MAXN];</p>
+<p>bool judge(int x,int y){<br>    if(rmq1(x,y)-rmq2(x,y)&lt;k)<br>        return true;<br>    return false;<br>}</p>
+<p>int main() {<br>    int T;<br>    scanf(“%d”,&amp;T);<br>    int l,r,m;<br>    LL ans;<br>    while(T–){<br>        scanf(“%d%d”,&amp;n,&amp;k);<br>        ans=0;<br>        for(int i=1;i&lt;=n;++i)scanf(“%d”,&amp;a[i]);<br>        initRMQ(n,a);<br>        for(int i=1;i&lt;=n;++i){<br>            l=i,r=n;<br>            int e=i;<br>            while(l&lt;=r){<br>                m=(l+r)&gt;&gt;1;<br>                if(judge(i,m)){<br>                    e=m;<br>                    l=m+1;<br>                }else{<br>                    r=m-1;<br>                }<br>            }<br>            ans+=(e-i+1);<br>        }<br>        printf(“%I64d\n”,ans);<br>    }<br>    return 0;<br>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1012-Circles-Game"><a href="#1012-Circles-Game" class="headerlink" title="1012 Circles Game"></a>1012 Circles Game</h2><blockquote>
+<div>HDU 5299：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5299" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5299</a></div>
+
+<div>题意：给出n个不想交的圆，两人轮流删圆，每次可以删去一个圆以及它包含的所有圆，不能删时为输</div>
+</blockquote>
+<p><div></div></p>
+<p><div></div><br>树上SG</p>
+<p>如果做出圆的包含关系树，就是一个明显的树上SG。</p>
+<p>对于树上SG附上一篇相关文章：<a href="http://wenku.baidu.com/link?url=T0KZZbcRPEpzyNd9gDqvGeVNjJNwF2Qz5iyMC13oLGOayOu-YtFdRb50PNZSyTLykh8rNnlIomgKWMP9WX66VhQ5LnfsKAh2eTz8WQKeMWS" target="_blank" rel="noopener">树上删边游戏</a></p>
+<p>&nbsp;</p>
+<p>这里直接说结论</p>
+<p><div></div></p>
+<blockquote>
+<p>树的删边游戏</p>
+<p>从某一棵树上删除一条边，同时删去所有在删除边后不再与根相连的部分。双方轮流进行，无法再进行删除者判定为失败。</p>
+<p>定理：</p>
+<ul>
+<li>叶子节点的 SG 值为 0;</li>
+<li>中间节点的 SG 值为它的所有子节点的 SG 值加 1 后的异或和。<br>对于建立圆的包含关系树，可以按半径从小到大排序，对于第一个大于并包含它的圆建边，然后break;</li>
+</ul>
+</blockquote>
+<p>PS：交G++</p>
+<p><br>&nbsp;</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;<br>using namespace std;</p>
+<p>#define MAX(a,b) ((a&gt;b)?(a):(b))</p>
+<p>#define MIN(a,b) ((a&lt;b)?(a):(b))</p>
+<p>#define LL __int64</p>
+<p>#define N 100005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>struct R{<br>    int x,y,r;<br>}o[N];</p>
+<p>bool cmp(R a,R b){<br>    return a.r&lt;b.r;<br>}</p>
+<p>//判断包含关系，i被j包含<br>int judge(int i,int j){<br>    if((o[i].x-o[j].x)<em>(o[i].x-o[j].x)+(o[i].y-o[j].y)</em>(o[i].y-o[j].y)&lt;(o[i].r-o[j].r)*(o[i].r-o[j].r))<br>        return 1;<br>    return 0;<br>}</p>
+<p>struct node{<br>    int to,next;<br>}edge[N];<br>int head[N],k;</p>
+<p>void init(){<br>    k=1;<br>    memset(head,0,sizeof(head));<br>}</p>
+<p>void add(int u,int v){<br>    edge[k].to=v;<br>    edge[k].next=head[u];<br>    head[u]=k++;<br>}</p>
+<p>int dfs(int u){<br>    int ret=0;<br>    for(int i=head[u];i;i=edge[i].next){<br>        ret^=(dfs(edge[i].to)+1);<br>    }<br>    return ret;<br>}</p>
+<p>int main(){</p>
+<pre><code>int T;
+int n;
+scanf(&quot;%d&quot;,&amp;amp;T);
+int ans,flag;
+while(T--){
+    init();
+    ans=0;
+    scanf(&quot;%d&quot;,&amp;amp;n);
+    for(int i=1;i&amp;lt;=n;++i){
+        scanf(&quot;%d%d%d&quot;,&amp;amp;o[i].x,&amp;amp;o[i].y,&amp;amp;o[i].r);
+    }
+
+    sort(o+1,o+n+1,cmp);
+    for(int i=1;i&amp;lt;=n-1;++i){
+        flag=0;
+        for(int j=i+1;j&amp;lt;=n;++j){
+            if(judge(i,j)){
+                add(j,i);
+                flag=1;
+                break;
+            }
+        }
+        if(!flag){
+            add(0,i);
+        }
+    }
+    add(0,n);
+    ans=dfs(0);
+    if(ans)printf(&quot;Alice\n&quot;);
+    else   printf(&quot;Bob\n&quot;);
+}
+
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>（待续。。。）</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="http://link.hhtjim.com/163/785902.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1001-OO’s-Sequence"><span class="toc-number">1.</span> <span class="toc-text">1001 OO’s Sequence</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1002-Assignment"><span class="toc-number">2.</span> <span class="toc-text">1002 Assignment</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1012-Circles-Game"><span class="toc-number">3.</span> <span class="toc-text">1012 Circles Game</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

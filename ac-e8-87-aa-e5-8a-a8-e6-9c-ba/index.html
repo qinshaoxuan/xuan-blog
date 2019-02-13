@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single" class="page">
+    <div id="top">
+        <a class="icon-left image-icon" href="javascript:history.back()"></a>
+    </div>
+    <div class="section">
+        <div class="article">
+            <div class="main">
+                <div class="content">
+                    <h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=2222" target="_blank" rel="noopener">HDU 2222 Keywords Search</a></p>
+<p>题意：给出多个单词，一篇文章，问给出的单词在文章中出现的次数，多次出现算一次，<br>单词相同算多次。</p>
+<p>&nbsp;</p>
+<p>指针实现</p>
+<p><pre class="lang:c++ decode:true" title="HDU 2222">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;queue&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define N 100005</p>
+<p>#define LL __int64</p>
+<p>struct node {<br>    node <em>fail;<br>    node </em>next[26];<br>    int count;<br>    node(){<br>        fail=NULL;<br>        count=0;<br>        for(int i=0;i&lt;26;++i){<br>            next[i]=NULL;<br>        }<br>    }<br>};</p>
+<p>node <em>root;<br>queue&lt;node</em>&gt; q;<br>char txt[1000010],key[100];</p>
+<p>void insert(char <em>str){<br>    int k,len;<br>    int i;<br>    node </em>p=root;<br>    len=strlen(str);<br>    for(i=0;i&lt;len;++i){<br>        k=str[i]-‘a’;<br>        if(p-&gt;next[k]==NULL)<br>            p-&gt;next[k]=new node();<br>        p=p-&gt;next[k];<br>    }<br>    p-&gt;count++;<br>}</p>
+<p>void build_ac(){    //初始化fail指针，BFS<br>    node <em>now,</em>nex;<br>    int i,j;<br>    while(!q.empty())q.pop();<br>    q.push(root);<br>    while(!q.empty()){<br>        now=q.front();<br>        q.pop();<br>        nex=NULL;<br>        for(i=0;i&lt;26;++i){<br>            if(now-&gt;next[i]!=NULL){<br>                if(now==root){            //第一个元素fail必指向根<br>                    now-&gt;next[i]-&gt;fail=root;<br>                }else{<br>                    nex=now-&gt;fail;         //失败指针<br>                    while(nex!=NULL){        //2种情况结束：匹配为空or找到匹配<br>                        if(nex-&gt;next[i]!=NULL){        //找到匹配<br>                            now-&gt;next[i]-&gt;fail=nex-&gt;next[i];<br>                            break;<br>                        }<br>                        nex=nex-&gt;fail;<br>                    }<br>                    if(nex==NULL)    //为空则从头匹配<br>                        now-&gt;next[i]-&gt;fail=root;<br>                }<br>                q.push(now-&gt;next[i]);<br>            }<br>        }<br>    }<br>}</p>
+<p>int query(){<br>    int k,len,res;<br>    node <em>p=root;<br>    res=0;<br>    len=strlen(txt);<br>    for(int i=0;i&lt;len;++i){<br>        k=txt[i]-‘a’;<br>        while(p-&gt;next[k]==NULL&amp;&amp;p!=root)     //跳转失败指针<br>            p=p-&gt;fail;<br>        p=p-&gt;next[k];<br>        if(p==NULL)<br>            p=root;<br>        node </em>temp=p;    //p不动，temp计算后缀串<br>        while(temp!=root&amp;&amp;temp-&gt;count!=-1){<br>            res+=temp-&gt;count;<br>            temp-&gt;count=-1;//重复不再计算<br>            temp=temp-&gt;fail;<br>        }<br>    }<br>    return res;<br>}</p>
+<p>int main(){<br>    int t,n;<br>    int i;<br>    scanf(“%d”,&amp;t);<br>    while(t–){<br>        root=new node();<br>        scanf(“%d”,&amp;n);<br>        for(i=0;i&lt;n;++i){<br>            scanf(“%s”,key);<br>            insert(key);<br>        }<br>        build_ac();<br>        scanf(“%s”,txt);<br>        printf(“%d\n”,query());<br>    }<br>    return 0;<br>}<br>数组实现</p>
+<p><pre class="lang:c++ decode:true " title="HDU 2222">#include &lt;cstdio&gt;</pre></p>
+<p>#include &lt;algorithm&gt;</p>
+<p>#include &lt;iostream&gt;</p>
+<p>#include &lt;cstring&gt;</p>
+<p>#include &lt;queue&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define N 100005</p>
+<p>#define LL __int64</p>
+<p>struct Trie<br>{<br>    int next[500010][26],fail[500010],end[500010];<br>    int root,L;<br>    int newnode()<br>    {<br>        for(int i = 0;i &lt; 26;i++)<br>            next[L][i] = -1;<br>        end[L++] = 0;<br>        return L-1;<br>    }<br>    void init()<br>    {<br>        L = 0;<br>        root = newnode();<br>    }<br>    void insert(char buf[])<br>    {<br>        int len = strlen(buf);<br>        int now = root;<br>        for(int i = 0;i &lt; len;i++)<br>        {<br>            if(next[now][buf[i]-‘a’] == -1)<br>                next[now][buf[i]-‘a’] = newnode();<br>            now = next[now][buf[i]-‘a’];<br>        }<br>        end[now]++;<br>    }<br>    void build()<br>    {<br>        queue&lt;int&gt;Q;<br>        fail[root] = root;<br>        for(int i = 0;i &lt; 26;i++)<br>            if(next[root][i] == -1)<br>                next[root][i] = root;<br>            else<br>            {<br>                fail[next[root][i]] = root;<br>                Q.push(next[root][i]);<br>            }<br>        while( !Q.empty() )<br>        {<br>            int now = Q.front();<br>            Q.pop();<br>            for(int i = 0;i &lt; 26;i++)<br>                if(next[now][i] == -1)<br>                    next[now][i] = next[fail[now]][i];<br>                else<br>                {<br>                    fail[next[now][i]]=next[fail[now]][i];<br>                    Q.push(next[now][i]);<br>                }<br>        }<br>    }<br>    int query(char buf[])<br>    {<br>        int len = strlen(buf);<br>        int now = root;<br>        int res = 0;<br>        for(int i = 0;i &lt; len;i++)<br>        {<br>            now = next[now][buf[i]-‘a’];<br>            int temp = now;<br>            while( temp != root )<br>            {<br>                res += end[temp];<br>                end[temp] = 0;<br>                temp = fail[temp];<br>            }<br>        }<br>        return res;<br>    }<br>    void debug()<br>    {<br>        for(int i = 0;i &lt; L;i++)<br>        {<br>            printf(“id = %3d,fail = %3d,end = %3d,chi = [“,i,fail[i],end[i]);<br>            for(int j = 0;j &lt; 26;j++)<br>                printf(“%2d”,next[i][j]);<br>            printf(“]\n”);<br>        }<br>    }<br>};<br>char buf[1000010];<br>Trie ac;<br>int main()<br>{<br>    int T;<br>    int n;<br>    scanf(“%d”,&amp;T);<br>    while( T– )<br>    {<br>        scanf(“%d”,&amp;n);<br>        ac.init();<br>        for(int i = 0;i &lt; n;i++)<br>        {<br>            scanf(“%s”,buf);<br>            ac.insert(buf);<br>        }<br>        ac.build();<br>        scanf(“%s”,buf);<br>        printf(“%d\n”,ac.query(buf));<br>    }<br>    return 0;<br>}<br>&nbsp;</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

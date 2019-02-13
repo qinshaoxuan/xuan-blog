@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">《深入理解Java虚拟机》学习笔记（6）——try-catch-finally</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">《深入理解Java虚拟机》学习笔记（6）——try-catch-finally</h1>
+        <div class="stuff">
+            <span>五月 04, 2016</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="../tags/JVM/">JVM</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <blockquote>
+<p>资料总结自：《深入理解Java虚拟机》 周志明 著</p>
+</blockquote>
+<hr>
+<p>&nbsp;</p>
+<p>下面代码演示了字节码层面中try-catch-finally是如何实现的。</p>
+<p><pre class="lang:java decode:true ">public int inc() {<br>    int x;<br>    try {<br>        x = 1;<br>        return x;<br>    } catch (Exception e) {<br>        x = 2;<br>        return x;<br>    } finally {<br>        x = 3;<br>    }<br>}</pre><br>编译后的ByteCode字节码及异常表</p>
+<p><pre class="toolbar:2 lang:default mark:28-30 decode:true">  public int inc();<br>    Code:<br>      stack=1, locals=5, args_size=1<br>         0: iconst_1            // try块中的x=1<br>         1: istore_1<br>         2: iload_1             // 保存x到returnValue中，此时x=1<br>         3: istore        4<br>         5: iconst_3            // finally块中的x=3<br>         6: istore_1<br>         7: iload         4     // 将returnValue中的值放到栈顶，准备给ireturn返回<br>         9: ireturn<br>        10: astore_2            // 给catch中定义的Exception e赋值，存储在Slot 2中<br>        11: iconst_2            // catch块中的x=2<br>        12: istore_1<br>        13: iload_1             // 保存x到returnValue中，此时x=2<br>        14: istore        4<br>        16: iconst_3            // finally块中的x=3<br>        17: istore_1<br>        18: iload         4     // 将returnValue中的值放到栈顶，准备给ireturn返回<br>        20: ireturn<br>        21: astore_3            // 如果出现了不属于java.lang.Exception及其子类的异常才会走到这里<br>        22: iconst_3            // finally块中的x=3<br>        23: istore_1<br>        24: aload_3             // 将异常放置到栈顶，并抛出<br>        25: athrow<br>      Exception table:<br>         from    to  target type<br>             0     5    10   Class java/lang/Exception<br>             0     5    21   any<br>            10    16    21   any</pre><br>编译器为这段Java源码生成了3条异常表记录，对应3条可能出现的代码执行路径。从Java代码的语义上讲，这3条执行路径分别为：</p>
+<ul>
+<li>如果try语句块中出现属于Exception或其子类的异常，则转到catch语句块处理，然后转到finally语句块处理。</li>
+<li>如果try语句块中出现不属于Exception或其子类的异常，则转到finally语句块处理，然后抛出异常。</li>
+<li><p>如果catch语句块中出现任何异常，则转到finally语句块处理。<br>对于这段代码返回值：</p>
+</li>
+<li><p>如果没有出现异常，返回值是1</p>
+</li>
+<li>如果出现了属于Exception或其子类的异常，返回值是2</li>
+<li>如果出现了属于Exception或其子类以外的异常，方法非正常退出，没有返回值。<br>字节码中第0~4行所做的操作就是讲整数1赋值给变量<span class="lang:java decode:true crayon-inline">x</span> ，并且将此时<span class="lang:java decode:true crayon-inline ">x</span> 的值复制一份副本到最后一个本地变量表的Slot中（这个Slot里面的值在ireturn指令执行前将会被重新读到操作栈顶，作为方法返回值使用，为了讲解方便，这里给Slot起了个名字：<span class="lang:java decode:true crayon-inline">returnValue</span> ）。</li>
+</ul>
+<p>如果这时没有出现异常，则会继续走到5~9行，将变量<span class="lang:java decode:true crayon-inline ">x</span> 赋值为3，然后将之前保存在<span class="lang:java decode:true crayon-inline ">returnValue</span> 中的整数1读入到操作栈顶，最后ireturn指令会以int形式返回操作栈顶中的值，方法结束。</p>
+<p>如果出现了属于Exception或其子类的异常，PC寄存器指针转到第10行，第10~20行所做的事情是将2赋值给变量<span class="lang:java decode:true crayon-inline ">x</span> ，然后将变量<span class="lang:java decode:true crayon-inline ">x</span> 此时的值赋值给<span class="lang:java decode:true crayon-inline ">returnValue</span> ，最后再将变量<span class="lang:java decode:true crayon-inline ">x</span> 的值改为3。方法返回前同样将<span class="lang:java decode:true crayon-inline ">returnValue</span> 中保留的整数2读到了操作栈顶。</p>
+<p>如果出现了属于Exception或其子类以外的异常，则PC寄存器指针转到第21行，第21行开始的代码，作用是变量<span class="lang:java decode:true crayon-inline ">x</span> 的值赋为3，并将栈顶的异常抛出，方法结束。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="http://link.hhtjim.com/163/785902.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

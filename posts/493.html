@@ -1,0 +1,409 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">2015 ACM/ICPC Asia Regional Changchun Online Solutions</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">2015 ACM/ICPC Asia Regional Changchun Online Solutions</h1>
+        <div class="stuff">
+            <span>九月 13, 2015</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="../tags/网络赛/">网络赛</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>&nbsp;</p>
+<hr>
+<h2 id="1001-Alisha’s-Party"><a href="#1001-Alisha’s-Party" class="headerlink" title="1001 Alisha’s Party"></a>1001 Alisha’s Party</h2><blockquote>
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=5437" target="_blank" rel="noopener">HDU 5437 </a></p>
+<p>题意：$$k$$个数(v_i)依次入队，$$m$$次出队操作，$$q$$次询问。</p>
+<p>每次出队操作有两个参数$$t$$和$$p$$表示在第$$t$$个数入队后出队$$p$$个最大的数，如果队内个数不足$$p$$个，则全部出队。</p>
+<p>在所有数入队后，所有数按从大到小依次出队。</p>
+<p>$$q$$次询问第(n_i)个出队的数是多少。</p>
+<p>(1\leqslant k\leqslant 150,000,1\leqslant v_i \leqslant 10^8 )<br>用优先队列模拟整个过程。注意队列为空的情况。</p>
+</blockquote>
+<p>PS：$$t$$不为非递减，且可能有相同的$$t$$</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;map&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL long long</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>#define N 150005</p>
+<p>struct node{<br>    int v,x;<br>    char name[250];<br>    bool operator&lt;(const node &amp;_t)const{<br>        if(_t.v==v)return x&gt;_t.x;<br>        return v&lt;_t.v;<br>    }<br>}fir[N];</p>
+<p>struct query{<br>    int t,p;<br>    bool operator&lt;(const query &amp;_t)const{<br>        return t&lt;_t.t;<br>    }<br>}que[N];</p>
+<p>priority_queue&lt;node&gt; q;<br>int ans[N];</p>
+<p>int main(){<br>    int T;<br>    int k,m,Q;<br>    int a;<br>    scanf(“%d”,&amp;T);<br>    while(T–){<br>        scanf(“%d%d%d”,&amp;k,&amp;m,&amp;Q);<br>        for(int i=1;i&lt;=k;++i){<br>            scanf(“%s%d”,fir[i].name,&amp;fir[i].v);<br>            fir[i].x=i;<br>        }<br>        for(int i=1;i&lt;=m;++i){<br>            scanf(“%d%d”,&amp;que[i].t,&amp;que[i].p);<br>        }<br>        sort(que+1,que+m+1);<br>        int now=1;<br>        int cnt=0;<br>        while(!q.empty())q.pop();<br>        for(int i=1;i&lt;=k;++i){<br>            q.push(fir[i]);<br>            while(i==que[now].t&amp;&amp;now&lt;=m){<br>                for(int j=1;j&lt;=que[now].p&amp;&amp;(!q.empty());++j){<br>                    ans[++cnt]=q.top().x;<br>                    q.pop();<br>                }<br>                now++;<br>            }<br>        }<br>        while(!q.empty()){<br>            ans[++cnt]=q.top().x;<br>            q.pop();<br>        }<br>        for(int i=1;i&lt;=Q;++i){<br>            scanf(“%d”,&amp;a);<br>            if(i!=1)printf(“ “);<br>            printf(“%s”,fir[ans[a]].name);<br>        }<br>        printf(“\n”);</p>
+<pre><code>}
+return 0;
+</code></pre><p>}<br><br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1002-Ponds"><a href="#1002-Ponds" class="headerlink" title="1002 Ponds"></a>1002 Ponds</h2><blockquote>
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=5438" target="_blank" rel="noopener">HDU 5438</a></p>
+<p>题意：在一个无向图中有$$p$$个点，$$m$$条边，每个点有一个值$$v_i$$。不断的删去度数小于2的点直到不能删为止。求新图中所有点个数为奇数的连通分量的点值的和。</p>
+<p>(1\leqslant p\leqslant 10^4,1\leqslant m\leqslant 10^5)<br>用类似拓扑排序的方法删掉所有满足条件的点。注意点的标记。最后一次DFS求出答案。</p>
+</blockquote>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true">#include&lt;iostream&gt;</pre></p>
+<p>#include&lt;cstdio&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;functional&gt;<br>using namespace std;</p>
+<p>#define ll long long</p>
+<p>#define N 10010</p>
+<p>#define M 200010</p>
+<p>struct Edge {<br>    int to,next;<br>} edge[M];<br>int tot,head[N];</p>
+<p>int n,m;<br>int ind[N];<br>int val[N];<br>int vis[N];</p>
+<p>void init()<br>{<br>    tot=0;<br>    memset(head,-1,sizeof(head));<br>    memset(ind,0,sizeof(ind));<br>    memset(vis,0,sizeof(vis));<br>}<br>void add(int u,int v)<br>{<br>    edge[tot].to=v;<br>    edge[tot].next=head[u];<br>    head[u]=tot++;<br>}</p>
+<p>void topsort()<br>{<br>    int u,v;<br>    queue&lt;int&gt; q;<br>    for(int i=1; i&lt;=n; i++)<br>        if(ind[i]&lt;=1) q.push(i);<br>    while(!q.empty()) {<br>        u=q.front();<br>        vis[u]=1;<br>        q.pop();<br>        for(int i=head[u]; i!=-1; i=edge[i].next) {<br>            v=edge[i].to;<br>            if(!vis[v]){<br>                ind[v]–;<br>                if(ind[v]&lt;=1) q.push(v);<br>            }<br>        }<br>    }<br>}<br>int tmp1;<br>ll tmp2;<br>void dfs(int u)<br>{<br>    vis[u]=1;<br>    tmp1+=1;<br>    tmp2+=val[u];<br>    for(int i=head[u]; i!=-1; i=edge[i].next) {<br>        int v=edge[i].to;<br>        if(!vis[v]) {<br>            dfs(v);<br>        }<br>    }<br>}<br>int main()<br>{<br>    int T;<br>    scanf(“%d”,&amp;T);<br>    while(T–) {<br>        init();<br>        scanf(“%d%d”,&amp;n,&amp;m);<br>        for(int i=1; i&lt;=n; i++) {<br>            scanf(“%d”,&amp;val[i]);<br>        }<br>        while(m–) {<br>            int a,b;<br>            scanf(“%d%d”,&amp;a,&amp;b);<br>            add(a,b);<br>            add(b,a);<br>            ind[b]++;<br>            ind[a]++;<br>        }<br>        topsort();<br>        ll ans=0;</p>
+<pre><code>    for(int i=1; i&amp;lt;=n; i++) {
+        if(vis[i]==0) {
+            tmp1=0;
+            tmp2=0;
+            dfs(i);
+            if(tmp1&amp;amp;1) ans+=tmp2;
+        }
+    }
+    cout&amp;lt;&amp;lt;ans&amp;lt;&amp;lt;endl;
+}
+return 0;
+</code></pre><p>}<br><br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1003-Aggregated-Counting"><a href="#1003-Aggregated-Counting" class="headerlink" title="1003 Aggregated Counting"></a>1003 Aggregated Counting</h2><blockquote>
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=5439" target="_blank" rel="noopener">HDU 5439</a></p>
+<p>题意：现有一个数列(a:1,2,2,3,3,4,4,4,5,5,5,6,6,6,6,\cdots )，(a_i)表示数字(i)在数列中出现了(a_i)次。现给出一个数(n)，求满足(a_k=n)的最大(k)值。</p>
+<p>(1\leqslant n\leqslant 10^9)<br>设(G_n)表示满足(a_k=n)的最大(k)值</p>
+</blockquote>
+<p>则(G_n=\sum_{i=1}^n (i \times a_i) )</p>
+<p>对于求(a_n)，我们可以设(p_n)表示数列(a)中最后一个数(n)的位置</p>
+<p>(a_n=lower_bound(p+1,p+N,n)-p)</p>
+<p>(p_n=p_{n-1}+a_n)</p>
+<p>如果直接求(G_n)明显超时，展开(G_8)会发现：</p>
+<p>(\begin{split} G_8 &amp; =1\times 1+2\times 2+3\times 2+4\times 3+5\times 3+6\times 4+7\times 4+8\times 4\ &amp; =1\times 1+(2+3)\times 2+(4+5)\times 3+(6+7+8)\times 4 \end{split})</p>
+<p>其中括号内数的个数为(a_i)，其和可以用求和公式算出。</p>
+<p>设(g_n)表示(G_{p_i})的值。</p>
+<p>(g_n=g_{n-1}+( p_n\times a_n - \frac{a_n(a_n-1)}{2} ) \times n)</p>
+<p>(G_n=g_{a_{n-1}}+[ (p_{a_{n-1}}+1) \times (n-p_{a_{n-1}}\ ) + \frac{(n-p_{a_{\ n-1}}\ \ )(n-p_{a_{\ n-1}}\ \ -1)}{2} ] \times a_n )</p>
+<p>其中(p_n,g_n)都可以预处理</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;iostream&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL long long</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>#define N 1000005</p>
+<p>#define MOD 1000000007</p>
+<p>LL p[N];<br>LL g[N];</p>
+<p>LL getpos(LL x,LL n){<br>    return lower_bound(p+1,p+n,x)-p;<br>}</p>
+<p>void init(){<br>    g[1]=p[1]=1;<br>    LL len;<br>    for(int i=2;i&lt;N;++i){<br>        len=getpos(i,i);<br>        p[i]=p[i-1]+len;<br>        g[i]=(g[i-1]+(p[i]<em>len-len</em>(len-1)/2)%MOD*i)%MOD;<br>    }<br>}</p>
+<p>LL solve(LL n){<br>    LL pos=getpos(n,N);<br>    LL len=n-p[pos-1];<br>    LL a1=p[pos-1]+1;<br>    return (g[pos-1]+(a1<em>len+len</em>(len-1)/2)%MOD*pos)%MOD;<br>}</p>
+<p>int main(){<br>    init();<br>    int T;<br>    LL n;<br>    scanf(“%d”,&amp;T);<br>    while(T–){<br>        scanf(“%I64d”,&amp;n);<br>        printf(“%I64d\n”,solve(n));<br>    }<br>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1005-Travel"><a href="#1005-Travel" class="headerlink" title="1005 Travel"></a>1005 Travel</h2><blockquote>
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=5441" target="_blank" rel="noopener">HDU 5441</a></p>
+<p>题意：在一个无向图中有$$n$$个点，$$m$$条边。现在有$$q$$次询问，每次询问有多少个有序对$$(a,b)$$满足a,b之间存在一条路径满足路径上的每条边长度都不超过x</p>
+<p>(1\leqslant n\leqslant 20,000,1\leqslant m\leqslant 10^6,1\leqslant q\leqslant 5,000)<br>离线+并查集</p>
+</blockquote>
+<p>先对边和询问同时按升序排序。然后将满足条件的边相连的点加入集合。对于每次询问可以通过集合中的点的个数算出答案。</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;stack&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;map&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;stdlib.h&gt;</p>
+<p>#include&lt;set&gt;</p>
+<p>#include&lt;ctime&gt;</p>
+<p>#include&lt;cmath&gt;<br>using namespace std;<br>const int mmax = 20010;<br>struct node<br>{<br>    int st,en;<br>    int len;<br>    bool operator &lt;(const node &amp;a) const<br>    {<br>        return len&lt;a.len;<br>    }<br>}E[2<em>100010];<br>int fa[mmax];<br>int Find(int x)<br>{<br>    if(x==fa[x])<br>        return fa[x];<br>    return fa[x]=Find(fa[x]);<br>}<br>int cnt[mmax];<br>struct Qu<br>{<br>    int x;<br>    int id;<br>    bool operator &lt;(const Qu &amp;a) const<br>    {<br>        return x&lt;a.x;<br>    }<br>}Q[5010];<br>int ans[5010];<br>int main()<br>{<br>    int t,n,m,q;<br>    cin&gt;&gt;t;<br>    while(t–)<br>    {<br>        scanf(“%d %d %d”,&amp;n,&amp;m,&amp;q);<br>        for(int i=0;i&lt;=n;i++)<br>            fa[i]=i,cnt[i]=1;<br>        for(int i=0;i&lt;m;i++)<br>        {<br>            scanf(“%d %d %d”,&amp;E[i].st,&amp;E[i].en,&amp;E[i].len);<br>        }<br>        sort(E,E+m);<br>        for(int i=0;i&lt;q;i++)<br>        {<br>            scanf(“%d”,&amp;Q[i].x);<br>            Q[i].id=i;<br>        }<br>        sort(Q,Q+q);<br>        int sum=0,tmp=0;<br>        for(int i=0;i&lt;q;i++)<br>        {<br>            while(tmp&lt;m &amp;&amp; E[tmp].len&lt;=Q[i].x)<br>            {<br>                int x=Find(E[tmp].st);<br>                int y=Find(E[tmp].en);<br>                if(x!=y)<br>                {<br>                    sum+=cnt[x]</em>cnt[y]*2;<br>                    fa[x]=y;<br>                    cnt[y]+=cnt[x];<br>                }<br>                tmp++;<br>            }<br>            ans[Q[i].id]=sum;<br>        }<br>        for(int i=0;i&lt;q;i++)<br>            printf(“%d\n”,ans[i]);<br>    }<br>    return 0;<br>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1006-Favorite-Donut"><a href="#1006-Favorite-Donut" class="headerlink" title="1006 Favorite Donut"></a>1006 Favorite Donut</h2><blockquote>
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=5442" target="_blank" rel="noopener">HDU 5442</a></p>
+<p>题意：将一个长度为$$n$$的字符串首位相连形成一个环。从环上任意一个点开始沿顺时针或逆时针绕一周可形成$$2n$$个新的字符串。求字典序最大的是哪个，输出起始位置和方向（顺时针为0，逆时针为1）。若有多个答案，则让起始位置最小；若起始位置相同，则优先输出顺时针。</p>
+<p>(1\leqslant n\leqslant 20,000)<br>后缀数组</p>
+</blockquote>
+<p>先将字符串重复一次，然后加入一个没出现过的字符，在加上翻转后的字符串。形成一个长度为(4n+1)的新字符串。再用后缀数组进行处理。</p>
+<p>字典序最大可能有多个，所以从sa[]末尾开始将所有height[i]&gt;=n的加入一个结构体数组。计算出起始位置和方向。再进行一次排序，得到最优答案。</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;string&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL long long</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>#define N 20005</p>
+<p>char str[N&lt;&lt;2];<br>int wa[N&lt;&lt;2],wb[N&lt;&lt;2],wv[N&lt;&lt;2],ws[N&lt;&lt;2];<br>int sa[N&lt;&lt;2];<br>int Rank[N&lt;&lt;2];<br>int height[N&lt;&lt;2];</p>
+<p>int cmp(int *r,int a,int b,int l){<br>    return r[a]==r[b]&amp;&amp;r[a+l]==r[b+l];<br>}</p>
+<p>void da(char <em>r,int </em>sa,int n,int m){<br>    int i,j,p,<em>x=wa,</em>y=wb,<em>t;<br>    for(i=0;i&lt;m;++i) ws[i]=0;<br>    for(i=0;i&lt;n;++i) ws[x[i]=r[i]]++;<br>    for(i=1;i&lt;m;++i) ws[i]+=ws[i-1];<br>    for(i=n-1;i&gt;=0;–i) sa[–ws[x[i]]]=i;<br>    for(j=1,p=1;p&lt;n;j&lt;&lt;=1,m=p){<br>        for(p=0,i=n-j;i&lt;n;++i) y[p++]=i;<br>        for(i=0;i&lt;n;++i) if(sa[i]&gt;=j) y[p++]=sa[i]-j;<br>        for(i=0;i&lt;n;++i) wv[i]=x[y[i]];<br>        for(i=0;i&lt;m;++i) ws[i]=0;<br>        for(i=0;i&lt;n;++i) ws[wv[i]]++;<br>        for(i=1;i&lt;m;++i) ws[i]+=ws[i-1];<br>        for(i=n-1;i&gt;=0;–i) sa[–ws[wv[i]]]=y[i];<br>        for(t=x,x=y,y=t,p=1,x[sa[0]]=0,i=1;i&lt;n;++i)<br>            x[sa[i]]=cmp(y,sa[i-1],sa[i],j)?p-1:p++;<br>    }<br>}<br>void calheight(char </em>r,int *sa,int n){<br>    int i,j,k=0;<br>    for(i=1;i&lt;=n;++i) Rank[sa[i]]=i;<br>    for(i=0;i&lt;n;height[Rank[i++]]=k)<br>        for(k?k–:0,j=sa[Rank[i]-1];r[i+k]==r[j+k];k++);<br>}</p>
+<p>struct node{<br>    int s,d;<br>    bool operator&lt;(const node &amp;_t)const{<br>        if(_t.s==s)return d&lt;_t.d;<br>        return s&lt;_t.s;<br>    }<br>}ans[N&lt;&lt;2];</p>
+<p>int main(){<br>    int T;<br>    int n;<br>    scanf(“%d”,&amp;T);<br>    while(T–){<br>        scanf(“%d%s”,&amp;n,str);<br>        for(int i=0;i&lt;n;++i){<br>            str[i+n]=str[i];<br>        }<br>        str[n+n]=’#’;<br>        for(int i=n+n+1,j=n+n-1;i&lt;n<em>4+1;++i,–j){<br>            str[i]=str[j];<br>        }<br>        str[n</em>4+1]=0,str[n<em>4+2]=’\0’;<br>        da(str,sa,n</em>4+2,’z’+110);<br>        calheight(str,sa,n*4+1);</p>
+<pre><code>    int cnt=0;
+    ans[cnt].s=(sa[n*4+1]&amp;lt;=2*n)?(sa[n*4+1]%n+1):(n-((sa[n*4+1]-2*n-1)%n));
+    ans[cnt++].d=(sa[n*4+1]&amp;lt;=2*n)?0:1;
+    int k=n*4+1;
+    while(height[k]&amp;gt;=n&amp;amp;&amp;amp;k&amp;gt;1){
+        ans[cnt].s=(sa[k-1]&amp;lt;=2*n)?(sa[k-1]%n+1):(n-((sa[k-1]-2*n-1)%n));
+        ans[cnt++].d=(sa[k-1]&amp;lt;=2*n)?0:1;
+        k--;
+    }
+    sort(ans,ans+cnt);
+    printf(&quot;%d %d\n&quot;,ans[0].s,ans[0].d);
+}
+return 0;
+</code></pre><p>}<br><br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1007-The-Water-Problem"><a href="#1007-The-Water-Problem" class="headerlink" title="1007 The Water Problem"></a>1007 The Water Problem</h2><blockquote>
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=5443" target="_blank" rel="noopener">HDU 5443</a></p>
+<p>题意：$$n$$个数，$$q$$次询问，每次询问区间$$[l,r]$$的最大值。</p>
+<p>(1\leqslant n\leqslant 10^3,1\leqslant q\leqslant 10^3)<br>直接RMQ水过。</p>
+</blockquote>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;<br>using namespace std;</p>
+<p>#define N 100005</p>
+<p>int dp[N][20];<br>int mm[N];<br>int a[N];</p>
+<p>void initRMQ(int n,int b[]) {<br>    mm[0] = -1;<br>    for(int i = 1; i &lt;= n; i++) {<br>        mm[i] = ((i&amp;(i-1)) == 0)?mm[i-1]+1:mm[i-1];<br>        dp[i][0] = b[i];<br>    }<br>    for(int j = 1; j &lt;= mm[n]; j++)<br>        for(int i = 1; i + (1&lt;&lt;j) -1 &lt;= n; i++) {<br>            dp[i][j] = max(dp[i][j-1],dp[i+(1&lt;&lt;(j-1))][j-1]);<br>        }<br>}</p>
+<p>int rmq(int x,int y) {<br>    int k = mm[y-x+1];<br>    return max(dp[x][k],dp[y-(1&lt;&lt;k)+1][k]);<br>}<br>int main() {<br>    int T;<br>    int n,q;<br>    int l,r;<br>    scanf(“%d”,&amp;T);<br>    while(T–) {<br>        scanf(“%d”,&amp;n);<br>        for(int i=1; i&lt;=n; ++i)<br>            scanf(“%d”,&amp;a[i]);<br>        initRMQ(n,a);<br>        scanf(“%d”,&amp;q);<br>        while(q–){<br>            scanf(“%d%d”,&amp;l,&amp;r);<br>            printf(“%d\n”,rmq(l,r));<br>        }<br>    }<br>    return 0;</p>
+<p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1008-Elven-Postman"><a href="#1008-Elven-Postman" class="headerlink" title="1008 Elven Postman"></a>1008 Elven Postman</h2><blockquote>
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=5444" target="_blank" rel="noopener">HDU 5444</a></p>
+<p>题意：在最初为空的二叉树中不断的插入n个数。对于每个数，从根节点开始判断，如果当前节点为空，就插入当前节点，如果当前节点不为空，则小于当前节点的值，插入右子树，否则插入左子树。</p>
+<p>接着q次询问，每次询问一个值在二叉树中从根节点开始的查找路径。</p>
+<p>(1\leqslant n\leqslant 10^3)<br>直接用二叉树模拟整个插入和询问的过程</p>
+</blockquote>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;map&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL long long</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>#define N 1005</p>
+<p>struct Node{<br>    int v;<br>    Node <em>l,</em>r;<br>}*root;</p>
+<p>void ins(Node<em> &amp;rt,int a){<br>    if(rt==NULL){<br>        rt=new Node();<br>        rt-&gt;v=a;<br>        rt-&gt;l=rt-&gt;r=NULL;<br>    }else{<br>        if(a&lt;rt-&gt;v){<br>            ins(rt-&gt;l,a);<br>        }else{<br>            ins(rt-&gt;r,a);<br>        }<br>    }<br>}<br>void query(Node </em>&amp;rt,int a){<br>    if(rt-&gt;v==a){<br>        printf(“\n”);<br>        return;<br>    }else{<br>        if(a&lt;rt-&gt;v){<br>            printf(“E”);<br>            query(rt-&gt;l,a);<br>        }else{<br>            printf(“W”);<br>            query(rt-&gt;r,a);<br>        }<br>    }<br>}<br>int main(){<br>    int T;<br>    scanf(“%d”,&amp;T);<br>    int n,q,a;<br>    while(T–){<br>        scanf(“%d”,&amp;n);<br>        while(n–){<br>            scanf(“%d”,&amp;a);<br>            ins(root,a);<br>        }<br>        scanf(“%d”,&amp;q);<br>        while(q–){<br>            scanf(“%d”,&amp;a);<br>            query(root,a);<br>        }<br>        root=NULL;<br>    }<br>    return 0;<br>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1010-Unknown-Treasure"><a href="#1010-Unknown-Treasure" class="headerlink" title="1010 Unknown Treasure"></a>1010 Unknown Treasure</h2><blockquote>
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=5446" target="_blank" rel="noopener">HDU 5446</a></p>
+<p>题意：求$$C^m_n \mod M$$,其中$$M$$为$$k$$个不同素数$$p_i$$的乘积。</p>
+<p>(1\leqslant m\leqslant n\leqslant 10^{18},1\leqslant k\leqslant 10,M\leqslant 10^{18},p_i\leqslant 10^5)<br>Lucas+中国剩余定理</p>
+</blockquote>
+<p>用lucas分别求出</p>
+<p>$$A_i =C^m_n \mod p_i$$</p>
+<p>得到同余方程组</p>
+<p>$$x \equiv A_i(mod \ p_i)$$</p>
+<p>用中国剩余定理可求出$$x$$</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;map&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL long long</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>LL a[15],m[15];</p>
+<p>LL extend_gcd(LL a,LL b,LL &amp;x,LL &amp;y) {<br>    if(a==0&amp;&amp;b==0) return -1;<br>    if(b==0) {<br>        x=1;<br>        y=0;<br>        return a;<br>    }<br>    LL d=extend_gcd(b,a%b,y,x);<br>    y-=a/b*x;<br>    return d;<br>}</p>
+<p>LL inv(LL a,LL n) {<br>    LL x,y;<br>    LL d=extend_gcd(a,n,x,y);<br>    if(d==1) return (x%n+n)%n;<br>    else return -1;<br>}</p>
+<p>LL C(LL n,LL k,int cur) {<br>    LL p=m[cur];<br>    if(k&gt;n) return 0;<br>    if(n==k||k==0)return 1;<br>    if(n==k+1||k==1)return n;<br>    LL ans=1;<br>    for(LL i=1; i&lt;=k; i++) {<br>        LL a=(n+i-k)%p;<br>        LL b=i%p;<br>        ans=ans<em>(a</em>inv(b,p)%p)%p;<br>    }<br>    return ans;<br>}</p>
+<p>bool solve(LL &amp;m0,LL &amp;a0,int m,int a) {<br>    long long y,x;<br>    int g = extend_gcd(m0,m,x,y);<br>    if(abs(a - a0)%g)return false;<br>    x <em>= (a - a0)/g;<br>    x %= m/g;<br>    a0 = (x</em>m0 + a0);<br>    m0 *= m/g;<br>    a0 %= m0;<br>    if(a0 &lt; 0)a0 += m0;<br>    return true;<br>}</p>
+<p>bool MLES(LL &amp;m0 ,LL &amp;a0,int n) {<br>    bool flag = true;<br>    m0 = 1;<br>    a0 = 0;<br>    for(int i = 0; i &lt; n; i++)<br>        if(!solve(m0,a0,m[i],a[i])) {<br>            flag = false;<br>            break;<br>        }<br>    return flag;<br>}</p>
+<p>LL Lucas(LL n,LL k,int cur) {<br>    LL p = m[cur];<br>    if(k == 0)  return 1;<br>    return C(n % p, k % p, cur) * Lucas(n / p, k / p, cur) % p;<br>}</p>
+<p>int main() {<br>    int T;<br>    LL N,M,K;</p>
+<pre><code>scanf(&quot;%d&quot;,&amp;amp;T);
+while(T--) {
+    memset(a,0,sizeof(a));
+    scanf(&quot;%I64d%I64d%I64d&quot;,&amp;amp;N,&amp;amp;M,&amp;amp;K);
+    for(int i=0; i&amp;lt;K; ++i)
+        scanf(&quot;%I64d&quot;,&amp;amp;m[i]);
+    for(int i=0; i&amp;lt;K; ++i) {
+        a[i]=Lucas(N,M,i)%m[i];
+    }
+    LL m0,a0;
+    MLES(m0,a0,K);
+    printf(&quot;%I64d\n&quot;,a0);
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>(待续…)</p>
+<p>&nbsp;</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="http://link.hhtjim.com/163/785902.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1001-Alisha’s-Party"><span class="toc-number">1.</span> <span class="toc-text">1001 Alisha’s Party</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1002-Ponds"><span class="toc-number">2.</span> <span class="toc-text">1002 Ponds</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1003-Aggregated-Counting"><span class="toc-number">3.</span> <span class="toc-text">1003 Aggregated Counting</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1005-Travel"><span class="toc-number">4.</span> <span class="toc-text">1005 Travel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1006-Favorite-Donut"><span class="toc-number">5.</span> <span class="toc-text">1006 Favorite Donut</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1007-The-Water-Problem"><span class="toc-number">6.</span> <span class="toc-text">1007 The Water Problem</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1008-Elven-Postman"><span class="toc-number">7.</span> <span class="toc-text">1008 Elven Postman</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1010-Unknown-Treasure"><span class="toc-number">8.</span> <span class="toc-text">1010 Unknown Treasure</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

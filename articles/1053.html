@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="yanm1ng&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="../css/images/logo.png">
+  
+  <title>
+    
+      《深入理解Java虚拟机》学习笔记（4）——垃圾收集器 | Xuan&#39;s Blog
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="../js/qrious.js"></script>
+<script src="../js/gitment.js"></script>
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="../index.html">
+      <div class="logo"></div>
+      <span>Xuan's Blog</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="../index.html" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="../index.html" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>《深入理解Java虚拟机》学习笔记（4）——垃圾收集器</h2>
+  <p class="post-date">2016-04-26</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><blockquote>
+<p>资料总结自：《深入理解Java虚拟机》 周志明 著</p>
+<p>相关资料：<a href="http://qsxuan.com/articles/1014.html" target="_blank" rel="external">《深入理解Java虚拟机》学习笔记（1）——JVM垃圾回收与内存分配策略</a></p>
+</blockquote>
+<hr>
+<p>&nbsp;</p>
+<p>如果说收集算法是内存回收的方法论，垃圾收集器就是内存回收的具体实现。Java虚拟机规范中对垃圾收集器应该如何实现并没有任何规定，因此不同的厂商、不同版本的虚拟机所提供的垃圾收集器都可能会有很大的差别，并且一般都会提供参数供用户根据自己的应用特点和要求组合出各个年代所使用的收集器。</p>
+<p>下图是基于JDK 1.7 Update 14 之后的HotSpot虚拟机所包含的所有收集器：</p>
+<p><img src="http://qsxuan.com/wp-content/uploads/2016/04/jvm-3-5.png" alt="jvm-3-5"></p>
+<p>在介绍这些收集器各自的特性之前，我们先来明确一个观点：虽然我们是在对各个收集器进行比较，但并非为了挑选一个最好的收集器出来。因为<strong>直到现在为止还没有最好的收集器出现，更加没有万能的收集器</strong>，所以我们选择的只是堆具体应用最合适的收集器。这点不需要多加解释就能证明：如果有一种放之四海皆准、任何场景下都适用的完美收集器存在，那HotSpot虚拟机就没必要实现那么多不同的收集器了。</p>
+<h2 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h2><p>Serial收集器是最基本、历史最悠久的收集器。</p>
+<p>这个收集器是一个单线程收集器，但它的“单线程”的意义并不仅仅是说明它只会使用一个CPU或者一条收集线程去完成垃圾收集工作，更重要的是在它进行垃圾收集时，<strong>必须暂停其他所有的工作线程</strong>（Sun将这件事情称之为“Stop The World”），直到它收集结束。“Stop The World”这个名字也许听起来很酷，但这项工作实际上是有虚拟机在后台自动发起和自动完成的，在用户不可见的情况下把用户的正常工作的线程全部停掉，这对很多应用来说都是难以接受的。Serial / Serial Old收集器的运行过程如下图：</p>
+<p><img src="http://qsxuan.com/wp-content/uploads/2016/04/jvm-3-6.png" alt="jvm-3-6"></p>
+<p>虽然“Stop The World”会带给用户恶劣的体验，但实际上到现在为止，它依然是虚拟机运行在Client模式下的默认新生代收集器。它也有着优于其他收集器的地方：简单而高效（与其他收集器的单线程比），对于限定单个CPU的环境来说，Serial收集器由于没有线程交互的开销，专心做垃圾收集自然可以获得最高的单线程收集效率。</p>
+<p>在用户的桌面应用场景中，分配给虚拟机管理的内存一般来说不会很大，收集几十兆甚至一两百兆的新生代（仅仅是新生代使用的内存，桌面应用基本不会再大了），停顿时间完全可以控制在几十毫秒最多一百毫秒以内，只要不是频繁发生，这点停顿是可以接受的。</p>
+<p><strong>所以，Serial收集器对于运行在Client模式下的虚拟机来说是一个很好的选择。</strong></p>
+<h2 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h2><p>ParNew收集器其实就是Serial收集器的多线程版本，除了使用多条线程进行垃圾收集以外，其余行为包括Serial收集器可用的所有控制参数、收集算法、Stop The World、对象分配规则、回收策略等都与Serial收集器完全一样，实际上这两种收集器也共用了先当多的代码。ParNew / Serial Old收集器的工作过程如下图：</p>
+<p><img src="http://qsxuan.com/wp-content/uploads/2016/04/jvm-3-7.png" alt="jvm-3-7"></p>
+<p>ParNew收集器除了多线程收集之外，其他与Serial收集器相比并没有太多的创新之处，但它却是许多运行在Server模式下的虚拟机中首选的新生代收集器，其中有一个与性能无关但很重要的原因是，除了Serial收集器外，目前只有它能与CMS收集器配合工作。</p>
+<p>在JDK 1.5时期，HotSpot推出了一款在强交互应用中几乎可称为划时代意义的垃圾收集器——CMS收集器（Concurrent Mark Sweep），这款收集器是HotSpot虚拟机中第一款真正意义上的并发（Concurrent）收集器，它第一次实现了让垃圾收集线程与用户线程（基本上）同时工作。不幸的是它作为老年的的收集器，却无法与JDK 1.4.0中已经存在的新生代收集器Parallel Scavenge配合工作，所以在JDK 1.5中使用CMS来收集老年代的时候，新生代只能选择ParNew或者Serial收集器中的一个。</p>
+<p>ParNew收集器也是使用-XX:+UseConcMarkSweepGC选项后的默认新生代收集器，也可以使用-XX:+UseParNewGC选项来强制指定它。</p>
+<p>ParNew收集器在单CPU的环境中绝对不会有比Serial收集器更好的效果，甚至由于存在线程交互的开销，该收集器在通过超线程技术实现的两个CPU的环境中都不能百分之百的保证超越Serial收集器。当然，随着可以使用的CPU的数量相同，在CPU非常大（譬如32各，现在CPU动辄就4核加超线程，服务器超过32个逻辑CPU的情况越来越多了）的环境下，可以使用-XX:ParallelGCThreads参数来限制垃圾收集的线程数。</p>
+<blockquote>
+<p>并发和并行这两个名词都是并发编程中的概念，在谈论垃圾收集器的上下文语境中，他们可以解释为：</p>
+<ul>
+<li><strong>并行（Parallel）</strong>：指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态。</li>
+<li><strong>并发（Concurrent）</strong>：指用户线程与垃圾收集线程同时运行（但不一定是并行的，也可能会交替执行），用户程序继续运行，而垃圾收集程序运行于另一个CPU上。</li>
+</ul>
+</blockquote>
+<h2 id="Parallel-Scavenge收集器"><a href="#Parallel-Scavenge收集器" class="headerlink" title="Parallel Scavenge收集器"></a>Parallel Scavenge收集器</h2><p>Parallel Scavenge收集器也是一个新生代收集器，它也是使用复制是算法的收集器，又是并行的多线程收集器……看上去和ParNew都一样，那它有什么特别之处呢？</p>
+<p>Parallel Scavenge收集器的特点是它的关注点与其他收集器不同，CMS等收集器的关注点尽可能地缩短垃圾收集时用户线程的停顿时间，而Parallel Scavenge收集器的目标则是达到一个可控制的吞吐量（Throughput）。所谓吞吐量就是CPU用于运行用户代码的时间与CPU总消耗时间的比值，即吞吐量 = 运行用户代码时间 / ( 运行用户代码时间 + 垃圾收集时间 )，虚拟机总共运行了100分钟，其中垃圾收集花掉1分钟，那吞吐量就是99%。</p>
+<p><strong>停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户的体验；而高吞吐量则可以最高效率地利用CPU时间，尽快地完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务。</strong></p>
+<p>Parallel Scavenge收集器提供了两个参数用于精确控制吞吐量，分别是控制最大垃圾收集停顿时间的 -XX:MaxGCPauseMillis 参数及直接设置吞吐量大小的 -XX:GCTimeRatio 参数。</p>
+<p>MaxGCPauseMillis参数允许的值是一个大于0的毫秒数，收集器将尽力保证内存回收花费的时间不超过设定值。不过大家不要异想天开地认为如果把这个参数的值设置得稍小一点就能使得系统的垃圾收集速度变得更快，GC停顿时间缩短是以牺牲吞吐量和新生代空间来换取的：系统把新生代调小一点，收集300MB新生代肯定比收集500MB快吧，这也直接导致垃圾收集发生得更频繁一些，原来10秒收集一次、每次停顿100毫秒，现在变成5秒收集一次、每次停顿70毫秒。停顿时间的确在下降，但吞吐量也降下来了。</p>
+<p>GCTimeRatio参数的值应当是一个大于0小于100的整数，也就是垃圾收集时间占总时间的比率，相当于是吞吐量的倒数。如果把此参数设置为19，那允许的最大GC时间就占总时间的5%（即 1 / ( 1 + 19 ) ），默认值为99，就是允许最大1%（即 1 / ( 1 + 99 ) ）的垃圾收集时间。</p>
+<p>由于与吞吐量关系密切，Parallel Scavenge收集器也经常被称为“吞吐量优先”收集器。除上述两个参数之外，，Parallel Scavenge收集器还有一个参数 -XX:+UseAdaptiveSizePolicy值得关注。这是一个开关参数，当这个参数打开之后，就不需要手工指定新生代的大小（-Xmn）、Eden与Survivor区的比例（-XX:SurivorRatio）、晋升老年代对象年龄（-XX:PretenureThreshold）等细节参数了，虚拟机会根据当前系统的运行情况收集性能监控信息，动态调节这些参数以提供最合适的停顿时间或最大的吞吐量，这种调节方式称之为GC自适应的调节策略（GC Ergonomics）。<strong>自适应调节策略也是Parallel Scavenge收集器与ParNew收集器的一个重要区别。</strong></p>
+<h2 id="Serial-Old收集器"><a href="#Serial-Old收集器" class="headerlink" title="Serial Old收集器"></a>Serial Old收集器</h2><p>Serial Old是Serial收集器的老年代版本，它同样是一个单线程收集器，使用“标记—整理”算法。和这个收集器的主要意义也是被Client模式下的虚拟机使用。如果在Server模式下，它主要还有两大用途：一个是在JDK 1.5以及之前的版本中与Parallel Scavenge收集器搭配使用，另一个就是作为CMS收集器的后备预案，在并发收集发生 Concurrent Mode Failure 的时候使用。</p>
+<p>Serial / Serial Old收集器的工作过程如下图：</p>
+<p><img src="http://qsxuan.com/wp-content/uploads/2016/04/jvm-3-6.png" alt="jvm-3-6"></p>
+<h2 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h2><p>Parallel Old是Parallel Scavenge收集器的老年代版本，使用多线程和“标记—整理”算法。</p>
+<p>这个收集器是在JDK 1.6中才开始提供的，在此之前，新生代的Parallel Scavenge收集器一直处于比较尴尬的状态。原因是，如果新生代选择了Parallel Scavenge收集器，老年代除了Serial Old（PS MarkSweep）收集器外别无选择。由于单线程的老年代Serial Old收集器在服务端应用性能上的“拖累”，几十使用了Parallel Scavenge收集器也未必能在整体应用上获得吞吐量最大化的效果，又因为老年代收集中无法充分利服务器多CPU的处理能力，在老年代很大而且硬件比较高级的环境中，这种组合的吞吐量甚至还不一定有ParNew加CMS的组合“给力”。</p>
+<p>直到Parallel Old收集器出现后，“吞吐量优先”收集器终于有了比较名副其实的应用组合，在注重吞吐量及CPU资源敏感的场合，都可以优先考虑Parallel Scavenge加Parallel Old收集器。</p>
+<p>Parallel Scavenge / Parallel Old收集器的工作过程如下图：</p>
+<p><img src="http://qsxuan.com/wp-content/uploads/2016/04/jvm-3-9.png" alt="jvm-3-9"></p>
+<h2 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h2><p>CMS（Concurrent Mark Sweep）收集器是一种以获取最短回收停顿时间为目标的收集器。目前很大一部分的Java应用都集中在互联网站或B/S系统的服务端上，这类应用尤其重视服务的响应速度，希望系统停顿时间最短，以给用户带来较好的体验，CMS收集器就非常符合这类应用需求。</p>
+<p>从名字（包含“Mark Sweep”）上就可以看出CMS收集器是基于“标记—清除”算法实现的，它的运作过程相对于前面几种收集器来说要更复杂一些，整个过程分为4个步骤：</p>
+<ol>
+<li>初始标记（CMS initial mark）</li>
+<li>并发标记（CMS concurrent mark）</li>
+<li>重新标记（CMS remark）</li>
+<li>并发清除（CMS concurrent sweep）<br>其中初始标记、重新标记着两个步骤仍然需要“Stop The World”。初始标记仅仅只是标记一下GC Root能直接关联到的对象，速度很快，并发标记阶段就是进行GC Roots Tracing的过程，而重新标记阶段则是为了修正并发标记期间因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段稍长一些，但远比并发标记的时间短。</li>
+</ol>
+<p>由于整个过程中耗时最长的并发标记和并发清除过程收集器线程都可以与用户线程一起工作，所以，从总体上来说，CMS收集器的内存回收过程是与用户线程一起并发执行的。通过下图可以比较清楚地看到CMS收集器的运作步骤中并发和需要停顿的时间。</p>
+<p><img src="http://qsxuan.com/wp-content/uploads/2016/04/jvm-3-10.png" alt="jvm-3-10"></p>
+<p>CMS是一款优秀的收集器，它的主要优点在名字上已经体现出来了：并发收集、低停顿。但是CMS还远达不到完美的程度，它有以下3个明显的缺点：</p>
+<ul>
+<li>CMS收集器对CPU资源非常敏感。面向并发设计的程序都对CPU资源比较敏感。在并发阶段，它虽然不会导致用户线程停顿，但是会因为占用了一部分线程（或者说CPU资源）而导致应用程序变慢，总吞吐量会降低。当CPU不足4个（譬如2个）时，CMS对用户程序的影响就可能变得很大，如果本来CPU负载就比较大，还分出一半的运算能力去执行收集器线程，就可能导致用户程序的执行速度忽然降低了50%，其实也让人无法接受。</li>
+<li>CMS收集器无法处理浮动垃圾（Floating Garbage，由于CMS并发清理阶段用户线程还在运行着，伴随着程序运行自然就还会有新的垃圾不断产生，这一部分垃圾出现在标记过程之后，CMS无法在当次收集中处理掉它们，只好留待下一次GC时再清理掉。这部分垃圾就称为“浮动垃圾”）。由于垃圾收集阶段用户线程还需要运行，就需要预留足够的内存空间给用户线程使用，因此CMS收集器不能像其他收集器一样等到老年代几乎完全被填满了再进行收集。在JDK 1.6中CMS收集器当老年代使用了92%的空间后就会被激活，可以通过-XX:CMSInitiatingOccupancyFraction参数来设置。如果预留的内存无法满足程序需要，就会出现“Concurrent Mode Failure”失败，这时会临时启用Serial Old收集器来重新进行老年代的垃圾收集，这样停顿时间就很长了。</li>
+<li>CMS是一款基于“标记—清除”算法实现的收集器（内存整理过程是无法并发的），这意味着收集结束时会有大量空间碎片产生，往往会出现老年代还有很大空间剩余，但无法找到足够大的连续空间来分配当前对象，不得不提前触发一次Full GC。</li>
+</ul>
+<h2 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h2><p>G1（Garbage-First）是一款面向服务端应用的垃圾收集器。</p>
+<p>在G1之前的其他收集器进行收集的范围都是整个新生代或者老年代，而G1不再是这样。使用G1收集器时，Java堆的内存布局就与其他收集器有很大差别，它将整个Java堆划分为多个大小相等的独立区域（Region），虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔离的了，它们都是一部分Region（不需要连续）的集合。</p>
+<p>与其他GC收集器相比，G1具备以下特点：</p>
+<ul>
+<li><strong>并行与并发</strong>：G1能充分利用多CPU、多核环境下的硬件优势，使用多个CPU（CPU或者CPU核心）来缩短Stop The World停顿的时间。</li>
+<li><strong>分代收集</strong>：与其他收集器一样，分代概念在G1中依然得以保留。虽然G1可以不需要其他收集器配合就能独立管理整个GC堆。</li>
+<li><strong>空间整合</strong>：与CMS的“标记—清除”算法不同，G1从整体来看是基于“标记—整理”算法实现的收集器，从局部（两个Region之间）上来看是基于“复制”算法实现的。但无论如何，这两个算法都意味着G1运作期间不会产生内存空间碎片，收集后能提供规整的可用内存。</li>
+<li><strong>可预测的停顿</strong>：这个G1相对于CMS的另一大优势，降低停顿时间是G1和CMS共同关注点，但G1除了追求低停顿外，还能建立可预测的停顿时间模型，能让使用者明确指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不得超过N毫秒，这几乎已经是实时Java（RTSJ）的垃圾收集器的特征了。<br>G1收集器之所以能建立可预测的停顿时间模型，是因为它可以有计划地避免在整个Java堆进行全区域的垃圾收集。G1跟踪各个Region里面的垃圾堆积的价值大小（回收所获得的空间大小以及回收所需时间的经验值），在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region。这种使用Region划分内存空间以及有优先级的区域回收方式，保证了G1收集器在有限的时间内可以获取尽可能高的收集效率。</li>
+</ul>
+<p>G1收集器的运作大致可划分为以下几个步骤：</p>
+<ol>
+<li>初始标记（Initial Marking）</li>
+<li>并发标记（Concurrent Marking）</li>
+<li>最终标记（Final Marking）</li>
+<li>筛选回收（Live Data Counting and Evacuation）<br><img src="http://qsxuan.com/wp-content/uploads/2016/04/jvm-3-11.png" alt="jvm-3-11"></li>
+</ol>
+<p>G1前几个步骤的运作过程和CMS有很多相似之处。</p>
+<p>初始标记阶段仅仅只是标记一下GC Roots能直接关联到的对象，并且修改TAMS（Nexr Top at Mark Start）的值，让下一阶段用户程序并发运行时，能在正确可用的Region中创建新对象，这阶段需要停顿线程，但耗时很短。</p>
+<p>并发标记阶段是从GC Roots开始对堆中对象进行可达性分析，找出存活的对象，这阶段耗时较长，但可以与用户并发执行。</p>
+<p>最终标记阶段是为了修正在并发标记期间因用户程序继续运作而导致标记产生变动的哪一部分标记记录，着阶段需要停顿线程，但是可并行执行。</p>
+<p>最后在筛选回收阶段首先对各个Region的回收价值和成本进行排序，根据用户所期望的GC停顿时间来制定回收计划。从Sun公司透露出来的信息来看，这个阶段其实也是可以做到与用户程序一起并发执行，但是因为只回收一部分Region，时间是用户可控制的，而且停顿用户线程将大幅度提高收集效率。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="../tags#JVM" >
+    <span class="tag-code">JVM</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Serial收集器"><span class="toc-nav-text">Serial收集器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#ParNew收集器"><span class="toc-nav-text">ParNew收集器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Parallel-Scavenge收集器"><span class="toc-nav-text">Parallel Scavenge收集器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Serial-Old收集器"><span class="toc-nav-text">Serial Old收集器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Parallel-Old收集器"><span class="toc-nav-text">Parallel Old收集器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#CMS收集器"><span class="toc-nav-text">CMS收集器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#G1收集器"><span class="toc-nav-text">G1收集器</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://qinshaoxuan.com/articles/1053.html';
+    var banner = ''
+    if (banner !== 'undefined') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "yanm1ng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "《深入理解Java虚拟机》学习笔记（4）——垃圾收集器",
+        owner: "yanm1ng",
+        repo: "yanm1ng.github.io",
+        oauth: {
+          client_id: "0f87e490e00ee3fd87ef",
+          client_secret: "4a9d2b148e7971c2201ad12131ce8bf8159ccd2e"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="../js/script.js"></script>
+  </body>
+</html>

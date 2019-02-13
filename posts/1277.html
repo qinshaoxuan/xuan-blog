@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">单例模式（Singleton）</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">单例模式（Singleton）</h1>
+        <div class="stuff">
+            <span>六月 11, 2016</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="../tags/设计模式/">设计模式</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p><strong>单例模式（Singleton）</strong>，保证一个类仅有一个实例，并提供一个访问它的全局访问点。<br>单例模式有以下特点：</p>
+<ul>
+<li>单例类只能有一个实例。</li>
+<li>单例类必须自己创建自己的唯一的实例。</li>
+<li>单例类必须能给所有其他对象提供这一实例。<br>&nbsp;</li>
+</ul>
+<h2 id="UML类图"><a href="#UML类图" class="headerlink" title="UML类图"></a>UML类图</h2><p><a href="http://qsxuan.com/wp-content/uploads/2016/05/Singleton.png" target="_blank" rel="noopener"><img src="http://qsxuan.com/wp-content/uploads/2016/05/Singleton.png" alt="Singleton"></a></p>
+<p>&nbsp;</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="饿汉式单例类"><a href="#饿汉式单例类" class="headerlink" title="饿汉式单例类"></a>饿汉式单例类</h3><p>在单例类被加载时就将自己实例化</p>
+<pre class="lang:java decode:true ">package com.qinshaoxuan.singleton;
+
+public class EagerSingleton {
+
+    private static final EagerSingleton instance = new EagerSingleton();
+
+    /**
+     * 私有的构造方法,保证外界无法直接实例化
+     */
+    private EagerSingleton(){}
+
+    /**
+     * 静态工厂方法
+     * @return 单例类的唯一实例
+     */
+    public static EagerSingleton getInstance(){
+        return instance;
+    }
+}
+</pre>
+
+<h3 id="懒汉式单例类"><a href="#懒汉式单例类" class="headerlink" title="懒汉式单例类"></a>懒汉式单例类</h3><p>在单例类第一次被引用时将自己实例化</p>
+<pre class="lang:java decode:true ">package com.qinshaoxuan.singleton;
+
+public class LazySingleton {
+
+    private static LazySingleton instance = null;
+
+    /**
+     * 私有的构造方法,保证外界无法直接实例化
+     */
+    private LazySingleton() {}
+
+    /**
+     * 静态工厂方法
+     * @return 单例类的唯一实例
+     */
+    synchronized public static LazySingleton getInstance(){
+        if(instance == null){
+            instance = new LazySingleton();
+        }
+        return instance;
+    }
+}
+</pre>
+
+<h3 id="登记式单例类"><a href="#登记式单例类" class="headerlink" title="登记式单例类"></a>登记式单例类</h3><p>登记式单例类是为了克服饿汉式和懒汉式单例类均不可继承的缺点而设计的。</p>
+<p>这里的实现为父类饿汉式，子类懒汉式，且子类只能是懒汉式。</p>
+<p>由于子类必须允许父类以构造方法调用产生实例，因此，它的构造方法必须是公开的。这样一来就等于允许了以这样的方式产生实例而不在父类的登记中，这是登记式单例类的一个缺点。</p>
+<p>由于父类的实例必须存在才可能有子类的实例，这在有些情况下是一个浪费，这是登记式单例类的另一个缺点。</p>
+<p>&nbsp;</p>
+<p>RegSingleton类</p>
+<p><pre class="lang:java decode:true ">package com.qinshaoxuan.singleton;</pre></p>
+<p>import java.util.HashMap;</p>
+<p>public class RegSingleton {</p>
+<pre><code>static private HashMap registry = new HashMap();
+
+static {
+    RegSingleton instence = new RegSingleton();
+    registry.put(instence.getClass().getName(), instence);
+}
+
+/**
+ * 保护的构造方法
+ */
+protected RegSingleton() {}
+
+/**
+ * 静态工厂方法
+ * @param name 单例类的类名
+ * @return 单例类的唯一实例
+ */
+static public RegSingleton getInstence(String name){
+    if(name == null){
+        name = &quot;com.qinshaoxuan.singleton.RegSingleton&quot;;
+    }
+    if(registry.get(name)==null){
+        try{
+            registry.put(name, Class.forName(name).newInstance());
+        }
+        catch(Exception e){
+            System.out.println(&quot;Error happened.&quot;);
+        }
+    }
+    return (RegSingleton)(registry.get(name));
+}
+</code></pre><p>}<br><br>RegSingletonChild类</p>
+<p><pre class="lang:java decode:true ">package com.qinshaoxuan.singleton;</pre></p>
+<p>public class RegSingletonChild extends RegSingleton {</p>
+<pre><code>/**
+ * 构造方法
+ */
+public RegSingletonChild() {}
+
+/**
+ * 静态工厂方法
+ * @return 单例类子类的唯一实例
+ */
+static public RegSingletonChild getIntance(){
+    return (RegSingletonChild)RegSingleton.getInstence(&quot;com.qinshaoxuan.singleton.RegSingletonChild&quot;);
+}
+</code></pre><p>}<br><br>&nbsp;</p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>在系统内存中只存在一个对象，因此可以节约系统资源，对于一些需要频繁创建和销毁的对象使用单例模式无疑可以提高系统的性能。</p>
+<p>&nbsp;</p>
+<h2 id="使用场合"><a href="#使用场合" class="headerlink" title="使用场合"></a>使用场合</h2><p>在一个系统要求一个类只有一个实例时才应当使用单例模式。反过来说，如果一个类可以有几个实例共存，那么就没有必要使用单例类。</p>
+<p>&nbsp;</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li>《大话设计模式》 作者：程杰，清华大学出版社</li>
+<li>《Java与模式》 作者：阎宏，电子工业出版社<br>&nbsp;</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="http://link.hhtjim.com/163/785902.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#UML类图"><span class="toc-number">1.</span> <span class="toc-text">UML类图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码实现"><span class="toc-number">2.</span> <span class="toc-text">代码实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#饿汉式单例类"><span class="toc-number">2.1.</span> <span class="toc-text">饿汉式单例类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#懒汉式单例类"><span class="toc-number">2.2.</span> <span class="toc-text">懒汉式单例类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#登记式单例类"><span class="toc-number">2.3.</span> <span class="toc-text">登记式单例类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优点"><span class="toc-number">3.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用场合"><span class="toc-number">4.</span> <span class="toc-text">使用场合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">5.</span> <span class="toc-text">参考文献</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

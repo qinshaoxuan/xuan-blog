@@ -1,0 +1,419 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">2015 Multi-University Training Contest 2 Solutions</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">2015 Multi-University Training Contest 2 Solutions</h1>
+        <div class="stuff">
+            <span>七月 23, 2015</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="../tags/多校/">多校</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>官方题解：<a href="http://bestcoder.hdu.edu.cn/blog/2015-multi-university-training-contest-2-%E9%A2%98%E8%A7%A3-by-%E5%AD%A6%E5%86%9B%E4%B8%AD%E5%AD%A6/" target="_blank" rel="noopener">2015 Multi-University Training Contest 2 solutions BY 学军中学</a></p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1002-Buildings"><a href="#1002-Buildings" class="headerlink" title="1002 Buildings"></a>1002 Buildings</h2><blockquote>
+<p>HDU 5301：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5301" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5301</a></p>
+<p>题意：有一个n<em>m的大矩阵，其中有一个1</em>1的坏格，求用若干个小矩阵去覆盖大矩阵，坏格不能被覆盖。问小矩阵中面积最大的面积最小是多少。给出n,m以及坏格的位置x,y<br>&nbsp;</p>
+</blockquote>
+<p>如果没有坏格，那么答案应该是(ans’=(min(m,n)+1)/2)</p>
+<p>有了坏格就要考虑坏格周围的4个格子是否能被覆盖到</p>
+<p>交换(n,m)使(n\leqslant m),并把坏格装换到矩阵左上角</p>
+<p>那么需要被覆盖的就是坏格下方的那个格子，只要它能被覆盖，那么其他4个格子也一定能被覆盖。</p>
+<p>同时要注意(ans)的长度不会超过((m+1)/2)。那么(ans=min((m+1)/2,max(ans’,min(n-x,y))))</p>
+<p>特殊情况：当大矩阵为正方形，且坏格位于方形中心时，(ans=ans’-1)</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;<br>using namespace std;</p>
+<p>#define MAX(a,b) ((a&gt;b)?(a):(b))</p>
+<p>#define MIN(a,b) ((a&lt;b)?(a):(b))</p>
+<p>#define LL __int64</p>
+<p>#define N 100005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>int main() {</p>
+<pre><code>int n,m,x,y;
+while(scanf(&quot;%d%d%d%d&quot;,&amp;amp;n,&amp;amp;m,&amp;amp;x,&amp;amp;y)!=EOF) {
+    if(n&amp;gt;m) {
+        swap(n,m);
+        swap(x,y);
+    }
+    int ans=(min(n,m)+1)/2;
+    x=min(x,n-x+1);
+    y=min(y,m-y+1);
+    if(n==m&amp;amp;&amp;amp;(n&amp;amp;1)&amp;amp;&amp;amp;x==y&amp;amp;&amp;amp;x==(n+1)/2)
+        ans--;
+    else {
+        ans=min((m+1)/2,max(ans,min(n-x,y)));
+    }
+    printf(&quot;%d\n&quot;,ans);
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1004-Delicious-Apples"><a href="#1004-Delicious-Apples" class="headerlink" title="1004 Delicious Apples"></a>1004 Delicious Apples</h2><blockquote>
+<p>HDU 5303：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5303" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5303</a></p>
+<p>题意：在一个长为L的环形路上有n个苹果数，坐标为0的位置为起点。分别给出了苹果树距离起点的长度(x_i)（顺时针）和苹果数量(a_i)，现在有一个最多能装(k)个苹果的篮子，从起点出发，往返摘取苹果，问最短的行走距离。</p>
+<p>(1\leqslant n ,k\leqslant 10^5,1\leqslant L\leqslant 10^9)<br>&nbsp;</p>
+</blockquote>
+<p>如果将环路从(\frac{L}{2})处断开，那么便可以左右分别贪心求出最小的(ans)</p>
+<p>但因为是环形，就要考虑一种特殊情况，可能需要绕整个环一周。因为左右两边贪心完后可能剩下小于(k)个的苹果（如果剩下大于(k)个，那么大于那部分走半边就可以摘取），对于这种情况特殊处理，然后取最小值。</p>
+<p>PS：注意用__int64</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;<br>using namespace std;</p>
+<p>#define MAX(a,b) ((a&gt;b)?(a):(b))</p>
+<p>#define MIN(a,b) ((a&lt;b)?(a):(b))</p>
+<p>#define LL __int64</p>
+<p>#define N 100005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>LL l[N],r[N];<br>int l_cnt,r_cnt;<br>int main() {<br>    //freopen(“C:\Users\F\Desktop\in.txt”, “r”, stdin);<br>    //freopen(“C:\Users\F\Desktop\out.txt”, “w”, stdout);</p>
+<pre><code>int t;
+int n,k,L;
+int x,a;
+LL ans;
+scanf(&quot;%d&quot;,&amp;amp;t);
+while(t--) {
+    ans=0;
+    memset(l,0,sizeof(l));
+    memset(r,0,sizeof(r));
+    l_cnt=1;
+    r_cnt=1;
+    scanf(&quot;%d%d%d&quot;,&amp;amp;L,&amp;amp;n,&amp;amp;k);
+    for(int i=1; i&amp;lt;=n; ++i) {
+        scanf(&quot;%d%d&quot;,&amp;amp;x,&amp;amp;a);
+        while(a--) {
+            if(x*2&amp;lt;L)
+                l[l_cnt++]=x;
+            else
+                r[r_cnt++]=L-x;
+        }
+    }
+    l_cnt--,r_cnt--;
+    sort(l+1,l+l_cnt+1);
+    sort(r+1,r+r_cnt+1);
+    for(int i=1; i&amp;lt;=l_cnt; ++i) {
+        if(i&amp;gt;k) {
+            l[i]+=l[i-k];
+        }
+    }
+    for(int i=1; i&amp;lt;=r_cnt; ++i) {
+        if(i&amp;gt;k) {
+            r[i]+=r[i-k];
+        }
+    }
+    ans=(l[l_cnt]+r[r_cnt])*2;
+
+    for(int i=0; i&amp;lt;=k; ++i) {
+        ans=min(ans,L+(l[l_cnt-i]+r[max(0,r_cnt-(k-i))])*2);
+    }
+    printf(&quot;%I64d\n&quot;,ans);
+}
+
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1006-Friends"><a href="#1006-Friends" class="headerlink" title="1006 Friends"></a>1006 Friends</h2><blockquote>
+<p>HDU 5305：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5305" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5305</a></p>
+<p>题意：n个人m对朋友，对于每对朋友可以选择成为线上朋友或者线下朋友，但要求每人的线上朋友数等于线下朋友数，问有多少种选择方法</p>
+<p>(1\leqslant n\leqslant 8)<br>&nbsp;</p>
+</blockquote>
+<p>当n=8时，(\frac{8\times7}{2}=28)条边，如果直接暴力枚举的话需要枚举(2^{28}\approx10^8)次，明显会TLE</p>
+<p>考虑剪枝，如果枚举的时候考虑当前边的两点，不让点的某一种朋友数超过点度数的(\frac{1}{2})，便会节省掉很大一部分时间。</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true " title="HDU 5305">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;<br>using namespace std;</p>
+<p>#define MAX(a,b) ((a&gt;b)?(a):(b))</p>
+<p>#define MIN(a,b) ((a&lt;b)?(a):(b))</p>
+<p>#define LL __int64</p>
+<p>#define N 100005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>int n,m;<br>int ans;<br>int on[10],off[10];<br>int vis[10];<br>struct Edge {<br>    int a,b;<br>} e[110];</p>
+<p>void dfs(int k) {<br>    if(k==m) {<br>        for(int i=1; i&lt;=n; ++i)<br>            if(on[i]!=off[i])return;<br>        ans++;<br>        return ;<br>    }<br>    int a=e[k].a,b=e[k].b;<br>    if(on[a]&lt;vis[a]/2&amp;&amp;on[b]&lt;vis[b]/2) {<br>        on[a]++,on[b]++;<br>        dfs(k+1);<br>        on[a]–,on[b]–;<br>    }<br>    if(off[a]&lt;vis[a]/2&amp;&amp;off[b]&lt;vis[b]/2) {<br>        off[a]++,off[b]++;<br>        dfs(k+1);<br>        off[a]–,off[b]–;<br>    }<br>}</p>
+<p>int main() {<br>    int T;<br>    scanf(“%d”,&amp;T);<br>    while(T–) {<br>        scanf(“%d%d”,&amp;n,&amp;m);<br>        ans=0;<br>        int flag=0;<br>        memset(vis,0,sizeof(vis));<br>        memset(on,0,sizeof(on));<br>        memset(off,0,sizeof(off));<br>        for(int i=0; i&lt;m; ++i) {<br>            scanf(“%d%d”,&amp;e[i].a,&amp;e[i].b);<br>            vis[e[i].a]++;<br>            vis[e[i].b]++;<br>        }<br>        for(int i=1; i&lt;=n; ++i) {<br>            if(vis[i]&amp;1)flag=1;<br>        }<br>        if(flag) {<br>            printf(“0\n”);<br>            continue;<br>        }<br>        dfs(0);<br>        printf(“%d\n”,ans);<br>    }<br>    return 0;<br>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1007-Gorgeous-Sequence"><a href="#1007-Gorgeous-Sequence" class="headerlink" title="1007 Gorgeous Sequence"></a>1007 Gorgeous Sequence</h2><blockquote>
+<p>HDU 5306：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5306" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5306</a></p>
+<p>题意：一个长度为n的序列a，定义三种操作：</p>
+<p>0 x y t: 对于(x\leqslant i \leqslant y)，令(a_i=min(a_i,t))</p>
+<p>1 x y: 输出区间([x,y])内的最大值</p>
+<p>2 x y: 输出区间([x,y])内的数的和<br>&nbsp;</p>
+</blockquote>
+<p>线段树区间合并</p>
+<p>用一个cover数组去记录lazy标记影响了多少个数</p>
+<p>用平时的输入外挂还过不了。。贴一个标程的输入外挂</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true " title="输入外挂">/<strong><strong><em>**</em></strong></strong>Read<strong><strong>**</strong></strong>/<br>char <em>ch, </em>ch1, buf[40<em>1024000+5], buf1[40</em>1024000+5];</pre></p>
+<p>void read(int &amp;x)<br>{<br>    for (++ch; <em>ch &lt;= 32; ++ch);<br>    for (x = 0; ‘0’ &lt;= </em>ch; ch++)    x = x <em> 10 + </em>ch - ‘0’;<br>}</p>
+<p>/<strong><strong><strong><strong><strong><strong>**</strong></strong></strong></strong></strong></strong>/</p>
+<p>int main(){</p>
+<pre><code>ch = buf - 1;
+ch1 = buf1 - 1;
+fread(buf, 1, 1000 * 35 * 1024, stdin);
+
+int x;
+read(x);
+
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<p>AC代码</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true " title="HDU 5306">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;<br>using namespace std;</p>
+<p>#define MAX(a,b) ((a&gt;b)?(a):(b))</p>
+<p>#define MIN(a,b) ((a&lt;b)?(a):(b))</p>
+<p>#define LL __int64</p>
+<p>#define N 1000005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>#define lson l,m,rt&lt;&lt;1</p>
+<p>#define rson m+1,r,rt&lt;&lt;1|1</p>
+<p>/<strong><strong><em>**</em></strong></strong>Read<strong><strong>**</strong></strong>/<br>char <em>ch, </em>ch1, buf[40<em>1024000+5], buf1[40</em>1024000+5];</p>
+<p>void read(int &amp;x)<br>{<br>    for (++ch; <em>ch &lt;= 32; ++ch);<br>    for (x = 0; ‘0’ &lt;= </em>ch; ch++)    x = x <em> 10 + </em>ch - ‘0’;<br>}</p>
+<p>/<strong><strong><strong><strong><strong><strong>**</strong></strong></strong></strong></strong></strong>/</p>
+<p>LL sum[N&lt;&lt;2];<br>int mmax[N&lt;&lt;2];<br>int tag[N&lt;&lt;2];<br>int cover[N&lt;&lt;2];</p>
+<p>void pushup(int rt){<br>    sum[rt]=sum[rt&lt;&lt;1]+sum[rt&lt;&lt;1|1];<br>    mmax[rt]=max(mmax[rt&lt;&lt;1],mmax[rt&lt;&lt;1|1]);<br>    cover[rt]=cover[rt&lt;&lt;1]+cover[rt&lt;&lt;1|1];<br>}</p>
+<p>void mark(int t,int l,int r,int rt){<br>    if(tag[rt]!=0&amp;&amp;tag[rt]&lt;=t)return;<br>    tag[rt]=t;<br>    if(cover[rt]!=r-l+1){<br>        mmax[rt]=t;<br>        sum[rt]+=(LL)(r-l+1-cover[rt])*t;<br>        cover[rt]=r-l+1;<br>    }<br>}</p>
+<p>void pushdown(int l,int r,int rt){<br>    if(tag[rt]){<br>        int m=(l+r)&gt;&gt;1;<br>        mark(tag[rt],lson);<br>        mark(tag[rt],rson);<br>    }<br>}</p>
+<p>void build(int l,int r,int rt){<br>    tag[rt]=0;<br>    if(l==r){<br>        read(tag[rt]);<br>        sum[rt]=mmax[rt]=tag[rt];<br>        cover[rt]=1;<br>        return;<br>    }<br>    int m=(l+r)&gt;&gt;1;<br>    build(lson);<br>    build(rson);<br>    pushup(rt);<br>}</p>
+<p>void clear(int t,int l,int r,int rt){<br>    if(mmax[rt]&lt;t)return;<br>    if(tag[rt]&gt;=t)<br>        tag[rt]=0;</p>
+<pre><code>if(l==r){
+    sum[rt]=mmax[rt]=tag[rt];
+    cover[rt]=(tag[rt]!=0);
+    return;
+}
+
+int m=(l+r)&amp;gt;&amp;gt;1;
+pushdown(l,r,rt);
+clear(t,lson);
+clear(t,rson);
+pushup(rt);
+</code></pre><p>}</p>
+<p>void update(int L,int R,int t,int l,int r,int rt){<br>    if(mmax[rt]&lt;=t)return;<br>    if(L&lt;=l&amp;&amp;r&lt;=R){<br>        clear(t,l,r,rt);<br>        if(l==r){<br>            sum[rt]=mmax[rt]=tag[rt]=t;<br>            cover[rt]=1;<br>        }else{<br>            pushup(rt);<br>        }<br>        mark(t,l,r,rt);<br>        return;<br>    }<br>    int m=(l+r)&gt;&gt;1;<br>    pushdown(l,r,rt);<br>    if(L&lt;=m)update(L,R,t,lson);<br>    if(R&gt;m)update(L,R,t,rson);<br>    pushup(rt);<br>}</p>
+<p>LL query(int L,int R,int op,int l,int r,int rt){<br>    if(L&lt;=l&amp;&amp;r&lt;=R){<br>        switch(op){<br>            case 1:return mmax[rt];break;<br>            case 2:return sum[rt];break;<br>        }<br>    }<br>    int m=(l+r)&gt;&gt;1;<br>    LL ret=0;<br>    pushdown(l,r,rt);<br>    if(L&lt;=m){<br>        switch(op){<br>            case 1:ret=max(ret,query(L,R,op,lson));break;<br>            case 2:ret+=query(L,R,op,lson);break;<br>        }<br>    }<br>    if(R&gt;m){<br>         switch(op){<br>            case 1:ret=max(ret,query(L,R,op,rson));break;<br>            case 2:ret+=query(L,R,op,rson);break;<br>        }<br>    }<br>    pushup(rt);<br>    return ret;<br>}</p>
+<p>void show(int l,int r,int rt){<br>    if(l==r){<br>        printf(“%I64d”,sum[rt]);<br>        return ;<br>    }<br>    int m=(l+r)&gt;&gt;1;<br>    pushdown(l,r,rt);<br>    show(lson);<br>    show(rson);<br>    pushup(rt);<br>}</p>
+<p>int main(){</p>
+<pre><code>ch = buf - 1;
+ch1 = buf1 - 1;
+fread(buf, 1, 1000 * 35 * 1024, stdin);
+int T;
+int n,m;
+int op,x,y,t;
+read(T);
+while(T--){
+    read(n);
+    read(m);
+    build(1,n,1);
+    while(m--){
+        read(op);
+        read(x);
+        read(y);
+        if(op==0){
+            read(t);
+            update(x,y,t,1,n,1);
+        }else if(op==1){
+            printf(&quot;%d\n&quot;,query(x,y,1,1,n,1));
+        }else{
+            printf(&quot;%I64d\n&quot;,query(x,y,2,1,n,1));
+        }
+    }
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1009-I-Wanna-Become-A-24-Point-Master"><a href="#1009-I-Wanna-Become-A-24-Point-Master" class="headerlink" title="1009 I Wanna Become A 24-Point Master"></a>1009 I Wanna Become A 24-Point Master</h2><blockquote>
+<p>HDU 5308：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5308" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5308</a></p>
+<p>题意：给n个整数n，用“+”，“-”，“*”，“/”，括号凑24点。</p>
+<p>(1\leqslant n\leqslant 10^5)<br>&nbsp;</p>
+</blockquote>
+<p>对于(n&lt;15)时可以打表：</p>
+<p>(n\leqslant 3,)无解</p>
+<p>(n=4,4*4+4+4=24)</p>
+<p>(n=5,(5-\frac{\frac{5}{5}}{5})\times 5=24)</p>
+<p>(n=6,6+6+6+6=24)</p>
+<p>(n=7,\frac{7\times7-\frac{7}{7}}{7+7}\times7=24)</p>
+<p>(n=8,8+8+8=24)</p>
+<p>(n=9,9+9+9-\frac{9}{9}-\frac{9}{9}-\frac{9}{9}=24)</p>
+<p>(n=10,10+10+\frac{10+10}{10}+\frac{10+10}{10}=24)</p>
+<p>(n=11,11+11+\frac{11+11}{11}=24)</p>
+<p>(n=12,12+12=24)</p>
+<p>(n=13,13+13-\frac{13+13}{13}=24)</p>
+<p>(n=14,14+14-\frac{14+14}{14}-\frac{14+14}{14}=24)</p>
+<p>对于(n\geqslant 15)：</p>
+<p>(\frac{n+n}{n}<em>\frac{n+n}{n}</em>\frac{n+n}{n}*\frac{n+n+n}{n}=24)</p>
+<p>对于多余的n可以用两个n相减得0，在把多余的n乘掉。</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true " title="HDU 5308">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;<br>using namespace std;</p>
+<p>#define MAX(a,b) ((a&gt;b)?(a):(b))</p>
+<p>#define MIN(a,b) ((a&lt;b)?(a):(b))</p>
+<p>#define LL __int64</p>
+<p>#define N 100005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>int main() {<br>    //freopen(“C:\Users\F\Desktop\in.txt”, “r”, stdin);<br>    //freopen(“C:\Users\F\Desktop\out.txt”, “w”, stdout);<br>    int n;<br>    while(scanf(“%d”,&amp;n)!=EOF) {<br>        if(n&lt;=3)<br>            printf(“-1\n”);<br>        else {<br>            if(n==4) {<br>                printf(“1 <em> 2\n”);<br>                printf(“5 + 3\n”);<br>                printf(“6 + 4\n”);<br>            } else if(n==5) {<br>                printf(“1 / 2\n”);//6<br>                printf(“6 / 3\n”);//7<br>                printf(“4 - 7\n”);//8<br>                printf(“5 </em> 8\n”);//9<br>            } else if(n==6) {<br>                printf(“1 + 2\n”);<br>                printf(“7 + 3\n”);<br>                printf(“8 + 4\n”);<br>                printf(“9 + 5\n”);<br>                printf(“10 - 6\n”);<br>            } else if(n==7) {<br>                printf(“1 / 2\n”);//8<br>                printf(“3 <em> 4\n”);//9<br>                printf(“9 - 8\n”);//10<br>                printf(“5 + 6\n”);//11<br>                printf(“10 / 11\n”);//12<br>                printf(“12 </em> 7\n”);//13<br>            } else if(n==8) {<br>                printf(“1 + 2\n”);//9<br>                printf(“9 + 3\n”);//10<br>                printf(“4 - 5\n”);//11<br>                printf(“11 <em> 6\n”);//12<br>                printf(“12 </em> 7\n”);//13<br>                printf(“13 <em> 8\n”);//14<br>                printf(“10 + 14\n”);//15<br>            } else if(n==9) {<br>                printf(“1 + 2\n”);//10<br>                printf(“10 + 3\n”);//11<br>                printf(“4 / 5\n”);//12<br>                printf(“6 / 7\n”);//13<br>                printf(“8 / 9\n”);//14<br>                printf(“11 - 12\n”);//15<br>                printf(“15 - 13\n”);//16<br>                printf(“16 - 14\n”);//17<br>            } else if(n==10) {<br>                printf(“1 + 2\n”);//11<br>                printf(“3 + 4\n”);//12<br>                printf(“12 / 5\n”);//13<br>                printf(“11 + 13\n”);//14<br>                printf(“6 + 7\n”);//15<br>                printf(“15 / 8\n”);//16<br>                printf(“14 + 16\n”);//17<br>                printf(“17 + 9\n”);//18<br>                printf(“18 - 10\n”);//19<br>            } else if(n==11) {<br>                printf(“1 + 2\n”);//12<br>                printf(“3 + 4\n”);//13<br>                printf(“13 / 5\n”);//14<br>                printf(“12 + 14\n”);//15<br>                printf(“6 - 7\n”);//16<br>                printf(“16 </em> 8\n”);//17<br>                printf(“17 <em> 9\n”);//18<br>                printf(“18 </em> 10\n”);//19<br>                printf(“19 <em> 11\n”);//20<br>                printf(“20 + 15\n”);//20<br>            } else if(n==12) {<br>                printf(“1 + 2\n”);//13<br>                printf(“3 - 4\n”);//14<br>                printf(“14 </em> 5\n”);//15<br>                printf(“15 <em> 6\n”);//16<br>                printf(“16 </em> 7\n”);//17<br>                printf(“17 <em> 8\n”);//18<br>                printf(“18 </em> 9\n”);//19<br>                printf(“19 <em> 10\n”);//20<br>                printf(“20 </em> 11\n”);//21<br>                printf(“21 <em> 12\n”);//22<br>                printf(“22 + 13\n”);//23<br>            } else if(n==13) {<br>                printf(“1 + 2\n”);//14<br>                printf(“3 + 4\n”);//15<br>                printf(“15 / 5\n”);//16<br>                printf(“14 - 16\n”);//17<br>                printf(“6 - 7\n”);//18<br>                printf(“18 </em> 8\n”);//19<br>                printf(“19 <em> 9\n”);//20<br>                printf(“20 </em> 10\n”);//21<br>                printf(“21 <em> 11\n”);//22<br>                printf(“22 </em> 12\n”);//23<br>                printf(“23 <em> 13\n”);//24<br>                printf(“24 + 17\n”);//25<br>            } else if(n==14) {<br>                printf(“1 + 2\n”);//15<br>                printf(“3 + 4\n”);//16<br>                printf(“16 / 5\n”);//17<br>                printf(“15 - 17\n”);//18<br>                printf(“6 + 7\n”);//19<br>                printf(“19 / 8\n”);//20<br>                printf(“18 - 20\n”);//21<br>                printf(“9 - 10\n”);//22<br>                printf(“22 </em> 11\n”);//23<br>                printf(“23 <em> 12\n”);//24<br>                printf(“24 </em> 13\n”);//25<br>                printf(“25 <em> 14\n”);//26<br>                printf(“26 + 21\n”);//27<br>            } else {<br>                printf(“1 + 2\n”);//1<br>                printf(“%d / 3\n”,n+1);//2<br>                printf(“4 + 5\n”);//3<br>                printf(“%d / 6\n”,n+3);//4<br>                printf(“%d </em> %d\n”,n+2,n+4);//5<br>                printf(“7 + 8\n”);//6<br>                printf(“%d / 9\n”,n+6);//7<br>                printf(“%d <em> %d\n”,n+5,n+7);//8<br>                printf(“10 + 11\n”);//9<br>                printf(“%d + 12\n”,n+9);//10<br>                printf(“%d / 13\n”,n+10);//11<br>                printf(“%d </em> %d\n”,n+8,n+11);//12<br>                printf(“14 - 15\n”);//13<br>                int lnow=n+13;<br>                int now=16;<br>                while(now&lt;=n) {<br>                    printf(“%d * %d\n”,lnow++,now++);<br>                }<br>                printf(“%d + %d\n”,lnow,n+12);<br>            }<br>        }<br>    }<br>    return 0;<br>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>（待续。。。）</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="http://link.hhtjim.com/163/785902.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1002-Buildings"><span class="toc-number">1.</span> <span class="toc-text">1002 Buildings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1004-Delicious-Apples"><span class="toc-number">2.</span> <span class="toc-text">1004 Delicious Apples</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1006-Friends"><span class="toc-number">3.</span> <span class="toc-text">1006 Friends</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1007-Gorgeous-Sequence"><span class="toc-number">4.</span> <span class="toc-text">1007 Gorgeous Sequence</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1009-I-Wanna-Become-A-24-Point-Master"><span class="toc-number">5.</span> <span class="toc-text">1009 I Wanna Become A 24-Point Master</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

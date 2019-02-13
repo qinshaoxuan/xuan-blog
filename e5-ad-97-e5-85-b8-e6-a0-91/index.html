@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single" class="page">
+    <div id="top">
+        <a class="icon-left image-icon" href="javascript:history.back()"></a>
+    </div>
+    <div class="section">
+        <div class="article">
+            <div class="main">
+                <div class="content">
+                    <h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=1251" target="_blank" rel="noopener">HDU 1251 统计难题</a><br>题意：统计出以某个字符串为前缀的单词数量</p>
+<p>指针实现</p>
+<p><pre class="lang:c++ decode:true " title="HDU 1251">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;<br>using namespace std;</p>
+<p>#define N 26</p>
+<p>struct node{<br>    node *Next[N];<br>    int v;<br>    node(){<br>        v=0;<br>        for(int i=0;i&lt;N;++i){<br>            Next[i]=NULL;<br>        }<br>    }<br>};</p>
+<p>node *root;</p>
+<p>void add(char <em>str){<br>    node </em>p=root;<br>    int k;<br>    for(int i=0;i&lt;strlen(str);++i){<br>        k=str[i]-‘a’;<br>        if(p-&gt;Next[k]==NULL){<br>            node *q=new node();<br>            q-&gt;v=1;<br>            p-&gt;Next[k]=q;<br>            p=p-&gt;Next[k];<br>        }else{<br>            p-&gt;Next[k]-&gt;v++;<br>            p=p-&gt;Next[k];<br>        }<br>    }<br>}</p>
+<p>int query(char <em>str){<br>    node </em>p=root;<br>    int k;<br>    for(int i=0;i&lt;strlen(str);++i){<br>        k=str[i]-‘a’;<br>        if(p-&gt;Next[k]==NULL)<br>            return 0;<br>        else<br>            p=p-&gt;Next[k];<br>    }<br>    return p-&gt;v;<br>}</p>
+<p>void del(node <em>root) {<br>    node </em>s = root;<br>    if(s==NULL) return;<br>    for (int i = 0; i &lt; N; i++) {<br>        if (s-&gt;Next[i])<br>            del(s-&gt;Next[i]);<br>    }<br>    delete s;<br>}</p>
+<p>int main(){<br>    int i;<br>    root=new node();<br>    char str[20];<br>    while(gets(str),str[0]!=’\0’){<br>        add(str);<br>    }<br>    while(scanf(“%s”,str)!=EOF){<br>        printf(“%d\n”,query(str));<br>    }<br>    del(root);<br>    return 0;<br>}<br>数组实现</p>
+<p><pre class="lang:c++ decode:true " title="HDU 1251">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;<br>using namespace std;</p>
+<p>#define NODE 1000005</p>
+<p>#define N 26</p>
+<p>int Next[NODE][N];     //数组建树<br>int v[NODE];        //相同前缀个数<br>int node;           //节点个数</p>
+<p>void init(){<br>    node=1;<br>    memset(Next[0],0,sizeof(Next[0]));<br>}</p>
+<p>void add(char *str){<br>    int len=strlen(str);<br>    int cur=0,k;<br>    for(int i=0;i&lt;len;++i){<br>        k=str[i]-‘a’;<br>        if(Next[cur][k]==0){<br>            memset(Next[node],0,sizeof(Next[node]));<br>            v[node]=0;<br>            Next[cur][k]=node++;<br>        }<br>        v[Next[cur][k]]++;<br>        cur=Next[cur][k];<br>    }<br>}</p>
+<p>int query(char *str){<br>    int k,cur=0;<br>    int len=strlen(str);<br>    for(int i=0;i&lt;len;++i){<br>        k=str[i]-‘a’;<br>        if(Next[cur][k])<br>            cur=Next[cur][k];<br>        else<br>            return 0;<br>    }<br>    return v[cur];<br>}</p>
+<p>int main(){<br>    char str[20];<br>    init();<br>    while(1){<br>        gets(str);<br>        if(str[0]==’\0’)break;<br>        add(str);<br>    }<br>    while(scanf(“%s”,str)!=EOF){<br>        printf(“%d\n”,query(str));<br>    }<br>    return 0;<br>}<br>&nbsp;</p>
+<p><strong>01字典树</strong></p>
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=4825" target="_blank" rel="noopener">HDU 4825 Xor Sum</a><br>题意：N个数M次询问，每次询问一个数S，求从N个数中找出一个数K，使K与S异或结果最大</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true " title="HDU 2825">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;map&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL __int64</p>
+<p>#define NODE 32000100</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>int n,m;<br>int node;<br>int Next[NODE][2];<br>LL v[NODE];</p>
+<p>void add(LL x) {<br>    int cur=0;<br>    for(int j=31; j&gt;=0; j–) {<br>        int k=((1&lt;&lt;j)&amp;x)?1:0;<br>        if(Next[cur][k]==0) {<br>            memset(Next[node],0,sizeof(Next[node]));<br>            v[node]=0;<br>            Next[cur][k]=node++;<br>        }<br>        cur=Next[cur][k];<br>    }<br>    v[cur]=x;<br>}</p>
+<p>LL query(LL x) {<br>    LL i,k,cur=0;<br>    for(i=31; i&gt;=0; i–) {<br>        k=((1&lt;&lt;i)&amp;x)?0:1;<br>        if(Next[cur][k]) cur=Next[cur][k];<br>        else cur=Next[cur][1-k];<br>    }<br>    return (v[cur]);<br>}<br>int main() {<br>    LL num,x;<br>    LL ans;<br>    int T,cas=1;<br>    scanf(“%d”,&amp;T);<br>    while(T–) {<br>        scanf(“%d%d”,&amp;n,&amp;m);</p>
+<pre><code>    node=1;
+    memset(Next[0],0,sizeof(Next[0]));
+    for(int i=0; i&amp;lt;n; i++) {
+        scanf(&quot;%I64d&quot;,&amp;amp;x);
+        add(x);
+    }
+    printf(&quot;Case #%d:\n&quot;,cas++);
+    while(m--) {
+        scanf(&quot;%I64d&quot;,&amp;amp;num);
+        printf(&quot;%I64d\n&quot;,query(num));
+    }
+}
+
+return 0;
+</code></pre><p>}<br><br>&nbsp;</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

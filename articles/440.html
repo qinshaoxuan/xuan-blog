@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="yanm1ng&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="../css/images/logo.png">
+  
+  <title>
+    
+      2015 Multi-University Training Contest 4 Solutions | Xuan&#39;s Blog
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="../js/qrious.js"></script>
+<script src="../js/gitment.js"></script>
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="../index.html">
+      <div class="logo"></div>
+      <span>Xuan's Blog</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="../index.html" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="../index.html" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>2015 Multi-University Training Contest 4 Solutions</h2>
+  <p class="post-date">2015-07-30</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>官方题解：<a href="http://bestcoder.hdu.edu.cn/blog/2015-multi-university-training-contest-4-solutions-by-%E5%AD%A6%E5%86%9B%E4%B8%AD%E5%AD%A6/" target="_blank" rel="external">2015 Multi-University Training Contest 4 solutions BY 学军中学</a></p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1001-Olympiad"><a href="#1001-Olympiad" class="headerlink" title="1001 Olympiad"></a>1001 Olympiad</h2><blockquote>
+<p>HDU 5327：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5327" target="_blank" rel="external">http://acm.hdu.edu.cn/showproblem.php?pid=5327</a></p>
+<p>题意：每次询问(<a href="a\leqslant b">a,b</a>)中有多少个 beautiful number， beautiful number指每位数字不同</p>
+<p>(1\leqslant T\leqslant 1000,1\leqslant a\leqslant b\leqslant 10^5)<br>因为范围比较小，可以直接暴力预处理出[1,n]内beautiful number的数量。<br>[a,b]=[1,a]-[1,b-1]</p>
+</blockquote>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;<br>using namespace std;</p>
+<p>#define LL __int64</p>
+<p>#define N 100005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>int cnt[N];<br>int vis[10];<br>void init(){<br>    memset(cnt,0,sizeof(cnt));<br>    int t,flag;<br>    for(int i=1;i&lt;=100000;++i){<br>        t=i;<br>        flag=0;<br>        memset(vis,0,sizeof(vis));<br>        while(t){<br>            vis[t%10]++;<br>            if(vis[t%10]&gt;1){<br>                flag=1;<br>                break;<br>            }<br>            t/=10;<br>        }<br>        cnt[i]=cnt[i-1];<br>        if(flag==0)<br>            cnt[i]++;<br>    }<br>}<br>int main(){</p>
+<pre><code>int T;
+scanf(&quot;%d&quot;,&amp;amp;T);
+init();
+while(T--){
+    int a,b;
+    scanf(&quot;%d%d&quot;,&amp;amp;a,&amp;amp;b);
+    printf(&quot;%d\n&quot;,cnt[b]-cnt[a-1]);
+}
+return 0;
+</code></pre><p>}<br><br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1002-Problem-Killer"><a href="#1002-Problem-Killer" class="headerlink" title="1002 Problem Killer"></a>1002 Problem Killer</h2><blockquote>
+<p>HDU 5328：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5328" target="_blank" rel="external">http://acm.hdu.edu.cn/showproblem.php?pid=5328</a></p>
+<p>题意：求出最长的等差数列和等比数列，答案取两者长度大的</p>
+<p>(1\leqslant n\leqslant 10^6)<br>随便YY一发就能过。</p>
+</blockquote>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;<br>using namespace std;</p>
+<p>#define INF 0x3f3f3f3f</p>
+<p>#define ll __int64</p>
+<p>#define N 1000010</p>
+<p>int n;<br>int a[N];<br>int dp[N][2];</p>
+<p>int main()<br>{<br>    int T;<br>    scanf(“%d”,&amp;T);<br>    while(T–){<br>        scanf(“%d”,&amp;n);<br>        for(int i=1;i&lt;=n;i++){<br>            scanf(“%d”,&amp;a[i]);<br>        }</p>
+<pre><code>    dp[1][0]=dp[1][1]=1;
+    for(int i=2;i&amp;lt;=n;i++) dp[i][0]=dp[i][1]=2;
+    for(int i=3;i&amp;lt;=n;i++){
+        if(a[i]-a[i-1]==a[i-1]-a[i-2]) dp[i][0]=dp[i-1][0]+1;
+        if(a[i]*1.0/a[i-1]==a[i-1]*1.0/a[i-2]) dp[i][1]=dp[i-1][1]+1;
+    }
+
+    int ans=0;
+    for(int i=1;i&amp;lt;=n;i++){
+        ans=max(ans,max(dp[i][0],dp[i][1]));
+    }
+    printf(&quot;%d\n&quot;,ans);
+}
+return 0;
+</code></pre><p>}<br><br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1007-Virtual-Participation"><a href="#1007-Virtual-Participation" class="headerlink" title="1007 Virtual Participation"></a>1007 Virtual Participation</h2><blockquote>
+<p>HDU 5334：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5334" target="_blank" rel="external">http://acm.hdu.edu.cn/showproblem.php?pid=5334</a></p>
+<p>题意：知道一个序列的不同的连续字串个数K，求构造满足K的任意一个序列</p>
+<p>(1\leqslant K\leqslant 10^9)，序列长度(1\leqslant K\leqslant 10^5)<br>因为序列长度(n)的最大范围小于(K)，所以不能用全填(1)的方法</p>
+</blockquote>
+<p>如果序列为这种形式：(1,\cdots ,1,2\cdots,2,3,\cdots,3,\cdots,t)<br>设(n)为序列长度，(L<em>i)为数(i)出现的次数，那么序列的不同的连续字串个数<br>$$!K=\frac{n^2+n-\sum</em>{i=1}^{t}L_i(L_i-1)}{2}$$</p>
+<p>可以列出下面的方程</p>
+<p>$$!\left{\begin{matrix}\sum_{i=1}^{t}L_i(L<em>i-1)=n^2+n-2k\ \sum</em>{i=1}^{t}L_i=n\end{matrix}\right.$$</p>
+<p>设(\sum_{i=1}^{t}L_i(L_i-1)=d)，那么可以用二分找出最大的(p)使(p(p-1)\leqslant d)，然后(L_1)可以取(p)<br>此时另(d=d-p(p-1))，又可以用上面的方法求出所有(L<em>i)。因为(d)一定为偶数，所以最后一定能让(d=0)<br>因为(d=n^2+n-2k)，所以需要用二分找到最小的(n)满足(n^2+n-2k\geqslant 0)<br>如果最后满足 (\sum</em>{i=1}^{t}L_i=n )，那么便是一个解。<br>通过打表发现不满足的只有(k=4)和(k=16)时，对于这两组直接全输出1就行</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;<br>using namespace std;</p>
+<p>#define LL __int64</p>
+<p>#define N 100005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>int L[N];<br>int cnt;</p>
+<p>int main(){</p>
+<pre><code>LL k;
+LL n;
+while(~scanf(&quot;%I64d&quot;,&amp;amp;k)){
+    cnt=0;
+
+    if(k==4||k==16){
+        printf(&quot;%d\n&quot;,k);
+        while(k--){
+            printf(&quot;1&quot;);
+            if(k!=0)printf(&quot; &quot;);
+        }
+        printf(&quot;\n&quot;);
+        continue;
+    }
+
+    //cal min(n) :n^2+n-2k&amp;gt;=0
+    LL l=1,r=100000,m;
+    while(l&amp;lt;=r){
+        m=(l+r)&amp;gt;&amp;gt;1;
+        if(m*m+m-2*k&amp;gt;=0){
+            n=m;
+            r=m-1;
+        }else{
+            l=m+1;
+        }
+    }
+
+    //cal L[]
+    LL d=n*n+n-2*k;
+    LL p;
+    LL len=0;
+    while(d||len&amp;lt;n){
+        l=1,r=100000;
+        while(l&amp;lt;=r){
+            m=(l+r)&amp;gt;&amp;gt;1;
+            if(m*(m-1)&amp;lt;=d){
+                p=m;
+                l=m+1;
+            }else{
+                r=m-1;
+            }
+        }
+        if(p==0)p=1;
+        L[++cnt]=(p?p:1);
+        len+=p;
+        d=d-p*(p-1);
+    }
+
+    printf(&quot;%I64d\n&quot;,n);
+    int first=true;
+    for(int i=1;i&amp;lt;=cnt;++i){
+        n-=L[i];
+        while(L[i]--){
+            if(!first)printf(&quot; &quot;);
+            printf(&quot;%d&quot;,i);
+            first=false;
+        }
+    }
+    printf(&quot;\n&quot;);
+
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1010-XYZ-and-Drops"><a href="#1010-XYZ-and-Drops" class="headerlink" title="1010 XYZ and Drops"></a>1010 XYZ and Drops</h2><blockquote>
+<p>HDU 5336：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5336" target="_blank" rel="external">http://acm.hdu.edu.cn/showproblem.php?pid=5336</a></p>
+<p>题意：在一个c*r的格子里，有一些水滴。一个大小大于4的水滴会向4个方向（上下左右）分裂成4个小水滴。小水滴会一直沿分裂方向运动，直到遇到水滴，使水滴大小加1，小水滴消失。现在给出一些水滴的坐标和大小。并在0s时在(x,y)处有一个水滴分裂。问Ts时所有水滴的状态</p>
+<p>( 1\leqslant r \leqslant100, 1\leqslant c\leqslant 100, 1\leqslant n\leqslant 100, 1\leqslant T\leqslant 10000 )<br>因为数据范围较小，可以直接模拟整个过程。</p>
+</blockquote>
+<p>有三点需要注意：<br>1、无论分裂前的水滴大小是多少，分裂后小水滴的大小始终是为1的。<br>2、0s时注意判断是否有水滴大小大于4，这些水滴在0s分裂。<br>3、水滴分裂后及时清除水滴的标记，此时水滴已经不存在</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;<br>using namespace std;</p>
+<p>#define MAX(a,b) ((a&gt;b)?(a):(b))</p>
+<p>#define MIN(a,b) ((a&lt;b)?(a):(b))</p>
+<p>#define LL __int64</p>
+<p>#define N 105</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>struct node1 {<br>    int x,y;<br>    node1() {}<br>    node1(int _x,int _y) {<br>        x=_x;<br>        y=_y;<br>    }<br>} wd[N];</p>
+<p>struct node2 {<br>    int x,y,d;<br>    node2() {}<br>    node2(int _x,int _y,int _d) {<br>        x=_x;<br>        y=_y;<br>        d=_d;<br>    }<br>};</p>
+<p>int mpt[N][N];<br>int val[N][N];<br>int dir[4][2]= {0,1,1,0,0,-1,-1,0};<br>int ans[N];<br>int r,c,n,T;</p>
+<p>queue&lt;node2&gt; sd;<br>vector&lt;node2&gt; temp;</p>
+<p>void init() {<br>    memset(mpt,0,sizeof(mpt));<br>    memset(val,0,sizeof(val));<br>    memset(ans,-1,sizeof(ans));<br>    while(!sd.empty())sd.pop();<br>    temp.clear();<br>}</p>
+<p>//判断是否超出边界<br>bool judge(node2 a) {<br>    if(a.x&lt;1||a.x&gt;r||a.y&lt;1||a.y&gt;c)return false;<br>    return true;<br>}</p>
+<p>//判断当前位置是否为水滴<br>bool iswd(node2 a) {<br>    if(mpt[a.x][a.y])return true;<br>    return false;<br>}</p>
+<p>//水滴分裂<br>void crack(int t) {</p>
+<pre><code>for(int i=1; i&amp;lt;=n; ++i) {
+    if(val[wd[i].x][wd[i].y]&amp;gt;4&amp;amp;&amp;amp;mpt[wd[i].x][wd[i].y]) {
+        ans[i]=t;
+        for(int j=0; j&amp;lt;4; ++j)
+            temp.push_back(node2(wd[i].x,wd[i].y,j));
+        val[wd[i].x][wd[i].y]=4;
+        mpt[wd[i].x][wd[i].y]=0;
+    }
+}
+for(int i=0; i&amp;lt;temp.size(); ++i)
+    sd.push(temp[i]);
+temp.clear();
+</code></pre><p>}</p>
+<p>//模拟<br>void bfs(int sx,int sy) {</p>
+<pre><code>node2 now,next;
+for(int i=0; i&amp;lt;4; ++i)
+    sd.push(node2(sx,sy,i));
+crack(0);
+val[sx][sy]=4;
+for(int t=1; t&amp;lt;=T; ++t) {
+    while(!sd.empty()) {
+        now=sd.front();
+        sd.pop();
+        next.x=now.x+dir[now.d][0];
+        next.y=now.y+dir[now.d][1];
+        next.d=now.d;
+        val[now.x][now.y]--;
+        if(!judge(next))continue;
+        val[next.x][next.y]++;
+        if(iswd(next))continue;
+        temp.push_back(next);
+    }
+    crack(t);
+}
+</code></pre><p>}</p>
+<p>int main() {<br>    int x,y,s;<br>    while(scanf(“%d%d%d%d”,&amp;r,&amp;c,&amp;n,&amp;T)!=EOF) {<br>        init();<br>        for(int i=1; i&lt;=n; ++i) {<br>            scanf(“%d%d%d”,&amp;x,&amp;y,&amp;s);<br>            mpt[x][y]=1;<br>            val[x][y]=s;<br>            wd[i]=node1(x,y);<br>        }<br>        scanf(“%d%d”,&amp;x,&amp;y);<br>        bfs(x,y);<br>        for(int i=1; i&lt;=n; ++i) {<br>            if(ans[i]==-1) {<br>                printf(“1 %d\n”,val[wd[i].x][wd[i].y]);<br>            } else {<br>                printf(“0 %d\n”,ans[i]);<br>            }<br>        }<br>    }<br>    return 0;<br>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>(待续…)</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="../tags#多校" >
+    <span class="tag-code">多校</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1001-Olympiad"><span class="toc-nav-text">1001 Olympiad</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1002-Problem-Killer"><span class="toc-nav-text">1002 Problem Killer</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1007-Virtual-Participation"><span class="toc-nav-text">1007 Virtual Participation</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1010-XYZ-and-Drops"><span class="toc-nav-text">1010 XYZ and Drops</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://qinshaoxuan.com/articles/440.html';
+    var banner = ''
+    if (banner !== 'undefined') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "yanm1ng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "2015 Multi-University Training Contest 4 Solutions",
+        owner: "yanm1ng",
+        repo: "yanm1ng.github.io",
+        oauth: {
+          client_id: "0f87e490e00ee3fd87ef",
+          client_secret: "4a9d2b148e7971c2201ad12131ce8bf8159ccd2e"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="../js/script.js"></script>
+  </body>
+</html>

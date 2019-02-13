@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">LeetCode 355 Design Twitter</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">LeetCode 355 Design Twitter</h1>
+        <div class="stuff">
+            <span>七月 18, 2016</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <blockquote>
+<p>题目链接：<a href="https://leetcode.com/problems/design-twitter/" target="_blank" rel="noopener">Design Twitter</a></p>
+<p>题意：设计一个简单版的Twitter，包括发tweets，关注/取消关注，系统推送自己关注的1o条最新的tweets（包括自己的）<br>居然随机到了一道设计题，刚开始觉得很简单啊，随便就能实现了，但是仔细想了下，要实现高效率并不简单，中途修改了两次设计，总算是比较满意了。</p>
+</blockquote>
+<p><pre class="lang:java decode:true">import java.util.ArrayList;<br>import java.util.HashMap;<br>import java.util.HashSet;<br>import java.util.LinkedList;<br>import java.util.List;</pre></p>
+<p>/**</p>
+<ul>
+<li>161 ms</li>
+<li></li>
+<li>@author xuan<br><em>
+</em>/</li>
+</ul>
+<p>public class Twitter {</p>
+<pre><code>private HashMap&amp;lt;Integer, ArrayList&amp;lt;Integer&amp;gt;&amp;gt; post; // key:userId,value:tweetIdList
+private HashMap&amp;lt;Integer, HashSet&amp;lt;Integer&amp;gt;&amp;gt; follow; // key:followerId,value:followeeIdSet
+private HashMap&amp;lt;Integer, Integer&amp;gt; postTime;
+private int postCount;
+
+/** Initialize your data structure here. */
+public Twitter() {
+    postTime = new HashMap&amp;lt;Integer, Integer&amp;gt;();
+    post = new HashMap&amp;lt;Integer, ArrayList&amp;lt;Integer&amp;gt;&amp;gt;();
+    follow = new HashMap&amp;lt;Integer, HashSet&amp;lt;Integer&amp;gt;&amp;gt;();
+    postCount = 0;
+}
+
+/**
+ * Compose a new tweet.
+ * 
+ * O(1)
+ */
+public void postTweet(int userId, int tweetId) {
+    if (!post.containsKey(userId)) {
+        post.put(userId, new ArrayList&amp;lt;Integer&amp;gt;());
+        follow(userId, userId);
+    }
+    post.get(userId).add(tweetId);
+    postTime.put(tweetId, postCount++);
+}
+
+/**
+ * Retrieve the 10 most recent tweet ids in the user&apos;s news feed. Each item
+ * in the news feed must be posted by users who the user followed or by the
+ * user herself. Tweets must be ordered from most recent to least recent.
+ * 
+ * O(10*followeeCount)
+ */
+public List&amp;lt;Integer&amp;gt; getNewsFeed(int userId) {
+
+    int count = 0;
+    List&amp;lt;Integer&amp;gt; ans = new LinkedList&amp;lt;Integer&amp;gt;();
+    ArrayList&amp;lt;ArrayList&amp;lt;Integer&amp;gt;&amp;gt; list = new ArrayList&amp;lt;ArrayList&amp;lt;Integer&amp;gt;&amp;gt;();
+    ArrayList&amp;lt;Integer&amp;gt; index = new ArrayList&amp;lt;Integer&amp;gt;();
+    HashSet&amp;lt;Integer&amp;gt; set = follow.get(userId);
+    if (set == null)
+        return ans;
+    for (Integer o : set) {
+        ArrayList l = post.get(o);
+        if (l != null) {
+            list.add(l);
+            index.add(l.size() - 1);
+        }
+    }
+
+    while (count &amp;lt; 10) {
+        int max = -1;
+        int loc = -1;
+        for (int i = 0; i &amp;lt; list.size(); ++i) {
+            ArrayList l = list.get(i);
+            if (index.get(i) &amp;lt; 0)
+                continue;
+            int e = (Integer) l.get(index.get(i));
+            if (loc == -1 || postTime.get(e) &amp;gt; postTime.get(max)) {
+                max = e;
+                loc = i;
+            }
+        }
+        if (max == -1 || loc == -1) {
+            break;
+        } else {
+            ans.add(max);
+            index.set(loc, index.get(loc) - 1);
+            count++;
+        }
+    }
+
+    return ans;
+}
+
+/**
+ * Follower follows a followee. If the operation is invalid, it should be a
+ * no-op.
+ * 
+ * O(1)
+ */
+public void follow(int followerId, int followeeId) {
+    if (!follow.containsKey(followerId)) {
+        follow.put(followerId, new HashSet&amp;lt;Integer&amp;gt;());
+    }
+    follow.get(followerId).add(followeeId);
+}
+
+/**
+ * Follower unfollows a followee. If the operation is invalid, it should be
+ * a no-op.
+ * 
+ * O(1)
+ */
+public void unfollow(int followerId, int followeeId) {
+    if (followerId != followeeId &amp;amp;&amp;amp; follow.containsKey(followerId)) {
+        follow.get(followerId).remove(followeeId);
+    }
+}
+</code></pre><p>}</p>
+<p>/**</p>
+<ul>
+<li>Your Twitter object will be instantiated and called as such:</li>
+<li>Twitter obj = new Twitter();</li>
+<li>obj.postTweet(userId,tweetId);</li>
+<li>List&lt;Integer&gt; param_2 = obj.getNewsFeed(userId);</li>
+<li>obj.follow(followerId,followeeId);</li>
+<li>obj.unfollow(followerId,followeeId);<br>*/<br>用一个<span class="lang:java decode:true crayon-inline ">HashMap&lt;Integer, HashSet&lt;Integer&gt;&gt;</span> 来记录关注情况，其中<span class="lang:java decode:true crayon-inline">key</span> 为<span class="lang:java decode:true crayon-inline">userId</span> ，<span class="lang:java decode:true crayon-inline">value</span> 为该用户的<span class="lang:java decode:true crayon-inline">followeeIdSet</span> ，这样可以在(O(1))的时间完成查询a是否关注了b和关注/取消关注功能</li>
+</ul>
+<p>比较复杂的是推送功能，一开始想的是用一个LinkedHashMap实现tweetId与userId的关联，同时保证tweetId按时间顺序排列，但是这样在推送时最坏需要扫描所有tweetId，这样复杂度就比较高了，因为tweet的数量会比较多。</p>
+<p>之后改成了用<span class="lang:java decode:true crayon-inline ">HashMap&lt;Integer, ArrayList&lt;Integer&gt;&gt;</span> 来记录每人发的tweets，<span class="lang:java decode:true crayon-inline ">key</span> 为<span class="lang:java decode:true crayon-inline ">userId</span> ，<span class="lang:java decode:true crayon-inline ">value</span> 为该用户的<span class="lang:java decode:true crayon-inline">tweetIdList</span> ，之后在推送时，将该用户所有关注者的<span class="lang:java decode:true crayon-inline">tweetIdList</span> 取出组成一个新的List，之后在每次扫描所有<span class="lang:java decode:true crayon-inline ">tweetIdList</span> 的最后一个元素（即最后发布的）,找出时间最晚的，放入推送List。这样的复杂度为(O(10\times followeeCount))，(followeeCount)为该用户关注人数</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="http://link.hhtjim.com/163/785902.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

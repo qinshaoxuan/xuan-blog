@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="yanm1ng&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="../css/images/logo.png">
+  
+  <title>
+    
+      Redis 高可用性 | Xuan&#39;s Blog
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="../js/qrious.js"></script>
+<script src="../js/gitment.js"></script>
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="../index.html">
+      <div class="logo"></div>
+      <span>Xuan's Blog</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="../index.html" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="../index.html" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Redis 高可用性</h2>
+  <p class="post-date">2017-09-02</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><blockquote>
+<p><a href="https://redis.io/documentation" target="_blank" rel="external">Redis 官方文档</a></p>
+<p><a href="https://github.com/antirez/redis" target="_blank" rel="external">GitHub: Redis</a></p>
+<p><a href="https://github.com/antirez/redis-doc/blob/master/topics/replication.md" target="_blank" rel="external">Redis Doc: Replication 主从复制</a></p>
+<p><a href="https://github.com/antirez/redis-doc/blob/master/topics/sentinel.md" target="_blank" rel="external">Redis Doc: Sentinel 哨兵</a></p>
+<p><a href="https://github.com/antirez/redis/blob/4.0/src/replication.c" target="_blank" rel="external">redis/replication.c at 4.0 · antirez/redis · GitHub</a></p>
+<p><a href="https://github.com/redisson/redisson" target="_blank" rel="external">Redisson: Redis based In-Memory Data Grid for Java · redisson/redisson · GitHub</a></p>
+</blockquote>
+<h2 id="Replication-主从复制"><a href="#Replication-主从复制" class="headerlink" title="Replication 主从复制"></a>Replication 主从复制</h2><p>Redis 支持简单且易用的主从复制（master-slave replication）功能， 该功能可以让从服务器（slave）成为主服务器（master）的精确复制品。</p>
+<p>&nbsp;</p>
+<h3 id="形式"><a href="#形式" class="headerlink" title="形式"></a>形式</h3><ul>
+<li>当 master 和 slave 处于正常连接状态，slave 通过 master 发送的命令流去更新当前的数据，以至于可以复制master中的数据变化，比如客户端的写操作，key的过期删除。</li>
+<li>当 master 和 slave 因为网络问题或者超时而断开连接，slave 重连后会试图进行局部同步（partial resynchronization）：它会尝试去获得因为断开连接而未接收的那一部分命令流。</li>
+<li>当局部同步不可行时，slave 会请求一次完全同步（full resynchronization）。此时 master 需要创建一个当前数据的快照，然后发送给 slave，并且继续发送数据变化的命令流。<br>&nbsp;</li>
+</ul>
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><ul>
+<li>redis 使用异步复制，同时 slave 也会定期地异步地告知 master 当前已处理的数据量</li>
+<li>一个 master 可以有多个 slave</li>
+<li>slave 也可以接受其他 slave 的连接。</li>
+<li>主从复制不会阻塞 master： 即使有一个或多个 slave 正在进行完全同步或者局部同步，master 也可以继续处理请求。</li>
+<li>主从复制对于 slave 来说，也只有极少情况是阻塞的。当 slave 在请求完全同步时，可以通过设置来让请求使用旧数据。另外，也可以设置当同步流断开时给客户端返回error。但是在完全同步的最后，从服务器删除旧数据到新数据完全加载这段时间内，请求会被阻塞。从redis 4.0开始，可以设置删除数据使用不同的线程，但是加载数据依然会在主线程并且会阻塞 slave。</li>
+<li>主从复制可以用于读写分离，让多个 slave 处理只读请求来提示可扩展性（比如一些 O(N) 的操作可以在 slave 上进行），或者单纯用于数据备份。</li>
+<li>主从复制也可以用来让 master 免于执行持久化操作，让 slave 去执行持久化，以此来提升 master 的性能。但一定要注意此时 master 不能配置自动拉起，否则会丢失所有数据。<br>&nbsp;</li>
+</ul>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>redis master 会有一个 replication ID，它是一个很大的伪随机字符串来标记当前的数据集。同时 master 会记录一个偏移量 offset 来表示用来发送给 slave 的复制流的字节数，用来表示当前 master 和 slave 的数据更新状态。就算当前没有 slave 连接，offset 也会增加。</p>
+<p>所以可以用以下形式来表示当前 master 数据的精确版本号<br><span class="lang:default decode:true crayon-inline ">replication ID, offset</span></p>
+<p>当 slave 连接 master， 它使用PSYNC命令来发送他们已经处理过的老版本号。然后 master 可以根据版本来发送增量的部分。但是当 master 的缓冲池容量不够时，或者 slave 发送了一个已经没有记录的replication ID时，就需要进行完全同步。</p>
+<p>当进行完全同步时，master 会起一个后台进程来生成一个 RDB 文件，同时也会缓存客户端所有新的写命令。当保存完毕，master 会将这个数据库文件发送给 slave，slave 会将它保存在硬盘，然后将它加载到内存中。接着 master 会将所有缓存的命令发送给 slave。</p>
+<p><center><a href="http://qsxuan.com/wp-content/uploads/2017/09/Replication.svg" target="_blank" rel="external"><img src="http://qsxuan.com/wp-content/uploads/2017/09/Replication.svg" alt="Replication"></a></center>如果 master 同时收到多个并发的 slave 的完全同步请求，也只会执行一个后台保存进程，然后发送给他们。</p>
+<p>可以通过配置来实现不用硬盘来做中间存储器的完全同步，以此来减少硬盘性能对同步的影响。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="Sentinel-哨兵"><a href="#Sentinel-哨兵" class="headerlink" title="Sentinel 哨兵"></a>Sentinel 哨兵</h2><p>哨兵为 redis 提供了高可用性。</p>
+<p>&nbsp;</p>
+<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><ul>
+<li>监控（Monitoring）：哨兵会不断地检查 master 和 slave 是否有按预期工作</li>
+<li>通知（Notification）：哨兵可以通过API通知系统管理员，或者其他程序，它所监控的redis实例出现的问题</li>
+<li>自动故障迁移（Automatic failover）：如果 master 不能按预期工作，哨兵会启动一个故障迁移进程，让其中一个 slave 晋升成为 master，而其他的 slave 则使用新的 master，而应用程序也会在连接的时候使用新的地址</li>
+<li>配置的提供者（Configuration provider）：哨兵会充当客户端的服务发现来源，客户端连接到哨兵来询问某个服务的当前 Redis 主服务器的地址。当故障转移发生时，哨兵会报告新地址。<br><center><a href="http://qsxuan.com/wp-content/uploads/2017/09/RedisSentinel.svg" target="_blank" rel="external"><img src="http://qsxuan.com/wp-content/uploads/2017/09/RedisSentinel.svg" alt="Replication"></a></center>&nbsp;</li>
+</ul>
+<h3 id="特性-1"><a href="#特性-1" class="headerlink" title="特性"></a>特性</h3><p>哨兵是一个分布式系统，它被设计成需要多个哨兵实例协同工作。这样的分布式系统有以下好处：</p>
+<ul>
+<li>由多个哨兵认定 master 不可访问，可以降低误报的可能性</li>
+<li>当部分哨兵不可用时仍可以工作，保证了系统的高可用性。一个故障转移系统不应该只有单点。<br>&nbsp;</li>
+</ul>
+<h3 id="Failover-过程"><a href="#Failover-过程" class="headerlink" title="Failover 过程"></a>Failover 过程</h3><ol>
+<li>当某个哨兵实例监控到 master 在设定时间内持续不可访问，就会将 master 标记为主观下线（SDOWN），并报告给其他哨兵</li>
+<li>当某个哨兵实例收集到设定数量的主观下线的报告，就会将 master 标记为客观下线（ODOWN），此时会请求进行故障迁移</li>
+<li>只有当超过半数（&gt;50%）的实例授权同意，然后对这次故障迁移产生的新配置进行版本号标识，才会进行故障迁移</li>
+<li>哨兵发送SLAVEOF NO ONE命令给一个 slave（由优先级规则选出），将其晋升为 master ，然后将更新后的配置广播给其他的哨兵</li>
+<li>如果旧的 master 重新上线，哨兵会发送一个SLAVEOF命令让他去同步新的 master<br>&nbsp;</li>
+</ol>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p><table class="table"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><th>Sentinel</th></p>
+<p><th>Down</th></p>
+<p><th>Failover</th><br></p>
+<p><tr></tr></p>
+<p><td rowspan="3">3</td></p>
+<p><td>0</td></p>
+<p><td>true</td><br></p>
+<p><tr></tr></p>
+<p><td>1</td></p>
+<p><td>true</td><br></p>
+<p><tr></tr></p>
+<p><td>2</td></p>
+<p><td>false</td><br></p>
+<p><tr></tr></p>
+<p><td rowspan="2">2</td></p>
+<p><td>0</td></p>
+<p><td>true</td><br></p>
+<p><tr></tr></p>
+<p><td>1</td></p>
+<p><td>false</td><br><br><br><br>&nbsp;</p>
+<h2 id="如何在-Jedis-中使用"><a href="#如何在-Jedis-中使用" class="headerlink" title="如何在 Jedis 中使用"></a>如何在 Jedis 中使用</h2><p><pre class="lang:xhtml decode:true " title="spring xml">&lt;bean id=”jedisPoolConfig” class=”redis.clients.jedis.JedisPoolConfig”&gt;<br>    &lt;property name=”maxTotal” value=”100” /&gt;<br>    &lt;property name=”maxIdle” value=”10” /&gt;<br>    &lt;property name=”testOnBorrow” value=”true”/&gt;<br>&lt;/bean&gt;<br>&lt;bean id=”jedisSentinelConfig” class=”org.springframework.data.redis.connection.RedisSentinelConfiguration”&gt;<br>    &lt;constructor-arg name=”propertySource”&gt;<br>        &lt;bean class=”org.springframework.core.env.MapPropertySource”&gt;<br>            &lt;constructor-arg name=”name” value=”RedisSentinelConfiguration”/&gt;<br>            &lt;constructor-arg name=”source”&gt;<br>                &lt;map&gt;<br>                    &lt;entry key=”spring.redis.sentinel.master” value=”${redis.sentinel.master}”/&gt;<br>                    &lt;entry key=”spring.redis.sentinel.nodes” value=”${redis.sentinel.nodes}” /&gt;<br>                &lt;/map&gt;<br>            &lt;/constructor-arg&gt;<br>        &lt;/bean&gt;<br>    &lt;/constructor-arg&gt;<br>&lt;/bean&gt;<br>&lt;bean id=”jedisConnectionFactory”<br>      class=”org.springframework.data.redis.connection.jedis.JedisConnectionFactory”<br>      destroy-method=”destroy”&gt;<br>    &lt;constructor-arg name=”sentinelConfig” ref=”jedisSentinelConfig” /&gt;<br>    &lt;constructor-arg name=”poolConfig” ref=”jedisPoolConfig” /&gt;<br>    &lt;property name=”database” value=”${redis.session.db}”/&gt;<br>    &lt;property name=”password” value=”${redis.passwd}” /&gt;<br>    &lt;property name=”timeout” value=”${redis.timeout}”/&gt;<br>    &lt;property name=”usePool” value=”true”/&gt;<br>&lt;/bean&gt;<br>&lt;bean id=”redisTemplate” class=”org.springframework.data.redis.core.RedisTemplate”&gt;<br>    &lt;property name=”connectionFactory” ref=”jedisConnectionFactory”/&gt;<br>    &lt;property name=”keySerializer”&gt;<br>        &lt;bean class=”org.springframework.data.redis.serializer.StringRedisSerializer”/&gt;<br>    &lt;/property&gt;<br>    &lt;property name=”valueSerializer”&gt;<br>        &lt;bean class=”org.springframework.data.redis.serializer.JdkSerializationRedisSerializer”/&gt;<br>    &lt;/property&gt;<br>    &lt;property name=”hashKeySerializer”&gt;<br>        &lt;bean class=”org.springframework.data.redis.serializer.StringRedisSerializer”/&gt;<br>    &lt;/property&gt;<br>    &lt;property name=”hashValueSerializer”&gt;<br>        &lt;bean class=”org.springframework.data.redis.serializer.JdkSerializationRedisSerializer”/&gt;<br>    &lt;/property&gt;<br>&lt;/bean&gt;</pre><br>如果使用了 spring session 且有多个<span class="lang:java decode:true crayon-inline">JedisConnectionFactory</span> ，则需要给 spring session 使用的加上<span class="lang:default decode:true crayon-inline ">primary=”true”</span></p>
+<p>&nbsp;</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ul>
+<li>如果要保证redis服务的高可用性，哨兵实例至少应该有3个</li>
+<li>配置密码要所有redis实例都配置requirepass 和 masterauth ，否则failover后会出现认证问题，客户端连接不上。</li>
+<li>当master、slave、sentinel都部署在一台机器上（比如测试环境），则所有ip使用完整ip，不要使用127.0.0.1或其他，且redis实例也要bind完整ip，不然会识别出错，而且无法正常failover</li>
+</ul>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Replication-主从复制"><span class="toc-nav-text">Replication 主从复制</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#形式"><span class="toc-nav-text">形式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#特性"><span class="toc-nav-text">特性</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#原理"><span class="toc-nav-text">原理</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Sentinel-哨兵"><span class="toc-nav-text">Sentinel 哨兵</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#功能"><span class="toc-nav-text">功能</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#特性-1"><span class="toc-nav-text">特性</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Failover-过程"><span class="toc-nav-text">Failover 过程</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#实验"><span class="toc-nav-text">实验</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#如何在-Jedis-中使用"><span class="toc-nav-text">如何在 Jedis 中使用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#注意事项"><span class="toc-nav-text">注意事项</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://qinshaoxuan.com/articles/1661.html';
+    var banner = ''
+    if (banner !== 'undefined') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "yanm1ng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "Redis 高可用性",
+        owner: "yanm1ng",
+        repo: "yanm1ng.github.io",
+        oauth: {
+          client_id: "0f87e490e00ee3fd87ef",
+          client_secret: "4a9d2b148e7971c2201ad12131ce8bf8159ccd2e"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="../js/script.js"></script>
+  </body>
+</html>

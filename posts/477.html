@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">2015 Multi-University Training Contest 8 Solutions</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">2015 Multi-University Training Contest 8 Solutions</h1>
+        <div class="stuff">
+            <span>八月 13, 2015</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="../tags/多校/">多校</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p>官方题解：<a href="http://bestcoder.hdu.edu.cn/blog/2015-multi-university-training-contest-8-solutions-by-%E7%BB%8D%E5%85%B4%E4%B8%80%E4%B8%AD/" target="_blank" rel="noopener">2015 Multi-University Training Contest 8 solutions BY 绍兴一中</a></p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1005-Danganronpa"><a href="#1005-Danganronpa" class="headerlink" title="1005 Danganronpa"></a>1005 Danganronpa</h2><blockquote>
+<p>HDU 5384：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5384" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5384</a></p>
+<p>题意：给n个字符串(A_i)，m个字符串(B_j)，定义(f(A,B))为B字符串在A字符串中出现的次数，可以重叠。求对于每个(A_i)，(\sum_{j=1}^{m}f(A_i,B_j))的值</p>
+<p>(n,m\leqslant 10^5, 1\leqslant |A_i|,|B_j|\leqslant 10^4, \sum|A_i|\leqslant 10^5, \sum|B_j|\leqslant 10^5)<br>AC自动机。<br>用所有(B_j)字符串构造一个AC自动机</p>
+</blockquote>
+<p>对于每个(A_i)扫描一次即可求出答案</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;map&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL __int64</p>
+<p>#define N 100005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>struct node {<br>    node <em>fail;<br>    node </em>next[26];<br>    int count;<br>    node() {<br>        fail=NULL;<br>        count=0;<br>        for(int i=0; i&lt;26; ++i) {<br>            next[i]=NULL;<br>        }<br>    }<br>};</p>
+<p>node <em>root;<br>queue&lt;node</em>&gt; q;</p>
+<p>void insert(string str) {<br>    int k,len;<br>    int i;<br>    node *p=root;<br>    len=str.size();<br>    for(i=0; i&lt;len; ++i) {<br>        k=str[i]-‘a’;<br>        if(p-&gt;next[k]==NULL)<br>            p-&gt;next[k]=new node();<br>        p=p-&gt;next[k];<br>    }<br>    p-&gt;count++;<br>}</p>
+<p>void build_ac() {   //初始化fail指针，BFS<br>    node <em>now,</em>nex;<br>    int i,j;<br>    while(!q.empty())q.pop();<br>    q.push(root);<br>    while(!q.empty()) {<br>        now=q.front();<br>        q.pop();<br>        nex=NULL;<br>        for(i=0; i&lt;26; ++i) {<br>            if(now-&gt;next[i]!=NULL) {<br>                if(now==root) {         //第一个元素fail必指向根<br>                    now-&gt;next[i]-&gt;fail=root;<br>                } else {<br>                    nex=now-&gt;fail;        //失败指针<br>                    while(nex!=NULL) {      //2种情况结束：匹配为空or找到匹配<br>                        if(nex-&gt;next[i]!=NULL) {     //找到匹配<br>                            now-&gt;next[i]-&gt;fail=nex-&gt;next[i];<br>                            break;<br>                        }<br>                        nex=nex-&gt;fail;<br>                    }<br>                    if(nex==NULL)   //为空则从头匹配<br>                        now-&gt;next[i]-&gt;fail=root;<br>                }<br>                q.push(now-&gt;next[i]);<br>            }<br>        }<br>    }<br>}</p>
+<p>int query(string txt) {<br>    int k,len,res;<br>    node <em>p=root;<br>    res=0;<br>    len=txt.size();<br>    for(int i=0; i&lt;len; ++i) {<br>        k=txt[i]-‘a’;<br>        while(p-&gt;next[k]==NULL&amp;&amp;p!=root)  //跳转失败指针<br>            p=p-&gt;fail;<br>        p=p-&gt;next[k];<br>        if(p==NULL)<br>            p=root;<br>        node </em>temp=p;   //p不动，temp计算后缀串<br>        while(temp!=root) { //&amp;&amp;temp-&gt;count!=-1){<br>            res+=temp-&gt;count;<br>            //temp-&gt;count=-1;//重复不再计算<br>            temp=temp-&gt;fail;<br>        }<br>    }<br>    return res;<br>}</p>
+<p>string a[N],b;</p>
+<p>int main() {<br>    int n,m;<br>    int T;<br>    cin&gt;&gt;T;<br>    while(T–) {<br>        root=new node();<br>        cin&gt;&gt;n&gt;&gt;m;<br>        for(int i=1; i&lt;=n; ++i)<br>            cin&gt;&gt;a[i];<br>        for(int i=1; i&lt;=m; ++i) {<br>            cin&gt;&gt;b;<br>            insert(b);<br>        }<br>        build_ac();</p>
+<pre><code>    for(int i=1; i&amp;lt;=n; ++i)
+        printf(&quot;%d\n&quot;,query(a[i]));
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1007-Cover"><a href="#1007-Cover" class="headerlink" title="1007 Cover"></a>1007 Cover</h2><blockquote>
+<p>HDU 5386：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5386" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5386</a></p>
+<p>题意：有一个n*m的矩阵，定义两种操作：</p>
+<p>L x y: for(int i=1;i&lt;=n;i++)color[i][x]=y;</p>
+<p>H x y:for(int i=1;i&lt;=n;i++)color[x][i]=y;</p>
+<p>现在给出矩阵的初始状态和终态，以及m个操作，求能满足条件的操作顺序<br>我们只要每次找一行或一列颜色除了0都相同的，然后如果有对应的操作，就把这行这列都赋值成0即可<br>答案只与终态有关。</p>
+</blockquote>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;map&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL __int64</p>
+<p>#define N 505</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>int dir[N],x[N],y[N];<br>int mpt[N][N];<br>int vis[N];<br>int ans[N];<br>int n,m;<br>int cle=0;</p>
+<p>int judge(int d,int opx,int opy) {<br>    for(int i=1; i&lt;=m; ++i)<br>        if(!vis[i]&amp;&amp;((dir[i]==d&amp;&amp;x[i]==opx&amp;&amp;(y[i]==opy||opy==0))||cle)) {<br>            vis[i]=1;<br>            return i;<br>        }<br>    return 0;<br>}</p>
+<p>void change(int id) {<br>    if(dir[id]==1)<br>        for(int i=1; i&lt;=n; i++)mpt[i][x[id]]=0;<br>    if(dir[id]==2)<br>        for(int i=1; i&lt;=n; i++)mpt[x[id]][i]=0;<br>}</p>
+<p>int main() {<br>    int T;</p>
+<pre><code>scanf(&quot;%d&quot;,&amp;amp;T);
+while(T--) {
+    cle=0;
+    memset(vis,0,sizeof(vis));
+    scanf(&quot;%d%d&quot;,&amp;amp;n,&amp;amp;m);
+    for(int i=1; i&amp;lt;=n; ++i)
+        for(int j=1; j&amp;lt;=n; ++j)
+            scanf(&quot;%d&quot;,&amp;amp;mpt[i][j]);
+
+    for(int i=1; i&amp;lt;=n; ++i)
+        for(int j=1; j&amp;lt;=n; ++j)
+            scanf(&quot;%d&quot;,&amp;amp;mpt[i][j]);
+
+    char op[2];
+    for(int i=1; i&amp;lt;=m; ++i) {
+        scanf(&quot;%s%d%d&quot;,op,&amp;amp;x[i],&amp;amp;y[i]);
+        if(op[0]==&apos;L&apos;)dir[i]=1;
+        else dir[i]=2;
+    }
+
+    int k=m;
+    int opy;
+    int id;
+    while(k) {
+        int flag=0;
+        id=0;
+
+        for(int i=1; i&amp;lt;=n&amp;amp;&amp;amp;!flag; ++i) {
+            int same=1;
+            opy=mpt[1][i];
+            for(int j=2; j&amp;lt;=n&amp;amp;&amp;amp;same; ++j) {
+                if(mpt[j][i]!=opy&amp;amp;&amp;amp;mpt[j][i]!=0&amp;amp;&amp;amp;opy!=0) same=0;
+                opy=max(opy,mpt[j][i]);
+            }
+            if(same) {
+                id=judge(1,i,opy);
+                flag=(id?1:0);
+            }
+        }
+        for(int i=1; i&amp;lt;=n&amp;amp;&amp;amp;!flag; ++i) {
+            int same=1;
+            opy=mpt[i][1];
+            for(int j=2; j&amp;lt;=n&amp;amp;&amp;amp;same; ++j) {
+                if(mpt[i][j]!=opy&amp;amp;&amp;amp;mpt[i][j]!=0&amp;amp;&amp;amp;opy!=0) same=0;
+                opy=max(opy,mpt[i][j]);
+            }
+
+            if(same) {
+                id=judge(2,i,opy);
+                flag=(id?1:0);
+            }
+        }
+        ans[k--]=id;
+        change(id);
+        flag=1;
+        for(int i=1; i&amp;lt;=n&amp;amp;&amp;amp;flag; ++i)
+            for(int j=1; j&amp;lt;=n&amp;amp;&amp;amp;flag; ++j)
+                if(mpt[i][j]!=0)flag=0;
+        if(flag)cle=1;
+    }
+
+    for(int i=1; i&amp;lt;=m; ++i) {
+        if(i!=1)printf(&quot; &quot;);
+        printf(&quot;%d&quot;,ans[i]);
+    }
+    printf(&quot;\n&quot;);
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1008-Clock"><a href="#1008-Clock" class="headerlink" title="1008 Clock"></a>1008 Clock</h2><blockquote>
+<p>HDU 5387：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5387" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5387</a></p>
+<p>题意：给一个时刻，分别求时针与分针，时针与秒针，分针与秒针的角度<br>计算一下角度就行，注意分数以及钝角的处理</p>
+</blockquote>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;map&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL __int64</p>
+<p>#define N 100005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>int gcd(int a,int b) {<br>    return (b&gt;0)?gcd(b,a%b):a;<br>}</p>
+<p>int main() {<br>    int ans[4];<br>    int T;<br>    int h,m,s;<br>    int hh,mm,ss;<br>    scanf(“%d”,&amp;T);<br>    while(T–) {<br>        scanf(“%d:%d:%d”,&amp;h,&amp;m,&amp;s);<br>        if(h&gt;=12)h-=12;<br>        hh=h<em>30</em>3600+m<em>30</em>60+s<em>30;<br>        mm=m</em>6<em>3600+s</em>6<em>60;<br>        ss=s</em>6*3600;<br>        ans[1]=abs(hh-mm);<br>        ans[2]=abs(hh-ss);<br>        ans[3]=abs(mm-ss);</p>
+<pre><code>    for(int i=1; i&amp;lt;=3; ++i) {
+        ans[i]=min(360*3600-ans[i],ans[i]);
+        if(ans[i]%3600==0)
+            printf(&quot;%d&quot;,ans[i]/3600);
+        else {
+            printf(&quot;%d/%d&quot;,ans[i]/gcd(ans[i],3600),3600/gcd(ans[i],3600));
+        }
+        printf(&quot; &quot;);
+    }
+    printf(&quot;\n&quot;);
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1010-Zero-Escape"><a href="#1010-Zero-Escape" class="headerlink" title="1010 Zero Escape"></a>1010 Zero Escape</h2><blockquote>
+<p>HDU 5389：<a href="http://acm.hdu.edu.cn/showproblem.php?pid=5389" target="_blank" rel="noopener">http://acm.hdu.edu.cn/showproblem.php?pid=5389</a></p>
+<p>题意：n个人，每人有一个标识符(id_i)（可以相同），现有两道门编号为(A,B)（可以相同）。对每个人要选择一个门通过。最后选择同一个门的人的标识符之和的数根和门的编号相同就可以通过。求能让所有人通过的方案数。</p>
+<p>(T\leqslant 100, n\leqslant 10^5, \sum n\leqslant 10^6, 1\leqslant A,B,id_i\leqslant 9)<br>DP<br>定义(dr(x))为(x)的数根</p>
+</blockquote>
+<p>数根有一个性质：(dr(a+b)\equiv dr(a)+dr(b)\space (\mod 9\space ))</p>
+<p>所以可以用(dp[i][j])表示从前(i)个数中选出一些数使其和的树根对9取模为(j)的方案数有多少</p>
+<p>状态转移方程：</p>
+<p>(for \ each \ j \in [0,9])</p>
+<p>(\qquad dp[i][j]=dp[i-1][j])<br>(\qquad dp[i][(j+d[i]) \% 9]=dp[i][(j+d[i]) \% 9]+dp[i-1][j])</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;</p>
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;cmath&gt;</p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;queue&gt;</p>
+<p>#include&lt;vector&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;map&gt;<br>using namespace std;</p>
+<p>#define pb push_back</p>
+<p>#define LL __int64</p>
+<p>#define N 100005</p>
+<p>#define INF 1&lt;&lt;30</p>
+<p>#define MOD 258280327</p>
+<p>int n;<br>int d[N];<br>LL dp[N][10];<br>int sum;<br>int A,B;</p>
+<p>int main(){<br>    int T;<br>    scanf(“%d”,&amp;T);<br>    while(T–){<br>        sum=0;<br>        memset(dp,0,sizeof(dp));<br>        scanf(“%d%d%d”,&amp;n,&amp;A,&amp;B);<br>        for(int i=1;i&lt;=n;++i){<br>            scanf(“%d”,&amp;d[i]);<br>            sum+=d[i];<br>        }<br>        sum%=9;<br>        dp[1][d[1]]=1;<br>        dp[1][0]=1;<br>        for(int i=2;i&lt;=n;++i){<br>            for(int j=0;j&lt;=9;++j){<br>                dp[i][j]=(dp[i][j]+dp[i-1][j])%MOD;<br>                dp[i][(j+d[i])%9]=(dp[i][(j+d[i])%9]+dp[i-1][j])%MOD;<br>            }<br>        }<br>        LL ans=0;<br>        if((A+B)%9==sum)ans=dp[n][A%9];<br>        if(ans==0&amp;&amp;(sum%9==A%9||sum%9==B%9))ans++;<br>        printf(“%I64d\n”,ans%MOD);<br>    }<br>    return 0;<br>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>(待续…)</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="http://link.hhtjim.com/163/785902.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1005-Danganronpa"><span class="toc-number">1.</span> <span class="toc-text">1005 Danganronpa</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1007-Cover"><span class="toc-number">2.</span> <span class="toc-text">1007 Cover</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1008-Clock"><span class="toc-number">3.</span> <span class="toc-text">1008 Clock</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1010-Zero-Escape"><span class="toc-number">4.</span> <span class="toc-text">1010 Zero Escape</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

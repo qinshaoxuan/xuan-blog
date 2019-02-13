@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xuan&#39;s blog</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="xuan,"> 
+    
+    <meta name="author" content="xuan"> 
+    <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
+    <link rel="icon" href="../img/favicon.ico"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="../css/diaspora.css">
+</head>
+</html>
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">设计原则</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">设计原则</h1>
+        <div class="stuff">
+            <span>五月 13, 2016</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="../tags/设计模式/">设计模式</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h2 id="开闭原则"><a href="#开闭原则" class="headerlink" title="开闭原则"></a>开闭原则</h2><p>开闭原则是指一个模块在扩展性方面应该是开放的，而在更改性方面应该是封闭的。 这个原则说的是，在设计一个模块的时候，应当使这个模块可以在不被修改的前提下被扩展。换言之，应当可以在不必修改源代码的情况下改变这个模块的行为。 所有的软件系统都有一个共同的性质，即对它们的需求都会随时间的推移而发生变化。在软件系统面临新的需求时，系统的设计必须是稳定的，满足开闭原则的设计可以给一个软件系统两个无可比拟的优越性：</p>
+<ul>
+<li>通过扩展已有的软件系统，可以提供新的行为，以满足对软件的新需求，使变化中软件系统有一定的适应性和灵活性。</li>
+<li>已有的软件模块，特别是最重要的抽象层模块不能再修改，这就使变化中的软件系统有一定的稳定性和延续性。</li>
+</ul>
+<p>具有这两个优点的软件系统是一个在高层次上实现了复用的系统，也是一个易于维护的系统。  </p>
+<h3 id="如何做到开闭原则"><a href="#如何做到开闭原则" class="headerlink" title="如何做到开闭原则"></a>如何做到开闭原则</h3><p>&nbsp;</p>
+<h4 id="抽象化"><a href="#抽象化" class="headerlink" title="抽象化"></a>抽象化</h4><p>在像Java语音这样的面向对象的编程语言里面，可以给系统定义出一个一劳永逸、不再更改的抽象设计，此设计允许有无穷无尽的行为在实现层被实现。在Java语言里，可以给出一个或多个抽象的Java类或接口，规定出所有的具体类必须提供的方法的特征作为系统设计的抽象层。这个抽象层预见了所有可能的扩展，因此，在任何扩展情况下都不会改变。这就使得系统的抽象层不需修改，从而满足了开闭原则的第二条：对修改关闭。 同时。由于从抽象层导出一个或多个新的具体类可以改变系统的行为，因此系统的设计对扩展时开放的，这就满足了开闭原则的第一条。  </p>
+<h4 id="对可变性的封装原则"><a href="#对可变性的封装原则" class="headerlink" title="对可变性的封装原则"></a>对可变性的封装原则</h4><p>开闭原则如果从另一个角度讲述，就是所谓的“对可变性的封装原则”，即找到一个系统的可变因素，将之封装起来。</p>
+<ul>
+<li>一种可变性不应当散落在代码的很多角落里，而应当被封装到一个对象里面。同一种可变性的不同表现意味着同一个继承等级结构中的具体子类。继承应当被看做是封装变化的方法，而不应当被认为是从一般的对象生成特殊的对象的方法。</li>
+<li>一种可变性不应当与另一种可变性混合在一起。</li>
+</ul>
+<p>尽管在很多情况下，无法百分之百地做到开闭原则，但是如果向这个方向上努力能够得到部分的成功，也可以显著地改善一个系统的结构。  </p>
+<h2 id="里氏替换原则"><a href="#里氏替换原则" class="headerlink" title="里氏替换原则"></a>里氏替换原则</h2><p>如果对每一个类型为T1的对象o1，都有类型为T2的对象o2，使得以T1定义的所有程序P在所有的对象o1都替换成o2时，程序P的行为没有变化，那么类型T2是类型T1的子类型。 换言之，一个软件实体如果使用的是一个基类的话，那么一定使用于其子类，而且它根本不能察觉出基类对象和子类对象的区别。 里氏替换原则是继承复用的基石，只有当衍生类可以替换掉基类，软件单位的功能不会受到影响时，基类才能真正被复用，而衍生类也才能够在基类的基础上增加新的行为。 必须指出的是，反过来的替换则不成立，即如果一个软件实体使用的是一个子类的话，那么它不一定使用于基类。  </p>
+<h2 id="依赖倒转原则"><a href="#依赖倒转原则" class="headerlink" title="依赖倒转原则"></a>依赖倒转原则</h2><blockquote>
+<p>在面向对象的系统里，两个类之间可以发生三种不同的耦合关系：</p>
+<ul>
+<li>零耦合（Nil Coupling）关系：如果两个类没有耦合关系，就称之为零耦合。</li>
+<li>具体耦合（Concrete Coupling）关系：具体性耦合发生在两个具体的（可实例化的）类之间，经由一个类对另一个具体类的直接引用造成。</li>
+<li>抽象耦合（Abstract Coupling）关系：抽象耦合关系发生在一个具体类和一个抽象类（或者接口）之间，使两个必须发生关系的类之间存有最大的灵活性。</li>
+</ul>
+</blockquote>
+<p>  依赖倒转原则要求客户端依赖于抽象耦合。依赖倒转原则的表述是：</p>
+<blockquote>
+<p>抽象不应当依赖于细节；细节应当依赖于抽象。</p>
+</blockquote>
+<p>依赖倒转原则的另一种表述是：</p>
+<blockquote>
+<p>要针对接口编程，不要针对实现编程。</p>
+</blockquote>
+<p>针对接口编程的意思就是说，应当使用接口和抽象类进行变量的类型声明、参量的类型生命、方法的返还类型声明，以及数据类型的转换等。 要保证做到这一点，一个具体类应当只实现接口和抽象类中声明过的方法，而不应当给出多余的方法。 倒转依赖关系强调一个系统内的实体之间关系的灵活性。基本上，如果设计师希望遵守开闭原则，那么倒转依赖原则则便是达到的途径。  </p>
+<h2 id="接口隔离原则"><a href="#接口隔离原则" class="headerlink" title="接口隔离原则"></a>接口隔离原则</h2><p>接口分离原则指的是在设计时采用多个与特定客户类（Client）有关的接口比采用一个通用的接口要好。也就是说，一个类要给多个客户类使用，那么可以为每个客户类创建一个接口，然后这个类实现所有这些接口，而不要只创建一个接口，其中包含了所有客户类需要的方法，然后这个类实现这个接口。  </p>
+<h2 id="合成-聚合复用原则"><a href="#合成-聚合复用原则" class="headerlink" title="合成/聚合复用原则"></a>合成/聚合复用原则</h2><p>合成/聚合复用原则就是在一个新的对象里面使用一些已有的对象，使之成为新对象的一部分；新的对象通过向这些对象的委派达到复用已有功能的目的。 这个设计原则的更简短的表述为：要尽量使用合成/聚合，尽量不要使用继承。  </p>
+<h2 id="最少知识原则"><a href="#最少知识原则" class="headerlink" title="最少知识原则"></a>最少知识原则</h2><p>最少知识原则（Least Knowledge Principle，简写为LKP），又叫迪米特法则（Law of Demeter，简写为LoD），一个对象应当对其他对象有尽可能少的了解。</p>
+<ul>
+<li>只与你直接的朋友们通信。</li>
+<li>不要跟陌生人说话。</li>
+<li>每个软件单位对其他的单位都只有最少的知识，而且局限于哪些与本单位密切相关的软件单位。</li>
+</ul>
+<p>一下的条件为“朋友”条件：</p>
+<ul>
+<li>当前对象本身（this）</li>
+<li>以参量形式传入到当前对象方法中的对象</li>
+<li>当前对象的实例变量直接引用的对象</li>
+<li>当前对象的实例变量如果是一个聚集，那么聚集中的元素也都是朋友</li>
+<li>当前对象所创建的对象</li>
+</ul>
+<p>任何一个对象，如果瞒住上面的条件之一，就是当前对象的“朋友”，否则就是“陌生人”。  </p>
+<h3 id="狭义的最少知识原则"><a href="#狭义的最少知识原则" class="headerlink" title="狭义的最少知识原则"></a>狭义的最少知识原则</h3><p>如果两个类不必彼此通信，那么这两个类就不应当发生直接的相互作用。如果其中的一个类需要调用另一个类的某个方法的话，可以通过第三者转发这个调用。</p>
+<p><a href="http://qsxuan.com/wp-content/uploads/2016/05/LoD1.png" target="_blank" rel="noopener"><img src="http://qsxuan.com/wp-content/uploads/2016/05/LoD1.png" alt="LoD1"></a></p>
+<p>“某人”并不需要与“陌生人”直接发生相互作用，但是“朋友”则更需要与“陌生人”发生相互作用，最少知识原则建议“某人”不要直接与“陌生人”发生相互作用，而是通过“朋友”与之发生直接的相互作用。 这时候，“朋友”实际上起到了将“某人”对“陌生人”的调用转发给“陌生人”的作用，这种传递叫做调用转发（Call Forwarding）。 所谓调用转发，需要隐藏“陌生人”的存在，使得“某人”仅知道“朋友”，而不知道“陌生人”；换言之，“某人”会认为他所调用的这个方法是“朋友”的方法。  </p>
+<h4 id="狭义最少知识原则的缺点"><a href="#狭义最少知识原则的缺点" class="headerlink" title="狭义最少知识原则的缺点"></a>狭义最少知识原则的缺点</h4><p>遵循狭义的最少知识原则会产生一个明显的缺点：会在系统里造出大量的小方法，散落在系统的各个角落。这些方法仅仅是传递间接的调用，因此与系统的商务逻辑无关。当设计师试图从一张类图看出总体的架构时，这些小的方法会造成迷惑和困扰。 遵循类之间的最少知识原则会使一个系统的局部简化，因为每个局部都不会和远距离的对象有直接关联。但是，这也会造成系统的不同模块之间的通信效率降低，也会使系统的不同模块之间不容易协调。  </p>
+<h4 id="与依赖倒转原则互补使用"><a href="#与依赖倒转原则互补使用" class="headerlink" title="与依赖倒转原则互补使用"></a>与依赖倒转原则互补使用</h4><p>为了克服效益的最少知识原则的缺点，可以使用依赖倒转原则，引入一个抽象的类型引用“抽象陌生人”对象，使“某人”依赖于“抽象陌生人”。换言之，就是将“抽象陌生人”变成朋友。</p>
+<p><a href="http://qsxuan.com/wp-content/uploads/2016/05/LoD2.png" target="_blank" rel="noopener"><img src="http://qsxuan.com/wp-content/uploads/2016/05/LoD2.png" alt="LoD2"></a></p>
+<p>“某人”现在与一个抽象角色建立了朋友关系，这样做的好处是“朋友”可以随时将具体“陌生人”换掉。只要新的具体“陌生人”具有相同的抽象类型，那么“某人”就无法区分它们。这就允许“陌生人”的具体实现可以独立于“某人”而变化。  </p>
+<h3 id="广义的最少知识原则"><a href="#广义的最少知识原则" class="headerlink" title="广义的最少知识原则"></a>广义的最少知识原则</h3><p>其实，最少知识原则所谈论的，就是对对象之间的信息流量、流向以及信息的影响的控制。 在一个软件系统中，一个模块设计得好不好的最主要、最重要的标志，就是该模块在多大程度上将自己的内部数据和其他与实现有关的细节隐藏起来。一个设计得好的模块可以将它所有的实现细节隐藏起来，彻底地将提供给外界的API和自己的实现分隔开来。这样一来，模块与模块之间就可以仅仅通过彼此的API相互通信，而不理会模块内部的工作细节。这一概念就是“信息的隐藏”，就是“封装”。 信息的隐藏非常重要的原因在于，它可以使各个子系统之间脱耦，从而允许它们独立地被开发、优化、使用阅读以及修改。这种脱耦化可以有效地加快系统的开发过程，因为可以独立地同时开发各个模块。它可以使维护过程变得容易，因为所有的模块都容易读懂，特别是不必担心对其他模块的影响。 虽然信息的隐藏本身并不能带来更好的性能，但是它可以使新能的有效调整变得容易。一旦确认某一个模块是性能的障碍时，设计人员可以针对这个模块本省进行优化，而不必担心影响到其他的模块。 信息的隐藏可以促进软件的复用。由于每一个模块都不依赖于其他模块而存在，因此每一个模块都可以独立地在其他地方使用。一个系统的规模越大，信息的隐藏就越是重要，而信息隐藏的威力也就越明显。 最少知识原则的只要用意是控制信息的过载。在将最少知识原则运用到系统设计中时，要注意以下几点：</p>
+<ul>
+<li>在类的划分上，应当创建有弱耦合的类。类之间的耦合越弱，就越有利于复用。一个处在弱耦合中的类一旦被修改，不会对有关系的类造成波及。</li>
+<li>在类的结构设计上，每一个类都应当尽量降低成员的访问权限。换言之，一个类包装好自己的private状态。这样一来，想要了解其中的一个类的意义时，不需要了解很多别的类的细节。一个类不应当public自己的属性，而应当提供取值和赋值的方法让外界间接访问字节的属性。</li>
+<li>在类的设计上，只要有可能，一个类应当设计成不变类。</li>
+<li>在对其他类的引用上，一个对象对其他对象的引用应当降到最低。</li>
+</ul>
+<p>&nbsp;</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li>《Java与模式》 作者：阎宏，电子工业出版社</li>
+</ul>
+<p>&nbsp;</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="http://link.hhtjim.com/163/785902.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci="" data-cs="" data-r="" data-o="" data-a="" data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#开闭原则"><span class="toc-number">1.</span> <span class="toc-text">开闭原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#如何做到开闭原则"><span class="toc-number">1.1.</span> <span class="toc-text">如何做到开闭原则</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#抽象化"><span class="toc-number">1.1.1.</span> <span class="toc-text">抽象化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#对可变性的封装原则"><span class="toc-number">1.1.2.</span> <span class="toc-text">对可变性的封装原则</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#里氏替换原则"><span class="toc-number">2.</span> <span class="toc-text">里氏替换原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#依赖倒转原则"><span class="toc-number">3.</span> <span class="toc-text">依赖倒转原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接口隔离原则"><span class="toc-number">4.</span> <span class="toc-text">接口隔离原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合成-聚合复用原则"><span class="toc-number">5.</span> <span class="toc-text">合成/聚合复用原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最少知识原则"><span class="toc-number">6.</span> <span class="toc-text">最少知识原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#狭义的最少知识原则"><span class="toc-number">6.1.</span> <span class="toc-text">狭义的最少知识原则</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#狭义最少知识原则的缺点"><span class="toc-number">6.1.1.</span> <span class="toc-text">狭义最少知识原则的缺点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#与依赖倒转原则互补使用"><span class="toc-number">6.1.2.</span> <span class="toc-text">与依赖倒转原则互补使用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#广义的最少知识原则"><span class="toc-number">6.2.</span> <span class="toc-text">广义的最少知识原则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">7.</span> <span class="toc-text">参考文献</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="../js/plugin.js"></script>
+<script src="../js/diaspora.js"></script>
+<link rel="stylesheet" href="../photoswipe/photoswipe.css">
+<link rel="stylesheet" href="../photoswipe/default-skin/default-skin.css">
+<script src="../photoswipe/photoswipe.min.js"></script>
+<script src="../photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

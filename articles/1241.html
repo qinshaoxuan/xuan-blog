@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="yanm1ng&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="../css/images/logo.png">
+  
+  <title>
+    
+      西南科技大学第十二届ACM/ICPC程序设计大赛题解 | Xuan&#39;s Blog
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="../js/qrious.js"></script>
+<script src="../js/gitment.js"></script>
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="../index.html">
+      <div class="logo"></div>
+      <span>Xuan's Blog</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="../index.html" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="../index.html" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>西南科技大学第十二届ACM/ICPC程序设计大赛题解</h2>
+  <p class="post-date">2016-06-05</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><blockquote>
+<p>这里是ABCDEF题的题解，GHIJK题题解：<a href="http://hate13.com/archives/109.html" target="_blank" rel="external">哈特13</a><br>校赛终于结束了，这次比赛还算比较完美，没有出现题目上的问题=。=</p>
+</blockquote>
+<p>废话不多说，上题解（代码仅供参考，写的太丑）</p>
+<p>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<h2 id="A-A-B-Problem"><a href="#A-A-B-Problem" class="headerlink" title="A. A+B Problem"></a>A. A+B Problem</h2><p>观察一下会发现每个$$A_i$$会加上数组$$B$$的一段，所以利用前缀和的思想即可。这道题暴力是肯定会超时的。</p>
+<p><pre class="lang:c++ decode:true">#include&lt;cstdio&gt;</pre></p>
+<p>#define N 100005</p>
+<p>#define LL long long</p>
+<p>LL a[N],b[N];<br>LL t;</p>
+<p>int main(){</p>
+<pre><code>int T;
+int n,m;
+
+scanf(&quot;%d&quot;,&amp;amp;T);
+while(T--){
+    t=0;
+
+    scanf(&quot;%d%d&quot;,&amp;amp;n,&amp;amp;m);
+    for(int i=0;i&amp;lt;n;++i) scanf(&quot;%lld&quot;,&amp;amp;a[i]);
+    for(int i=0;i&amp;lt;m;++i) scanf(&quot;%lld&quot;,&amp;amp;b[i]);
+
+    for(int i=0;i&amp;lt;n;++i){
+        if(i&amp;lt;m) t+=b[i];
+        if(i&amp;gt;n-m) t-=b[i-n+m-1];
+        a[i]+=t;
+
+        if(i!=0) printf(&quot; &quot;);
+        printf(&quot;%lld&quot;,a[i]);
+    }
+    printf(&quot;\n&quot;);
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<h2 id="B-Football"><a href="#B-Football" class="headerlink" title="B. Football"></a>B. Football</h2><p>这道题主要就是模拟，暴力枚举，处理好优先级关系，各种姿势都能过。</p>
+<p><pre class="lang:c++ decode:true ">#include &lt;iostream&gt;</pre></p>
+<p>#include &lt;string&gt;</p>
+<p>#include &lt;algorithm&gt;</p>
+<p>#include &lt;cmath&gt;</p>
+<p>#include &lt;cstring&gt;</p>
+<p>#include &lt;cstdio&gt;</p>
+<p>#include &lt;map&gt;<br>using namespace std;</p>
+<p>int main() {<br>    int T;<br>    cin &gt;&gt; T;<br>    while(T–) {<br>        map &lt;string, int&gt; sc, diff, ball, cnt;<br>        string a, b, c;<br>        for(int i = 0; i &lt; 5; i++) {<br>            cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;<br>            int g1, g2;<br>            sscanf(c.c_str(), “%d:%d”, &amp;g1, &amp;g2);<br>            if(g1 &gt; g2)sc[a] += 3;<br>            else if(g1 == g2)sc[a]++, sc[b]++;<br>            else sc[b] += 3;<br>            diff[a] += g1 - g2;<br>            diff[b] += g2 - g1;<br>            ball[a] += g1;<br>            ball[b] += g2;<br>            cnt[a]++;<br>            cnt[b]++;<br>        }<br>        string m = “BWUST”, o;<br>        map&lt;string, int&gt;::iterator it;<br>        for(it = cnt.begin(); it != cnt.end(); it++)<br>            if(it-&gt;second &lt; 3 &amp;&amp; it-&gt;first != m)o = it-&gt;first;</p>
+<pre><code>    int flag=1;
+    for(int d = 1; d &amp;lt; 20&amp;amp;&amp;amp;flag; d++)
+        for(int y = 0; y &amp;lt; 20&amp;amp;&amp;amp;flag; y++) {
+            int x = y + d;
+            sc[m] += 3;
+            diff[m] += d;
+            diff[o] -= d;
+            ball[m] += x;
+            ball[o] += y;
+            int ccnt = 0;
+            for(it = cnt.begin(); it != cnt.end(); it++) {
+                string s = it-&amp;gt;first;
+                if(s == m)continue;
+                if(sc[s] &amp;gt; sc[m]) {
+                    ccnt++;
+                    continue;
+                }
+                if(sc[s] &amp;lt; sc[m])continue;
+                if(diff[s] &amp;gt; diff[m]) {
+                    ccnt++;
+                    continue;
+                }
+                if(diff[s] &amp;lt; diff[m])continue;
+                if(ball[s] &amp;gt; ball[m]) {
+                    ccnt++;
+                    continue;
+                }
+                if(ball[s] &amp;lt; ball[m])continue;
+                if(s &amp;lt; m) {
+                    ccnt++;
+                    continue;
+                }
+            }
+            if(ccnt &amp;lt;= 1) {
+                cout &amp;lt;&amp;lt; x &amp;lt;&amp;lt; &quot;:&quot; &amp;lt;&amp;lt; y&amp;lt;&amp;lt;endl;
+                flag=0;
+                continue;
+            }
+            sc[m] -= 3;
+            diff[o] += d;
+            diff[m] -= d;
+            ball[o] -= y;
+            ball[m] -= x;
+        }
+    if(flag) cout &amp;lt;&amp;lt; &quot;IMPOSSIBLE&quot; &amp;lt;&amp;lt; endl;
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<h2 id="C-GCD"><a href="#C-GCD" class="headerlink" title="C. GCD"></a>C. GCD</h2><p>题目求$$\begin{split}G(a,b)=\prod_{1\leqslant i&lt; b, a\leqslant j\leqslant b,i&lt; j}\ gcd (i,j)\end{split}$$</p>
+<p>设$$\begin{split}g(n)=\prod_{1\leqslant i&lt; j\leqslant n} gcd(i,j)\end{split}$$</p>
+<p>则$$G(a,b)=\frac{g(b)}{g(a-1)}$$</p>
+<p>则问题转化成求$$g(n)$$，就是一个很眼熟的题了，具体过程：</p>
+<p>设$$\begin{split}f(n)=\prod_{i=1}^{n-1} gcd(i,n)\end{split}$$</p>
+<p>则$$\begin{split} g(n) &amp; =\prod_{j=2}^{n} f(j)\ &amp;=g(n-1)f(n)\end{split}$$</p>
+<p>所有$$gcd(x,n)$$的值都是$$n$$的约数，按照约数进行分类，令$$p(d,n)$$表示满足$$gcd(x,n)=d(x&lt; n)$$的正整数$$x$$的个数</p>
+<p>则$$f(n)=\prod_{d|n} d^{p(d,n)}$$</p>
+<p>$$gcd (x, n) = d$$的充要条件为$$gcd (\frac{x}{d}, \frac{n}{d}) = 1$$,因此满足条件的$$\frac{x}{d}$$有$$\phi(\frac{n}{d})$$个,则$$f(n)=\prod_{d|n}d^{\phi(\frac{n}{d})}$$</p>
+<p>如果依次计算$$f(n)$$，枚举$$f(n)$$的约数的话效率太低，因此对于每个$$d$$枚举它的倍数$$n$$并更新$$f(n)$$</p>
+<p>因为运算结果要对$$10^9+7$$取余，所以还需要求$$g(a-1)$$的逆元</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;cstring&gt;</p>
+<p>#define N 800001</p>
+<p>#define LL long long</p>
+<p>#define MOD 1000000007</p>
+<p>LL euler[N],mul[N];</p>
+<p>void getEuler(){<br>    memset(euler,0,sizeof(euler));<br>    euler[1]=1;<br>    for(int i=2;i&lt;=N;++i){<br>        if(!euler[i]){<br>            for(int j=i;j&lt;=N;j+=i){<br>                if(!euler[j])euler[j]=j;<br>                euler[j]=euler[j]/i*(i-1);<br>            }<br>        }<br>    }<br>}</p>
+<p>LL pow(LL a,LL b){<br>    LL ret=1;<br>    while(b){<br>        if(b&amp;1)ret=(ret<em>a)%MOD;<br>        a=(a</em>a)%MOD;<br>        b&gt;&gt;=1;<br>    }<br>    return ret;<br>}</p>
+<p>LL inv(LL a,LL m){<br>    if(a==1)return 1;<br>    return inv(m%a,m)*(m-m/a)%m;<br>}</p>
+<p>void getMul(){<br>    for(int i=1;i&lt;=N;++i)mul[i]=1;<br>    for(int i=1;i&lt;=N;++i){<br>        for(int j=i<em>2;j&lt;=N;j+=i){<br>            mul[j]=(mul[j]</em>pow(i,euler[j/i]))%MOD;<br>        }<br>    }</p>
+<pre><code>for(int i=3;i&amp;lt;=N;++i){
+    mul[i]=(mul[i]*mul[i-1])%MOD;
+}
+</code></pre><p>}</p>
+<p>LL gcd(int a,int b){<br>    return b?gcd(b,a%b):a;<br>}</p>
+<p>int main(){<br>    getEuler();<br>    getMul();<br>    int T,a,b;<br>    scanf(“%d”,&amp;T);<br>    int cnt=0;<br>    while(T–){<br>        scanf(“%d%d”,&amp;a,&amp;b);<br>        printf(“%lld\n”,mul[b]*inv(mul[a-1],MOD)%MOD);<br>    }<br>    return 0;<br>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<h2 id="D-Mode"><a href="#D-Mode" class="headerlink" title="D. Mode"></a>D. Mode</h2><p>首先要明白，m一定是数组a中的数，这个有兴趣可以自己证明一下。</p>
+<p>有了这个前提，我们可以先将数组a按升序排序。</p>
+<p>然后这道题的解法就是二分长度（即答案中的出现次数），然后枚举端点，也可以枚举端点，然后二分长度。</p>
+<p>设端点坐标为$$x$$，则当长度$$len$$满足$$len\times a<em>x-\sum</em>{i=x-len+1}^{x}a_i\leqslant k$$时，表示可以让$$a<em>i$$出现$$len$$次，其中$$\sum</em>{i=x-len+1}^{x}a_i$$可以预处理前缀和快速求出</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;algorithm&gt;<br>using namespace std;</p>
+<p>#define N 100005</p>
+<p>#define LL long long</p>
+<p>LL a[N];<br>LL sum[N];<br>int n,k;</p>
+<p>int judge(int cnt){<br>    for(int i=cnt;i&lt;=n;++i){<br>        if(cnt*a[i]-(sum[i]-sum[i-cnt])&lt;=k)<br>            return a[i];<br>    }<br>    return -1;<br>}</p>
+<p>int main(){<br>    int T;<br>    scanf(“%d”,&amp;T);<br>    while(T–){<br>        scanf(“%d%d”,&amp;n,&amp;k);<br>        for(int i=1;i&lt;=n;++i) scanf(“%lld”,&amp;a[i]);</p>
+<pre><code>    sort(a+1,a+1+n);
+
+    sum[0]=0;
+    for(int i=1;i&amp;lt;=n;++i) sum[i]=a[i]+sum[i-1];
+
+    int l=1,r=n;
+    int ansval=0,anscnt=0;
+    while(l&amp;lt;=r){
+        int mid=(l+r)&amp;gt;&amp;gt;1;
+        int val=judge(mid);
+        if(val!=-1){
+            ansval=val,anscnt=mid;
+            l=mid+1;
+        }else{
+            r=mid-1;
+        }
+    }
+    printf(&quot;%d %d\n&quot;,anscnt,ansval);
+}
+return 0;
+</code></pre><p>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<h2 id="E-01-String"><a href="#E-01-String" class="headerlink" title="E. 01 String"></a>E. 01 String</h2><p>水题之一，答案就是0和1的个数之差</p>
+<p><pre class="lang:c++ decode:true">#include&lt;cstdio&gt;</pre></p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;algorithm&gt;<br>using namespace std;</p>
+<p>#define N 10005</p>
+<p>int main() {<br>    int T;<br>    char str[N];<br>    scanf(“%d”, &amp;T);<br>    while(T–) {<br>        int one = 0;<br>        int n = 0;<br>        scanf(“%d”, &amp;n);<br>        scanf(“%s”, str);<br>        for(int i = 0; i &lt; n; ++i) {<br>            one += (str[i] == ‘1’);<br>        }<br>        printf(“%d\n”, abs(n - one - one));<br>    }<br>    return 0;<br>}<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<h2 id="F-Fibonacci"><a href="#F-Fibonacci" class="headerlink" title="F. Fibonacci"></a>F. Fibonacci</h2><p>列出前几项会发现，设$$F<em>i$$为A,$$F</em>{i+1}$$为B，那么会发现之后的组合顺序有：BA、AB、BB</p>
+<p>设$$C<em>A$$为字符串s在A中出现的次数，$$C</em>{AB}$$为字符串s在AB相接处出现的次数，其他同理</p>
+<p>则$$F_k$$中出现的次数为$$C_A+C<em>B+C</em>{BA}+C<em>{AB}+C</em>{BB}$$</p>
+<p>但不可能直接求出$$F_k$$，所以我们需要找出$$F<em>n$$与$$F</em>{n+1}$$中$$C_A,C<em>B,C</em>{BA},C<em>{AB},C</em>{BB}$$的关系（为了简洁，以下公式中省略C）。</p>
+<p>通过观察可以得出下面的关系：</p>
+<p>$$!\begin{equation}\label{1}\left{\begin{matrix}A<em>{n+1}=BA</em>{n+1}&amp;=&amp;B<em>n\B</em>{n+1}&amp;=&amp;A_n+B<em>n\AB</em>{n+1}&amp;=&amp;A_n+BB<em>n\BB</em>{n+1}&amp;=&amp;AB_n\end{matrix}\right.\end{equation}$$</p>
+<p>设：</p>
+<p>$$!\begin{equation}\label{2}\begin{pmatrix}A_n &amp; B_n &amp; AB_n &amp; BB_n\end{pmatrix}\begin{pmatrix}a_1 &amp; a_2 &amp; a_3 &amp; a_4\b_1 &amp; b_2 &amp; b_3 &amp; b_4\c_1 &amp; c_2 &amp; c_3 &amp; c_4\d_1 &amp; d_2 &amp; d_3 &amp; d<em>4\end{pmatrix}=\begin{pmatrix}A</em>{n+1} &amp; B<em>{n+1} &amp; AB</em>{n+1} &amp; BB_{n+1}\end{pmatrix}\end{equation}$$</p>
+<p>由$$(\ref{1})$$和$$(\ref{2})$$可得：</p>
+<p>$$!\begin{equation}\label{3}\begin{pmatrix}A_n &amp; B_n &amp; AB_n &amp; BB<em>n\end{pmatrix}\begin{pmatrix}0 &amp; 1 &amp; 1 &amp; 0\1 &amp; 1 &amp; 0 &amp; 0\0 &amp; 0 &amp; 0 &amp; 1\0 &amp; 0 &amp; 1 &amp; 0\end{pmatrix}=\begin{pmatrix}A</em>{n+1} &amp; B<em>{n+1} &amp; AB</em>{n+1} &amp; BB_{n+1}\end{pmatrix}\end{equation}$$</p>
+<p>则：</p>
+<p>$$!\begin{equation}\label{4}\begin{pmatrix}A_1 &amp; B_1 &amp; AB_1 &amp; BB<em>1\end{pmatrix}\begin{pmatrix}0 &amp; 1 &amp; 1 &amp; 0\1 &amp; 1 &amp; 0 &amp; 0\0 &amp; 0 &amp; 0 &amp; 1\0 &amp; 0 &amp; 1 &amp; 0\end{pmatrix}^{n-1}=\begin{pmatrix}A</em>{n} &amp; B<em>{n} &amp; AB</em>{n} &amp; BB_{n}\end{pmatrix}\end{equation}$$</p>
+<p>由此可以先找出k较小时字符串s出现的次数，然后通过矩阵快速幂来求出答案</p>
+<p><pre class="lang:c++ decode:true ">#include&lt;iostream&gt;</pre></p>
+<p>#include&lt;cstring&gt;</p>
+<p>#include&lt;string&gt;</p>
+<p>#include&lt;cstdio&gt;<br>using namespace std;</p>
+<p>#define LL long long</p>
+<p>#define MOD 1000000007</p>
+<p>#define SIZE 4</p>
+<p>#define MAXN 30</p>
+<p>#define MAXS 1000010</p>
+<p>#define MAXSS 100010</p>
+<p>template&lt;class T&gt;<br>struct Matrix {<br>    int r, c;<br>    T a[SIZE][SIZE];<br>    Matrix() {<br>        memset(a, 0, sizeof a);<br>    }<br>    Matrix(int si) {<br>        memset(a, 0, sizeof a);<br>        r = c = si;<br>        for(int i = 0; i &lt; si; i++)<br>            a[i][i] = 1;<br>    }<br>    inline Matrix operator <em> (const Matrix &amp;rhs) {<br>        Matrix&lt;T&gt; ret;<br>        ret.r = r;<br>        ret.c = rhs.c;<br>        for(int k = 0; k &lt; c; ++k)<br>            for(int i = 0; i &lt; ret.r; ++i)<br>                if(a[i][k])<br>                for(int j = 0; j &lt; ret.c; ++j)<br>                    ret.a[i][j] = (ret.a[i][j] + (LL)a[i][k] </em> rhs.a[k][j]) % MOD;<br>        return ret;<br>    }<br>    Matrix operator ^ (LL b) {<br>        Matrix&lt;T&gt; ret, base = <em>this;<br>        int setret = 0;<br>        while(b) {<br>            if(b &amp; 1) ret = (setret ? ret</em>base : base), setret = 1;<br>            base = base * base;<br>            b &gt;&gt;= 1;<br>        }<br>        return ret;<br>    }<br>};</p>
+<p>int Next[MAXSS];<br>char fs[MAXN][MAXS];<br>int fib[MAXN];</p>
+<p>void getNext(char* str){<br>    int len2=strlen(str);<br>    for(int i = 1, j = 0;i&lt;len2;++i){<br>        while(j &amp;&amp; str[i]!=str[j]) j=Next[j];<br>        if(str[i]==str[j])++j;<br>        Next[i+1]=j;<br>    }<br>}</p>
+<p>int KMP(char<em> txt,char</em> str) {<br>    int len1=strlen(txt);<br>    int len2=strlen(str);<br>    int ret = 0;<br>    for(int i = 0, j = 0;i&lt;len1;++i){<br>        while(j &amp;&amp; txt[i]!=str[j]) j=Next[j];<br>        if(txt[i]==str[j])++j;<br>        if(j==len2) ++ret,j=Next[j];<br>    }<br>    return ret;<br>}</p>
+<p>char instr[MAXSS];<br>char A[MAXS], B[MAXS];<br>char temp[MAXS];</p>
+<p>int main() {<br>    Matrix&lt;int&gt; M;//BA=A,B,AB,BB</p>
+<pre><code>M.r = M.c = 4;
+M.a[0][1] = M.a[0][2] = M.a[1][0] = M.a[1][1] = M.a[2][3] = M.a[3][2] = 1;
+
+fib[1] = fib[2] = 1;
+strcpy(fs[1],&quot;a&quot;);
+strcpy(fs[2],&quot;b&quot;);
+for(int i = 3; i &amp;lt; 30; ++i) {
+    fib[i] = fib[i - 1] + fib[i - 2];
+    strcpy(fs[i], fs[i - 1]);
+    strcat(fs[i], fs[i - 2]);
+}
+for(int i = 1; i &amp;lt; 30; ++i) fs[i][fib[i]] = &apos;\0&apos;;
+
+LL k;
+int m;
+
+scanf(&quot;%lld%d&quot;,&amp;amp;k,&amp;amp;m);
+while(m--) {
+    scanf(&quot;%s&quot;, instr);
+    int len = strlen(instr);
+    getNext(instr);
+    if(k &amp;lt; 30) {
+        printf(&quot;%d\n&quot;,KMP(fs[k],instr));
+        continue;
+    }
+
+    int I;
+    for(int i = 1; i &amp;lt; 30; i++) {
+        if(fib[i] &amp;gt;= len) {
+            strcpy(B, fs[i + 1]);
+            strcpy(A, fs[i]);
+            I = i;
+            break;
+        }
+    }
+
+    LL CA = KMP(A,instr);
+    LL CB = KMP(B,instr);
+
+    strcpy(temp,B);
+    LL CBA = KMP(strcat(temp , A),instr) - CB - CA;
+
+    strcpy(temp,A);
+    LL CAB = KMP(strcat(temp , B),instr) - CA - CB;
+
+    strcpy(temp,B);
+    LL CBB = KMP(strcat(temp , B),instr) - CB - CB;
+
+    Matrix&amp;lt;int&amp;gt; cnt;
+    cnt.r = 1;
+    cnt.c = 4;
+    cnt.a[0][1] = 1;
+    cnt = cnt * (M ^ (k - I - 1));
+
+    LL ans = (cnt.a[0][0] * (CBA + CA) + cnt.a[0][1] * CB + cnt.a[0][2] * CAB + cnt.a[0][3] * CBB) % MOD;
+    printf(&quot;%d\n&quot;,ans);
+}
+return 0;
+</code></pre><p>}<br><br>&nbsp;</p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#A-A-B-Problem"><span class="toc-nav-text">A. A+B Problem</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#B-Football"><span class="toc-nav-text">B. Football</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#C-GCD"><span class="toc-nav-text">C. GCD</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#D-Mode"><span class="toc-nav-text">D. Mode</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#E-01-String"><span class="toc-nav-text">E. 01 String</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#F-Fibonacci"><span class="toc-nav-text">F. Fibonacci</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://qinshaoxuan.com/articles/1241.html';
+    var banner = ''
+    if (banner !== 'undefined') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "yanm1ng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "西南科技大学第十二届ACM/ICPC程序设计大赛题解",
+        owner: "yanm1ng",
+        repo: "yanm1ng.github.io",
+        oauth: {
+          client_id: "0f87e490e00ee3fd87ef",
+          client_secret: "4a9d2b148e7971c2201ad12131ce8bf8159ccd2e"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="../js/script.js"></script>
+  </body>
+</html>

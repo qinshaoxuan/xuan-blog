@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="yanm1ng&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="../css/images/logo.png">
+  
+  <title>
+    
+      LeetCode 15 3Sum AND 16 3Sum Closest  AND 18 4Sum | Xuan&#39;s Blog
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="../js/qrious.js"></script>
+<script src="../js/gitment.js"></script>
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="../index.html">
+      <div class="logo"></div>
+      <span>Xuan's Blog</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="../index.html" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="../about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="../index.html" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="../about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>LeetCode 15 3Sum AND 16 3Sum Closest  AND 18 4Sum</h2>
+  <p class="post-date">2015-10-31</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><blockquote>
+<p>题目链接：<a href="https://leetcode.com/problems/3sum/" target="_blank" rel="external">3Sum</a></p>
+<p>题意：给一个数组，找出所有不同的三元组(a,b,c)，满足a+b+c=0<br>&nbsp;</p>
+</blockquote>
+<p>对于K-Sum问题（$$\sum^K_i a_i = 0$$）都有通解</p>
+<p>先对数组排序，再枚举$$K-2$$个数的和$$sum$$，再用二指针在$$O(n)$$时间求出剩下2个数$$(a,b)$$满足$$a+b=-sum$$，所以复杂度为$$O(n^{k-1})$$</p>
+<p>对于去重，因为数组有序，所以可以直接跳过重复的数。同时注意左指针的起始位置。</p>
+<p>时间复杂度$$O(n^2)$$</p>
+<p>&nbsp;</p>
+<p><pre class="lang:java decode:true" title="LeetCode 15">public class Solution {<br>    public List&lt;List&lt;Integer&gt;&gt; threeSum(int[] nums) {<br>        List&lt;List&lt;Integer&gt;&gt; ans = new LinkedList&lt;List&lt;Integer&gt;&gt;();<br>        Arrays.sort(nums);<br>        int len = nums.length;<br>        for (int i = 0; i &lt; len-2; ++i) {<br>            if (i &gt; 0 &amp;&amp; nums[i] == nums[i - 1])<br>                continue;<br>            int tag = -nums[i];<br>            int l = i+1, r = len - 1;<br>            while (l &lt; r) {<br>                if (nums[l] + nums[r] == tag) {<br>                    List&lt;Integer&gt; node = new ArrayList&lt;Integer&gt;();<br>                    node.add(-tag);<br>                    node.add(nums[l]);<br>                    node.add(nums[r]);<br>                    ans.add(node);<br>                    while(l&lt;r&amp;&amp;nums[l]==nums[l+1])l++;<br>                    while(l&lt;r&amp;&amp;nums[r]==nums[r-1])r–;<br>                    l++;<br>                    r–;<br>                } else if (nums[l] + nums[r] &lt; tag) {<br>                    l++;<br>                } else {<br>                    r–;<br>                }<br>            }<br>        }<br>        return ans;<br>    }<br>}</pre><br>&nbsp;</p>
+<p>&nbsp;</p>
+<blockquote>
+<p>题目链接：<a href="https://leetcode.com/problems/3sum-closest/" target="_blank" rel="external">3Sum Closest</a></p>
+<p>题意：给一个数组，找出一个三元组(a,b,c)的和sum=a+b+c，满足sum最接近给出的target<br>&nbsp;</p>
+</blockquote>
+<p>方法和上一道题差不多，每次移动指针更新答案</p>
+<p>时间复杂度$$O(n^2)$$</p>
+<p>&nbsp;</p>
+<p><pre class="lang:java decode:true " title="LeetCode 16">public class Solution {<br>    public int threeSumClosest(int[] nums, int target) {<br>        Arrays.sort(nums);<br>        int ansabs = 1 &lt;&lt; 30;<br>        int ans = 0;<br>        int len = nums.length;<br>        for (int i = 0; i &lt; len - 2; ++i) {<br>            int sum = target - nums[i];<br>            int l = i + 1, r = len - 1;<br>            while (l &lt; r) {<br>                if (Math.abs(nums[l] + nums[r] - sum) &lt; ansabs) {<br>                    ansabs = Math.abs(nums[l] + nums[r] - sum);<br>                    ans = nums[l] + nums[r] + nums[i];<br>                }<br>                if (nums[l] + nums[r] == sum) {<br>                    return target;<br>                } else if (nums[l] + nums[r] &lt; sum) {<br>                    l++;<br>                } else {<br>                    r–;<br>                }<br>            }<br>        }<br>        return ans;<br>    }<br>}</pre><br>&nbsp;</p>
+<blockquote>
+<p>题目链接：<a href="https://leetcode.com/problems/4sum/" target="_blank" rel="external">4Sum</a></p>
+<p>题意：给一个数组和target，找出所有的一个四元组(a,b,c,d)满足a + b + c + d = target<br>&nbsp;</p>
+</blockquote>
+<p>同理，先对数组排序，再枚举两个数的和，然后用二指针处理剩下两个数，注意利用大小关系去重</p>
+<p>时间复杂度$$O(n^3)$$</p>
+<p>&nbsp;</p>
+<p><pre class="lang:c++ decode:true" title="LeetCode 18">public class Solution {<br>    public List&lt;List&lt;Integer&gt;&gt; fourSum(int[] nums, int target) {<br>        List&lt;List&lt;Integer&gt;&gt; ans = new LinkedList&lt;List&lt;Integer&gt;&gt;();<br>        Arrays.sort(nums);</pre></p>
+<pre><code>    for (int i = 0; i &amp;lt; nums.length - 3; ++i) {
+        if (i &amp;gt; 0 &amp;amp;&amp;amp; nums[i] == nums[i - 1]) continue;
+
+        for (int j = i + 1; j &amp;lt; nums.length - 2; ++j) {
+            if (j &amp;gt; i + 1 &amp;amp;&amp;amp; nums[j] == nums[j - 1]) continue;
+
+            int tag = target - nums[i] - nums[j];
+            int l = j + 1, r = nums.length - 1;
+            while (l &amp;lt; r) {
+                if (nums[l] + nums[r] == tag) {
+                    List&amp;lt;Integer&amp;gt; node = new ArrayList&amp;lt;Integer&amp;gt;();
+                    node.add(nums[i]);
+                    node.add(nums[j]);
+                    node.add(nums[l]);
+                    node.add(nums[r]);
+                    ans.add(node);
+                    while (l &amp;lt; r &amp;amp;&amp;amp; nums[l] == nums[l + 1]) l++;
+                    while (l &amp;lt; r &amp;amp;&amp;amp; nums[r] == nums[r - 1]) r--;
+                    l++;
+                    r--;
+                } else if (nums[l] + nums[r] &amp;lt; tag) {
+                    l++;
+                } else {
+                    r--;
+                }
+            }
+        }
+    }
+    return ans;
+}
+</code></pre><p>}<br>&nbsp;</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="../tags#K-Sum" >
+    <span class="tag-code">K-Sum</span>
+  </a>
+
+  <a href="../tags#二指针" >
+    <span class="tag-code">二指针</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="nav">none</ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://qinshaoxuan.com/articles/717.html';
+    var banner = ''
+    if (banner !== 'undefined') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "yanm1ng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "LeetCode 15 3Sum AND 16 3Sum Closest  AND 18 4Sum",
+        owner: "yanm1ng",
+        repo: "yanm1ng.github.io",
+        oauth: {
+          client_id: "0f87e490e00ee3fd87ef",
+          client_secret: "4a9d2b148e7971c2201ad12131ce8bf8159ccd2e"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="../js/script.js"></script>
+  </body>
+</html>
