@@ -420,14 +420,14 @@ $(function() {
                 return false;
                 break;
             // quick view
-            case (tag.indexOf('pviewa') != -1):
-                $('body').removeClass('mu')
-                setTimeout(function() {
-                    Diaspora.HS($(e.target), 'push')
-                    $('.toc').fadeIn(1000);
-                }, 300)
-                return false;
-                break;
+            // case (tag.indexOf('pviewa') != -1):
+            //     $('body').removeClass('mu')
+            //     setTimeout(function() {
+            //         Diaspora.HS($(e.target), 'push')
+            //         $('.toc').fadeIn(1000);
+            //     }, 300)
+            //     return false;
+            //     break;
             // photoswipe
             case (tag.indexOf('pimg') != -1):
                 var pswpElement = $('.pswp').get(0);
