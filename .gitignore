@@ -7,3 +7,5 @@ themes/
 public/
 .deploy*/
 .deploy_git/
+_config.yml
+.idea
