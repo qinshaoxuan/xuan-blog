@@ -5,12 +5,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>24 - xuan&#39;s blog</title>
+    <title>LeetCode 61 Rotate List - xuan&#39;s blog</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate">
     <meta name="keywords" content="xuan,"> 
-    
+    <meta name="description" content="
+题目链接：Rotate List题意：将链表向右滚动，超出末尾的链接在头部
+
+依旧是考验细节的题，第一次遍历的时候记录下长度，第二次历遍根据移动的距离得到移动后的链表的头结点和尾结点，再处理下引用,"> 
     <meta name="author" content="xuan"> 
     <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
     <link rel="icon" href="../img/xuan-favicon.ico"> 
@@ -26,7 +29,7 @@
     <div class="bar" style="width: 0;"></div>
     <a class="icon-home image-icon" href="javascript:;" data-url="http://qsxuan.com"></a>
     <div title="播放/暂停" class="icon-play"></div>
-    <h3 class="subtitle">24</h3>
+    <h3 class="subtitle">LeetCode 61 Rotate List</h3>
     <div class="social">
         <!--<div class="like-icon">-->
             <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
@@ -44,18 +47,64 @@
     <div class="section">
         <div class="article">
     <div class="main">
-        <h1 class="title">24</h1>
+        <h1 class="title">LeetCode 61 Rotate List</h1>
         <div class="stuff">
-            <span>二月 27, 2019</span>
+            <span>七月 22, 2016</span>
             
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="../tags/链表/">链表</a></li></ul>
+
 
         </div>
         <div class="content markdown">
-            
+            <blockquote>
+<p>题目链接：<a href="https://leetcode.com/problems/rotate-list/" target="_blank" rel="noopener">Rotate List</a><br>题意：将链表向右滚动，超出末尾的链接在头部</p>
+</blockquote>
+<p>依旧是考验细节的题，第一次遍历的时候记录下长度，第二次历遍根据移动的距离得到移动后的链表的头结点和尾结点，再处理下引用关系即可。</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Solution</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> ListNode <span class="token function">rotateRight</span><span class="token punctuation">(</span>ListNode head<span class="token punctuation">,</span> <span class="token keyword">int</span> k<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>head <span class="token operator">==</span> null <span class="token operator">||</span> k <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+            <span class="token keyword">return</span> head<span class="token punctuation">;</span>
+        <span class="token keyword">int</span> len <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        ListNode x <span class="token operator">=</span> head<span class="token punctuation">;</span>
+
+        <span class="token keyword">while</span> <span class="token punctuation">(</span>x<span class="token punctuation">.</span>next <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            x <span class="token operator">=</span> x<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+            len<span class="token operator">++</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        x<span class="token punctuation">.</span>next <span class="token operator">=</span> head<span class="token punctuation">;</span>
+        k <span class="token operator">=</span> k <span class="token operator">%</span> len<span class="token punctuation">;</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span>k<span class="token operator">++</span> <span class="token operator">&lt;</span> len<span class="token punctuation">)</span>
+            x <span class="token operator">=</span> x<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+
+        ListNode last <span class="token operator">=</span> x<span class="token punctuation">;</span>
+        ListNode first <span class="token operator">=</span> x<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+
+        last<span class="token punctuation">.</span>next <span class="token operator">=</span> null<span class="token punctuation">;</span>
+        <span class="token keyword">return</span> first<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
-            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
-                <source type="audio/mpeg" src="https://link.hhtjim.com/163/33418860.mp3">
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
             </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="http://link.hhtjim.com/163/785902.mp3"></li>
+                        
+                    
+                </ul>
             
         </div>
         

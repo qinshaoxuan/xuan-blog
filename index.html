@@ -13,10 +13,10 @@
     
     <meta name="author" content="xuan"> 
     <link rel="alternative" href="atom.xml" title="xuan&#39;s blog" type="application/atom+xml"> 
-    <link rel="icon" href="/img/favicon.ico"> 
+    <link rel="icon" href="/img/xuan-favicon.ico"> 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
     <link rel="stylesheet" href="css/diaspora.css">
-</head>
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
 </html>
 <body class="loading">
     <span id="config-title" style="display:none">xuan&#39;s blog</span>
@@ -25,19 +25,19 @@
     <ul id="menu-menu" class="menu">
         
         <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
-            <a href="/music/" title="Music">Music</a>
+            <a href="../../music/" title="Music">Music</a>
         </li>
         
         <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
-            <a href="/archives/" title="Archives">Archives</a>
+            <a href="../../archives/" title="Archives">Archives</a>
         </li>
         
         <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
-            <a href="/categories/" title="Categories">Categories</a>
+            <a href="../../categories/" title="Categories">Categories</a>
         </li>
         
         <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
-            <a href="/tags/" title="Tags">Tags</a>
+            <a href="../../tags/" title="Tags">Tags</a>
         </li>
         
     </ul>
@@ -54,7 +54,7 @@
 <div id="screen">
     <div id="mark">
         <div class="layer" data-depth="0.4">
-            <img src="/img/welcome-cover.jpg" id="cover" crossorigin="anonymous" width="1920" height="1080">
+            <img src="/img/xuan-welcome-cover.jpg" id="cover" crossorigin="anonymous" width="1920" height="1080">
         </div>
     </div>
     <div id="vibrant">
@@ -94,12 +94,56 @@
 
 <div class="post">
     <a href="posts/1522.html" title="正则表达式基础">
-        <img src="/img/cover.jpg" class="cover" width="680" height="440">
+        <img src="/img/xuan-cover.jpg" class="cover" width="680" height="440">
     </a>
     <div class="else">
         <p>十月 15, 2016</p>
         <h3><a href="posts/1522.html" title="正则表达式基础" class="posttitle">正则表达式基础</a></h3>
         <p>正则表达式就是用某种模式去匹配一类字符串的一种公式。简单记录一下正则表达式的规则。</p>
+    </div>
+</div>
+
+
+<div class="post">
+    <a href="posts/1409.html" title="LeetCode 61 Rotate List">
+        <img src="/img/1409.jpg" class="cover" width="680" height="440">
+    </a>
+    <div class="else">
+        <p>七月 22, 2016</p>
+        <h3><a href="posts/1409.html" title="LeetCode 61 Rotate List" class="posttitle">LeetCode 61 Rotate List</a></h3>
+        <p>
+题目链接：Rotate List题意：将链表向右滚动，超出末尾的链接在头部
+
+依旧是考验细节的题，第一次遍历的时候记录下长度，第二次历遍根据移动的距离得...</p>
+    </div>
+</div>
+
+
+<div class="post">
+    <a href="posts/769.html" title="LeetCode 135 Candy">
+        <img src="/img/48889436_p0.jpg" class="cover" width="680" height="440">
+    </a>
+    <div class="else">
+        <p>十一月 14, 2015</p>
+        <h3><a href="posts/769.html" title="LeetCode 135 Candy" class="posttitle">LeetCode 135 Candy</a></h3>
+        <p>
+题目链接：Candy题意：N个孩子排成一排，每个孩子有个rating值，现在给每个孩子发糖果，要求：
+
+每人至少一个
+rating值比相邻孩子高的人得的...</p>
+    </div>
+</div>
+
+
+<div class="post">
+    <a href="posts/730.html" title="LeetCode 33 Search in Rotated Sorted Array">
+        <img src="/img/39759178_p0.png" class="cover" width="680" height="440">
+    </a>
+    <div class="else">
+        <p>十一月 07, 2015</p>
+        <h3><a href="posts/730.html" title="LeetCode 33 Search in Rotated Sorted Array" class="posttitle">LeetCode 33 Search in Rotated Sorted Array</a></h3>
+        <p>
+题目链接：Search in Rotated Sorted Array题意：给一个数组nums，这个数组是由一个另一个排好序的数组从某个位置截断，前半部...</p>
     </div>
 </div>
 
@@ -166,6 +210,27 @@
         </div>
     </div>
 </div>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"], linebreaks: { automatic:true }, EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: { inlineMath: [ ["$", "$"], ["\\(","\\)"] ], processEscapes: true, ignoreClass: "tex2jax_ignore|dno",skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {  noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, Macros: { href: "{}" } },
+        messageStyle: "none"
+    });
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
 
 
 
